@@ -41,7 +41,7 @@ Kubernetes 的学习难点从来不在「某个命令怎么用」，而在于**�
 
 **导论**
 
-- 0 · 如何使用本手册
+0· 如何使用本手册
 
 **第一篇　容器技术基础**
 
@@ -155,7 +155,7 @@ start index.html
 
 本仓库根文件为 `index.html`，可直接启用 GitHub Pages 在线阅读：
 
-`Settings → Pages → Source 选择 main 分支根目录` → 访问 `https://<用户名>.github.io/learnk8s/`
+`Settings → Pages → Source 选择 main 分支根目录` → 访问 `https://baokaijian.github.io/learnk8s/`
 
 ---
 
