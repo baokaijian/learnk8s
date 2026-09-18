@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Kubernetes 系统化教学手册 · 从容器原理到生产化实践</title>
 <style>
 :root{
@@ -73,7 +73,13 @@ body{
 #sidebar a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(74,158,255,.09);font-weight:600}
 #sidebar a.hidden{display:none}
 /* ============ 主内容 ============ */
-main{margin-left:var(--sidebar-w);max-width:1000px;padding:0 56px 120px}
+/* 正文在「侧栏右侧区域」内水平居中：main 总宽 = 侧栏宽 + 正文宽 + 两侧内边距，
+   再整体居中，即可让正文与右侧空白对称，消除宽屏下右侧大片留白 */
+main{
+  margin:0 auto;
+  max-width:calc(var(--sidebar-w) + 1040px + 112px);
+  padding:0 56px 120px calc(var(--sidebar-w) + 56px);
+}
 .cover{padding:88px 0 56px;border-bottom:1px solid var(--border)}
 .cover .kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:20px}
 .cover h1{font-size:44px;line-height:1.22;font-weight:800;color:#fff;letter-spacing:-.015em;margin-bottom:18px}
@@ -173,17 +179,82 @@ hr{border:none;border-top:1px solid var(--border-soft);margin:44px 0}
 }
 #backtop:hover{border-color:var(--accent);color:var(--accent)}
 mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
+/* ============ 侧栏遮罩（窄屏） ============ */
+#mask{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:880;
+  opacity:0;transition:opacity .25s;backdrop-filter:blur(1px);
+}
+#mask.show{display:block;opacity:1}
+/* ============ 响应式：平板 ============ */
 @media (max-width:1100px){
-  #sidebar{transform:translateX(-100%);transition:transform .25s}
+  #sidebar{transform:translateX(-100%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.5)}
   #sidebar.open{transform:none}
-  main{margin-left:0;padding:0 24px 100px}
+  main{margin:0 auto;max-width:100%;padding:0 32px 100px}
   .grid2,.grid3,.toc-grid{grid-template-columns:1fr}
   .cover h1{font-size:32px}
   #menuBtn{display:flex!important}
 }
-#menuBtn{display:none;position:fixed;top:14px;left:14px;z-index:950;width:40px;height:40px;border-radius:8px;background:var(--bg-elev);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text)}
+/* ============ 响应式：手机 ============ */
+@media (max-width:760px){
+  body{font-size:15.5px;line-height:1.8}
+  main{padding:0 18px 90px}
+  #sidebar{width:86vw;max-width:320px}
+  /* 顶部留出汉堡按钮空间，避免遮挡封面 */
+  .cover{padding:64px 0 40px}
+  .cover h1{font-size:26px;line-height:1.3}
+  .cover .kicker{font-size:11px;letter-spacing:.16em;margin-bottom:14px}
+  .cover .tagline{font-size:15px;line-height:1.8}
+  .cover .meta{gap:8px;margin-top:26px}
+  .chip{font-size:11.5px;padding:4px 10px}
+  h2{font-size:22px;margin:52px 0 16px;padding-top:16px}
+  h2 .num{font-size:17px;margin-right:8px}
+  h3{font-size:18px;margin:34px 0 12px}
+  h4{font-size:15.5px;margin:24px 0 10px}
+  h5{font-size:14px}
+  p,li{word-break:break-word}
+  .lead{font-size:15.5px;line-height:1.8}
+  ul,ol{padding-left:20px}
+  /* 代码块：缩小内边距与字号，横向可滚动 */
+  pre{padding:14px 14px;margin:0 0 20px;border-radius:6px}
+  pre code{font-size:12px;line-height:1.62}
+  .lang{font-size:9.5px;padding:4px 9px}
+  code{font-size:12.5px;padding:1px 5px}
+  /* 提示框 */
+  .box{padding:14px 16px 14px 16px;margin:0 0 20px}
+  .box .bt{font-size:13px}
+  /* 表格：允许横向滚动，提示用户 */
+  .tw{margin:0 0 20px;border-radius:6px}
+  table{font-size:12.8px;min-width:460px}
+  th{padding:9px 11px;font-size:12.2px}
+  td{padding:8px 11px}
+  /* 图与卡片 */
+  figure{padding:16px 12px 12px;margin:0 0 22px;border-radius:6px}
+  figcaption{font-size:12px;margin-top:12px}
+  .card{padding:14px 15px}
+  .toc{padding:20px 18px;margin:30px 0 18px;border-radius:6px}
+  .toc-grid{gap:4px}
+  .toc-item{font-size:13px}
+  hr{margin:32px 0}
+  /* 悬浮按钮避让安全区（刘海屏 / 手势条） */
+  #backtop{right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:40px;height:40px}
+  #menuBtn{top:calc(12px + env(safe-area-inset-top,0px));left:12px}
+}
+/* ============ 响应式：小屏手机 ============ */
+@media (max-width:420px){
+  main{padding:0 14px 80px}
+  .cover h1{font-size:22px}
+  .cover .tagline{font-size:14.5px}
+  h2{font-size:20px;margin:44px 0 14px}
+  h2 .num{display:block;font-size:14px;margin:0 0 4px}
+  h3{font-size:16.5px}
+  table{min-width:400px}
+  pre{padding:12px 12px}
+  pre code{font-size:11.5px}
+  #sidebar{width:90vw}
+}
+#menuBtn{display:none;position:fixed;top:14px;left:14px;z-index:950;width:40px;height:40px;border-radius:8px;background:var(--bg-elev);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.35)}
 @media print{
-  #sidebar,#backtop,#progress,#menuBtn{display:none!important}
+  #sidebar,#backtop,#progress,#menuBtn,#mask{display:none!important}
   main{margin:0;max-width:none;padding:0}
   body{background:#fff;color:#000}
 }
@@ -191,7 +262,8 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 </head>
 <body>
 <div id="progress"></div>
-<div id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')">
+<div id="mask"></div>
+<div id="menuBtn">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 </div>
 
@@ -17738,12 +17810,39 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
   /* ---------- 窄屏点击章节后收起侧栏 ---------- */
   links.forEach(function (a) {
     a.addEventListener('click', function () {
-      if (window.innerWidth <= 1100) { sidebar.classList.remove('open'); }
+      if (window.innerWidth <= 1100) { setSidebar(false); }
     });
   });
 
+  /* ---------- 侧栏开合：遮罩 + 背景滚动锁 ---------- */
+  var maskEl = document.getElementById('mask');
+  function syncScrollLock() {
+    var open = sidebar.classList.contains('open') && window.innerWidth <= 1100;
+    document.body.style.overflow = open ? 'hidden' : '';
+    maskEl.classList.toggle('show', open);
+  }
+  function setSidebar(open) {
+    sidebar.classList.toggle('open', open);
+    syncScrollLock();   /* 同步刷新，避免状态滞后一帧 */
+  }
+  /* 兜底：外部若直接改 class，也保持遮罩同步 */
+  if (window.MutationObserver) {
+    new MutationObserver(syncScrollLock).observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+  }
+  /* 点击遮罩关闭 */
+  maskEl.addEventListener('click', function () { setSidebar(false); });
+
+  /* 汉堡按钮开合侧栏 */
+  document.getElementById('menuBtn').addEventListener('click', function () {
+    setSidebar(!sidebar.classList.contains('open'));
+  });
+
+  /* ---------- 窗口尺寸变化时同步状态 ---------- */
+  window.addEventListener('resize', syncScrollLock);
+
   updateProgress();
   updateActive();
+  syncScrollLock();
 })();
 </script>
 </body>
