@@ -270,7 +270,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <nav id="sidebar">
   <div class="side-head">
     <h1>Kubernetes 系统化教学手册</h1>
-    <div class="sub">从容器原理到生产化实践 · 完全自洽</div>
+    <div class="sub">从容器原理到生产化实践 · 理论与实践</div>
     <div class="side-search">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="searchInput" type="text" placeholder="搜索章节 / 概念…">
@@ -342,7 +342,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <section class="cover">
   <div class="kicker">Cloud Native · Teaching Handbook</div>
   <h1>Kubernetes 系统化教学手册</h1>
-  <p class="tagline">一份完全自洽的 Kubernetes 学习材料：从 Linux 容器隔离原理出发，经集群架构、网络、存储、调度、可观测性，直至生产化治理与服务网格。所有概念、示例与命令均在本文档内部完整给出，读者无需查阅任何外部资料即可系统掌握。</p>
+  <p class="tagline">一份系统化的 Kubernetes 学习材料：从容器原理、集群架构，到网络、存储、调度与生产实践。初学者先完成入门实验，再按需深入原理；涉及版本与插件的内容应结合对应官方文档核对。</p>
   <div class="meta">
     <span class="chip hl">43 章 · 完整知识体系</span>
     <span class="chip">容器基础</span>
@@ -382,11 +382,18 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 </table>
 </div>
 
+<div class="box tip" id="beginner-start">
+<div class="bt">小白先做：让一个网站跑起来</div>
+<p>先认识 5 个词：镜像是应用打包结果；容器是运行中的进程；Pod 是部署与调度单元；Deployment 管理副本与更新；Service 提供稳定访问入口。</p>
+<p>在自己的终端按 <a href="BEGINNER_GUIDE.md">入门实验步骤</a> 创建本地集群，用 <a href="examples/beginner/app.yaml">完整实验清单</a> 完成部署 → 访问 → 扩容 → 删除一个 Pod 观察恢复 → 制造镜像错误 → 回滚 → 清理。每一步都有预期结果和排障提示。</p>
+<p>第一轮目标：能解释 kubectl 操作的是 API 对象，理解 Running 与 Ready 的区别，并能用 get、describe、logs 找到证据。完成后再深入 Linux 原理、存储、高可用和服务网格。</p>
+</div>
+
 <h3>0.2 三种阅读路径</h3>
 
 <div class="grid3">
 <div class="card">
-<h5>系统学习（推荐）</h5>
+<h5>系统深入学习</h5>
 <p>从第 1 章顺序读到第 43 章。适合希望建立完整心智模型、准备承担平台建设职责的读者。预计需要投入较多连续时间。</p>
 </div>
 <div class="card">
@@ -405,14 +412,14 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 
 <ul>
 <li>以 <code>$</code> 开头的代码块表示在终端执行的 shell 命令，<code>#</code> 开头的是注释。</li>
-<li>YAML 清单可以直接保存为文件后用 <code>kubectl apply -f</code> 应用，但请根据实际环境调整镜像地址、资源规格与存储类名称。</li>
+<li>仅<strong>完整资源清单</strong>在满足前置条件后可保存并 apply。以 spec、selector 等开头的是合并片段；含 ...、示例域名/私有镜像或 Helm 模板的块不能直接运行。初学者先使用仓库 examples/beginner/app.yaml。</li>
 <li>涉及版本敏感的特性（如某些 Beta 阶段的 API），文中会明确标注其成熟度阶段。</li>
 <li>所有示例使用的命名空间、服务名、域名均为演示用途，实际部署时应遵循所在组织的命名规范。</li>
 </ul>
 
 <div class="box note">
 <div class="bt">关于版本</div>
-<p>本手册的内容以 Kubernetes 1.30 之后进入稳定或广泛可用的特性为基础，同时纳入了后续版本中已经成熟的关键能力（如 Pod 级资源原地调整、动态资源分配、用户命名空间等）。文中对处于 Alpha / Beta 阶段的能力会明确说明，以便读者判断是否可在生产中使用。</p>
+<p>本次内容核查日期为 <strong>2026-10-02</strong>。静态字段检查使用 Kubernetes <strong>v1.34.0 官方 OpenAPI</strong>，它只是可复现的校验基线，不代表当前最新版本或所有功能的最低版本。插件和特性门控按各自版本核对；文中的 1.30/1.31 等旧版本命令是历史示意，不是当前安装推荐。</p>
 </div>
 
 <h3>0.4 环境准备</h3>
@@ -431,7 +438,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 </table>
 </div>
 
-<p>建议初学者从单机开发环境起步：先把本文档前两篇的 YAML 都跑一遍，理解声明式 API 的行为，再考虑搭建更复杂的环境。附录 B 提供了可直接使用的清单模板。</p>
+<p>初学者先完成 <a href="BEGINNER_GUIDE.md">小白入门实验</a>：部署、访问、扩容、排障、恢复与清理。第一轮读第 8、9、10、11、12、13、24、28、39 章的基础段落；Linux 深层原理、etcd 运维、CNI 和服务网格放到第二轮。</p>
 
 <h3>0.5 学完之后你应该能做什么</h3>
 
@@ -586,7 +593,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <li><strong>镜像体积大</strong>。一个只包含几兆字节应用代码的服务，其虚拟机镜像可能达到数 GB。</li>
 </ul>
 
-<h3>1.2 容器的本质：被隔离的进程</h3>
+<h3>1.3 容器的本质：被隔离的进程</h3>
 
 <p>容器走了一条完全不同的路。它不模拟硬件，而是直接<strong>复用宿主机内核</strong>，通过内核提供的隔离机制，让一组进程"以为自己"独占了一台机器。</p>
 
@@ -616,7 +623,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 </table>
 </div>
 
-<h3>1.3 隔离能力的来源</h3>
+<h3>1.4 隔离能力的来源</h3>
 
 <p>容器之所以能"欺骗"进程，靠的是 Linux 内核提供的两组机制，它们分别解决不同的问题：</p>
 
@@ -635,7 +642,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 
 <p>两者缺一不可：只有 Namespace，容器之间会互相抢资源；只有 Cgroups，容器之间会互相干扰甚至看到对方。第 2 章会详细展开这两组机制的细节。</p>
 
-<h3>1.4 容器与虚拟机的选择</h3>
+<h3>1.5 容器与虚拟机的选择</h3>
 
 <p>这并非一个"谁更好"的问题，而是"什么场景适合什么"的问题。</p>
 
@@ -656,10 +663,10 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 
 <div class="box tip">
 <div class="bt">实践中的组合</div>
-<p>生产环境常见的是两者结合：用虚拟机做租户或安全域级别的强隔离，在虚拟机内部用容器做应用级别的部署单元。云上的托管 Kubernetes 服务基本都遵循这个模式——你拿到的是若干台虚拟机（节点），而 Kubernetes 在这些节点上调度容器。此外，当需要更强隔离时，还可以使用沙箱容器运行时（如 gVisor、Kata Containers），它们为每个 Pod 提供独立内核，兼具容器的速度与虚拟机的隔离强度，这部分内容会在第 26 章讨论。</p>
+<p>生产环境常把虚拟机与容器结合使用。需要更强运行时隔离时，可选沙箱运行时：<strong>Kata Containers</strong> 为 Pod 使用轻量虚拟机及独立的 guest Linux 内核；<strong>gVisor</strong> 用用户态应用内核 Sentry 实现系统调用，并非给每个 Pod 启动一套 guest Linux。两者的兼容性与性能开销需分别评估。</p>
 </div>
 
-<h3>1.5 本章小结</h3>
+<h3>1.6 本章小结</h3>
 
 <ul>
 <li>容器不是虚拟机，它是<strong>被 Namespace 隔离视图、被 Cgroups 限制资源的普通进程</strong>。</li>
@@ -667,6 +674,8 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <li>Namespace 管"看得见"，Cgroups 管"用多少"，两者共同构成容器的隔离基础。</li>
 <li>容器与虚拟机不是替代关系，而是适用于不同隔离层级的两种技术。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://gvisor.dev/docs/architecture_guide/intro/">gVisor 架构</a></p></div>
 
 <hr>
 
@@ -686,12 +695,12 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <tbody>
 <tr><td><code>PID</code></td><td>进程 ID 空间</td><td>容器内进程号从 1 开始，看不到宿主机其他进程</td></tr>
 <tr><td><code>NET</code></td><td>网络栈</td><td>独立的网卡、IP、路由表、端口空间、iptables 规则</td></tr>
-<tr><td><code>MNT</code></td><td>挂载点</td><td>独立的文件系统树，容器内 <code>/</code> 是镜像内容</td></tr>
+<tr><td><code>MNT</code></td><td>挂载点视图</td><td>隔离挂载操作；独立根目录还需配合 pivot_root/chroot 等机制</td></tr>
 <tr><td><code>UTS</code></td><td>主机名与域名</td><td>容器可以有自己的 hostname</td></tr>
 <tr><td><code>IPC</code></td><td>进程间通信</td><td>独立的共享内存段、信号量、消息队列</td></tr>
 <tr><td><code>USER</code></td><td>用户与组 ID</td><td>容器内的 root 可映射为宿主机的普通用户</td></tr>
 <tr><td><code>Cgroup</code></td><td>cgroup 根视图</td><td>容器只能看到自己的 cgroup 层级</td></tr>
-<tr><td><code>TIME</code></td><td>系统时钟偏移</td><td>可为容器设置独立的启动时间与单调时钟</td></tr>
+<tr><td><code>TIME</code></td><td>单调时钟与启动时钟偏移</td><td>隔离 CLOCK_MONOTONIC/CLOCK_BOOTTIME；不隔离 CLOCK_REALTIME 墙上时钟</td></tr>
 </tbody>
 </table>
 </div>
@@ -756,8 +765,8 @@ my-real-host</code></pre>
 <tbody>
 <tr><td>层级结构</td><td>每种资源一个独立层级，进程可同时属于多个树</td><td>统一单一层级，一个进程只在一个位置</td></tr>
 <tr><td>资源控制</td><td>各控制器独立，规则可能冲突</td><td>统一管理，规则一致</td></tr>
-<tr><td>内存管理</td><td>统计与限制分离，容易误判</td><td>统一内存控制器，包含 page cache 统计</td></tr>
-<tr><td>压力信息</td><td>无</td><td>提供 PSI（Pressure Stall Information），可观测资源争抢</td></tr>
+<tr><td>内存管理</td><td>同样统计匿名内存与 page cache；接口分散</td><td>统一内存控制器，包含 page cache 统计</td></tr>
+<tr><td>压力信息</td><td>可读系统级 /proc/pressure（需内核支持 PSI）</td><td>还可提供每个 cgroup 的 CPU/内存/IO pressure 文件</td></tr>
 <tr><td>现代发行版支持</td><td>逐步淘汰</td><td>主流默认（内核 4.15+ 可用，5.8+ 完善）</td></tr>
 </tbody>
 </table>
@@ -807,7 +816,7 @@ my-real-host</code></pre>
 
 <div class="box tip">
 <div class="bt">常见误区：CPU 节流</div>
-<p>很多团队发现服务延迟抖动，排查后是 CPU 节流导致。典型场景是：给容器设了 <code>limits.cpu: "1"</code>，应用是单线程但会突发占用 2 核，于是每个 100ms 周期里有一半时间被强制暂停。观测方法是查看 <code>container_cpu_cfs_throttled_periods_total</code> 与 <code>container_cpu_cfs_periods_total</code> 的比值，若接近或超过 25% 就说明节流严重。第 28 章会详细讨论如何设置合理的资源规格。</p>
+<p>很多团队发现服务延迟抖动，排查后是 CPU 节流导致。典型场景是：给容器设了 <code>limits.cpu: "1"</code>，应用有多个线程或进程，短时间内合计占用 2 核，于是每个 100ms 周期里有一半时间被强制暂停。观测方法是查看 <code>container_cpu_cfs_throttled_periods_total</code> 与 <code>container_cpu_cfs_periods_total</code> 的比值，若接近或超过 25% 就说明节流严重。第 28 章会详细讨论如何设置合理的资源规格。</p>
 </div>
 
 <h4>内存限制与 OOM</h4>
@@ -835,18 +844,18 @@ oom_kill 1</code></pre>
 <table>
 <thead><tr><th>字段</th><th>含义</th><th>运维意义</th></tr></thead>
 <tbody>
-<tr><td><code>low</code></td><td>内存低于 low 水位线触发</td><td>正常，内核在做回收</td></tr>
+<tr><td><code>low</code></td><td>低于 memory.low 保护量时仍发生回收</td><td>通常表示保护被过度分配或内存压力较大</td></tr>
 <tr><td><code>high</code></td><td>超过 high 水位线，开始积极回收</td><td>出现说明内存偏紧，应关注</td></tr>
-<tr><td><code>max</code></td><td>达到 memory.max，回收无法满足</td><td>严重，即将触发 OOM</td></tr>
+<tr><td><code>max</code></td><td>内存使用即将超过 memory.max 的次数</td><td>触发直接回收；不代表每次都发生 OOM</td></tr>
 <tr><td><code>oom</code></td><td>OOM 事件被触发</td><td>进程即将被选为牺牲者</td></tr>
-<tr><td><code>oom_kill</code></td><td>实际杀死了进程</td><td>对应 Kubernetes 中的 OOMKilled 状态</td></tr>
+<tr><td><code>oom_kill</code></td><td>该 cgroup 中被 OOM killer 杀死的进程数</td><td>结合容器终止原因、节点日志判断；OOMKilled 是容器终止原因，不是 Pod phase</td></tr>
 </tbody>
 </table>
 </div>
 
 <div class="box danger">
 <div class="bt">OOMKilled 的排查要点</div>
-<p>当 Pod 状态显示 <code>OOMKilled</code>（可通过 <code>kubectl describe pod</code> 在容器的 <code>Last State</code> 中看到），需要注意一个关键点：<strong>Cgroups 统计的内存包含了 page cache</strong>。也就是说，即使应用自身堆内存没超，仅仅是文件读写产生的缓存也可能把容器推到限制之上。这在数据密集型应用中很常见。</p>
+<p>当容器的终止原因显示 <code>OOMKilled</code> 时，结合节点日志区分容器内存限制引发的 OOM 与节点级 OOM。Cgroup 内存统计包含匿名内存和 page cache；可回收缓存通常先被回收，不能仅凭缓存较大就断定 OOM 的根因。</p>
 <p>此外，Java 应用还有额外的坑：JVM 默认根据宿主机的物理内存推算堆大小，而非容器的内存限制。虽然现代 JVM 已支持容器感知，但仍需显式设置 <code>-XX:MaxRAMPercentage</code> 等参数，并预留堆外内存（元空间、线程栈、直接内存）的空间。</p>
 </div>
 
@@ -926,6 +935,8 @@ ls: /home: No such file or directory   <span class="tk-c"># 宿主机的家目�
 <li><strong>PID 1 需要正确处理信号与子进程回收</strong>，否则会出现优雅关闭失败与僵尸进程。</li>
 <li><strong>Cgroups 内存统计包含 page cache</strong>，Java 等应用需注意 JVM 堆大小与容器限制的配合。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">Linux cgroup v2</a></p></div>
 
 <hr>
 
@@ -1027,7 +1038,7 @@ ls: /home: No such file or directory   <span class="tk-c"># 宿主机的家目�
 <div class="box danger">
 <div class="bt">永远不要在生产使用 latest 标签</div>
 <p><code>latest</code> 是一个普通的标签名，不是"最新版本"的保证。它的危险在于：同一个标签在不同时间可能指向不同内容，导致<strong>无法复现问题、回滚目标不明确、节点间运行的版本不一致</strong>（因为不同节点拉取时间不同）。</p>
-<p>正确做法：使用不可变的版本标识。推荐使用语义化版本号，或直接使用镜像构建产物的摘要（digest）：</p>
+<p>语义化版本标签便于理解版本，但标签仍可能被仓库重新指向。需要固定具体镜像内容时使用 digest，并配合可信来源、签名验证和漏洞更新流程；摘要本身不能证明发布者可信。</p>
 <pre><span class="lang">yaml</span><code>image: registry.example.com/team/order-service@sha256:3f2a1b9c...</code></pre>
 <p>摘要精确指向镜像内容的哈希值，绝对不可篡改，是最可靠的引用方式。</p>
 </div>
@@ -1142,6 +1153,8 @@ ls: /home: No such file or directory   <span class="tk-c"># 宿主机的家目�
 <li>生产环境<strong>禁用 latest 标签</strong>，应使用语义化版本或摘要引用。</li>
 <li>镜像体积通过精简基础镜像、多阶段构建、合并清理命令来优化。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/containers/images/">Kubernetes 镜像标签与摘要</a></p></div>
 
 <hr>
 
@@ -1315,18 +1328,18 @@ a1b2c3d4e5f6   nginx:1.27   "/docker-entrypoint.…"   Up 3 seconds   0.0.0.0:80
 </table>
 </div>
 
-<pre><span class="lang">bash</span><code><span class="tk-c"># 创建命名卷</span>
-<span class="tk-p">$</span> docker volume create pgdata
+<pre><span class="lang">bash</span><code># 创建命名卷
+$ docker volume create pgdata
 
-<span class="tk-c"># 使用命名卷启动数据库</span>
-<span class="tk-p">$</span> docker run -d --name pg \
+# 使用命名卷启动数据库
+$ docker run -d --name pg \
     -e POSTGRES_PASSWORD=secret \
     -v pgdata:/var/lib/postgresql/data \
     postgres:16
 
-<span class="tk-c"># 列出与检查卷</span>
-<span class="tk-p">$</span> docker volume ls
-<span class="tk-p">$</span> docker volume inspect pgdata
+# 列出与检查卷
+$ docker volume ls
+$ docker volume inspect pgdata
 [
     {
         "CreatedAt": "2026-03-01T10:00:00Z",
@@ -1337,8 +1350,10 @@ a1b2c3d4e5f6   nginx:1.27   "/docker-entrypoint.…"   Up 3 seconds   0.0.0.0:80
     }
 ]
 
-<span class="tk-c"># 备份卷数据（通过临时容器打包）</span>
-<span class="tk-p">$</span> docker run --rm -v pgdata:/src -v $(pwd):/backup alpine \
+
+# 数据库一致性前提：先使用 pg_dump/数据库备份工具；若做卷 tar，需先停止写入/停止数据库。
+# 备份卷数据（通过临时容器打包）
+$ docker run --rm -v pgdata:/src -v $(pwd):/backup alpine \
     tar czf /backup/pgdata-backup.tar.gz -C /src .</code></pre>
 
 <div class="box warn">
@@ -1348,27 +1363,28 @@ a1b2c3d4e5f6   nginx:1.27   "/docker-entrypoint.…"   Up 3 seconds   0.0.0.0:80
 
 <h3>4.4 容器网络基础操作</h3>
 
-<pre><span class="lang">bash</span><code><span class="tk-c"># 查看 Docker 的网络列表</span>
-<span class="tk-p">$</span> docker network ls
+<pre><span class="lang">bash</span><code># 查看 Docker 的网络列表
+$ docker network ls
 NETWORK ID     NAME      DRIVER    SCOPE
 7f3a1b2c9d4e   bridge    bridge    local
 8a2b3c4d5e6f   host      host      local
 9b3c4d5e6f70   none      null      local
 
-<span class="tk-c"># 创建自定义桥接网络（推荐，自带 DNS 解析）</span>
-<span class="tk-p">$</span> docker network create appnet
+# 创建自定义桥接网络（推荐，自带 DNS 解析）
+$ docker network create appnet
 
-<span class="tk-c"># 将容器接入该网络，容器间可直接用容器名互相访问</span>
-<span class="tk-p">$</span> docker run -d --name api --network appnet myapi:1.0
-<span class="tk-p">$</span> docker run -d --name db  --network appnet postgres:16
+# 将容器接入该网络，容器间可直接用容器名互相访问
+$ docker run -d --name api --network appnet myapi:1.0
+$ docker run -d --name db --network appnet -e POSTGRES_PASSWORD=local-demo-only postgres:16
 
-<span class="tk-c"># 在 api 容器内可以直接用服务名访问 db</span>
-<span class="tk-p">$</span> docker exec api ping -c 2 db
+# 演示密码仅用于本地；myapi:1.0 是需自行构建的镜像，且须含 ping
+# 在 api 容器内可以用 db 名称访问数据库
+$ docker exec api ping -c 2 db
 PING db (172.18.0.3): 56 data bytes
 64 bytes from 172.18.0.3: icmp_seq=0 ttl=64 time=0.085 ms
 
-<span class="tk-c"># 查看网络详情，包括容器与 IP 分配</span>
-<span class="tk-p">$</span> docker network inspect appnet</code></pre>
+# 查看网络详情，包括容器与 IP 分配
+$ docker network inspect appnet</code></pre>
 
 <div class="box note">
 <div class="bt">默认 bridge 网络的局限</div>
@@ -1416,7 +1432,7 @@ PING db (172.18.0.3): 56 data bytes
 <tr><td>基础镜像过于臃肿</td><td><code>ubuntu:22.04</code> 约 77 MB，而 <code>python:3.12-slim</code> 更合适，Alpine 更小</td></tr>
 <tr><td>apt 缓存未清理</td><td><code>/var/lib/apt/lists</code> 会永久留在层中，白白增加数十 MB</td></tr>
 <tr><td>编译工具链进入运行镜像</td><td><code>build-essential</code>、<code>git</code> 在运行时完全不需要，却增大了体积与攻击面</td></tr>
-<tr><td><code>COPY .</code> 破坏缓存</td><td>任何文件变更都会导致后续所有层重建，包括依赖安装</td></tr>
+<tr><td><code>COPY .</code> 的缓存影响范围</td><td>上下文变更会使 COPY 及其后续步骤失效；上例已位于 COPY 之前的 pip 安装不会因此失效。为正确缓存应用依赖，应先复制 requirements.txt 并安装，再复制业务代码</td></tr>
 <tr><td>以 root 运行</td><td>容器被攻破时攻击者直接获得 root 权限</td></tr>
 </tbody>
 </table>
@@ -1646,6 +1662,8 @@ README.md</code></pre>
 <li><strong>必须配置 .dockerignore</strong>，避免把 <code>.git</code>、依赖目录、密钥文件带入镜像。</li>
 </ul>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://docs.docker.com/build/cache/invalidation/">Docker 构建缓存</a></p></div>
+
 <hr>
 
 <h2 id="ch6"><span class="num">06</span>容器网络与存储基础</h2>
@@ -1774,11 +1792,11 @@ work/       <span class="tk-c"># 内核工作目录</span></code></pre>
 <div class="grid3">
 <div class="card">
 <h5>临时存储</h5>
-<p>随容器生命周期存在。容器删除即丢失。适合缓存、临时文件。在 Kubernetes 中对应 <code>emptyDir</code>。</p>
+<p>Kubernetes 的 emptyDir 随 <strong>Pod</strong> 生命周期存在，容器崩溃重启后数据仍保留；Pod 被删除后清理。不要把它与随单个容器删除而消失的可写层混为一谈。</p>
 </div>
 <div class="card">
 <h5>节点本地存储</h5>
-<p>存在宿主机磁盘上，容器重建后数据仍在，但换节点就丢失。适合本地缓存、单节点数据。Kubernetes 中对应 <code>hostPath</code>、<code>local</code> 卷。</p>
+<p>hostPath/local 数据保存在特定节点上。工作负载换到其他节点后不能直接访问原节点数据，但并不表示原磁盘的数据自动被删除；节点或磁盘损坏才可能造成数据丢失。</p>
 </div>
 <div class="card">
 <h5>网络存储</h5>
@@ -1879,7 +1897,7 @@ mycontainer   4821   running  /tmp/mycontainer       2026-03-01T10:00:00Z
 
 <div class="box deep">
 <div class="bt">这个练习说明了什么</div>
-<p>上面这段操作揭示了一个事实：<strong>运行容器根本不需要 Docker</strong>。只要有符合 OCI 规范的根文件系统和一份 <code>config.json</code>，一个几十行代码的 <code>runc</code> 就能完成全部工作。Docker 的价值在于镜像构建、分发、网络、卷管理等"外围能力"，而非"运行容器"这件事本身。</p>
+<p>只要具备符合 OCI 规范的根文件系统与 config.json，就可使用 runc 启动容器。runc 是完整的底层运行时实现，并非几十行代码；Docker 还提供镜像构建、分发、网络与卷管理等能力。</p>
 <p>理解了这一点，就能理解 Kubernetes 为什么可以绕开 Docker——它只需要一个能运行容器的运行时，而 <code>containerd</code> 就是这样的运行时。</p>
 </div>
 
@@ -2358,7 +2376,7 @@ print('结束时间:', d['status']['finishedAt'])
 
 <h4>kube-apiserver：集群的唯一入口</h4>
 
-<p>apiserver 是唯一直接访问 etcd 的组件，也是所有其他组件唯一的通信对象。它承担了四个关键职责：</p>
+<p>在 Kubernetes 核心控制面中，apiserver 是访问 etcd 和操作 API 对象的入口。组件并非只与它通信：kubelet 还通过 CRI 调用运行时，apiserver 会访问 kubelet，网络和存储插件也有自身的通信链路。</p>
 
 <div class="tw">
 <table>
@@ -2387,10 +2405,10 @@ print('结束时间:', d['status']['finishedAt'])
 
 <h4>etcd：集群的唯一真相来源</h4>
 
-<p>etcd 是一个分布式的、强一致的键值存储。Kubernetes 的所有状态——每个对象的完整定义与当前状态——都存储在 etcd 中。</p>
+<p>etcd 持久化 Kubernetes 的 API 对象定义和已写入 API 的状态。应用的持久卷数据、容器镜像与容器日志不因此存入 etcd，必须分别备份。</p>
 
-<pre><span class="lang">bash</span><code><span class="tk-c"># 查看 etcd 中的键结构（需要 etcdctl 与证书）</span>
-<span class="tk-p">$</span> ETCDCTL_API=3 etcdctl \
+<pre><span class="lang">bash</span><code># 查看 etcd 中的键结构（需要 etcdctl 与证书）
+$ ETCDCTL_API=3 etcdctl \
     --endpoints=https://127.0.0.1:2379 \
     --cacert=/etc/kubernetes/pki/etcd/ca.crt \
     --cert=/etc/kubernetes/pki/etcd/server.crt \
@@ -2403,22 +2421,22 @@ print('结束时间:', d['status']['finishedAt'])
 /registry/services/endpoints/default/kubernetes
 /registry/services/specs/default/nginx
 
-<span class="tk-c"># 查看 etcd 健康状态</span>
-<span class="tk-p">$</span> etcdctl endpoint health --cluster
+# 查看 etcd 健康状态
+$ etcdctl endpoint health --cluster
 https://10.0.1.10:2379 is healthy: successfully committed proposal: took = 2.1ms
 
-<span class="tk-c"># 查看集群成员与领导节点</span>
-<span class="tk-p">$</span> etcdctl member list -w table
-<span class="tk-p">$</span> etcdctl endpoint status --cluster -w table
+# 查看集群成员与领导节点
+$ etcdctl member list -w table
+$ etcdctl endpoint status --cluster -w table
 
-<span class="tk-c"># 备份 etcd（生产环境必须定期执行）</span>
-<span class="tk-p">$</span> etcdctl snapshot save /backup/etcd-$(date +%Y%m%d-%H%M%S).db \
+# 备份 etcd（生产环境必须定期执行）
+$ etcdctl snapshot save /backup/etcd-$(date +%Y%m%d-%H%M%S).db \
     --endpoints=https://127.0.0.1:2379 \
     --cacert=/etc/kubernetes/pki/etcd/ca.crt \
     --cert=/etc/kubernetes/pki/etcd/server.crt \
     --key=/etc/kubernetes/pki/etcd/server.key
 
-<span class="tk-p">$</span> etcdctl snapshot status /backup/etcd-20260301-100000.db -w table
+$ etcdutl snapshot status /backup/etcd-20260301-100000.db -w table
 +----------+----------+------------+------------+
 |   HASH   | REVISION | TOTAL KEYS | TOTAL SIZE |
 +----------+----------+------------+------------+
@@ -2427,7 +2445,7 @@ https://10.0.1.10:2379 is healthy: successfully committed proposal: took = 2.1ms
 
 <div class="box danger">
 <div class="bt">etcd 是集群最关键的组件</div>
-<p>etcd 丢失意味着<strong>整个集群的状态丢失</strong>——所有 Deployment、Service、ConfigMap 的定义都不复存在。虽然已经在运行的容器不会立即停止（kubelet 仍在管理它们），但集群将失去自愈能力，任何 Pod 重启都无法被重建。</p>
+<p>etcd 丢失且 API Server 无法工作时，集群无法可靠地创建、调度和调谐新对象。运行中的容器通常继续运行，kubelet 仍可能按已有配置重启本节点容器；这不等于控制器能替换丢失的 Pod。</p>
 <p>因此，生产环境必须做到：</p>
 <ul>
 <li><strong>定期备份 etcd</strong>，并将备份文件存放在集群之外的独立位置。</li>
@@ -2552,7 +2570,7 @@ etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yam
 
 <div class="box tip">
 <div class="bt">静态 Pod：控制平面的自举方式</div>
-<p>注意 <code>staticPodPath</code> 指向的目录。控制平面组件（apiserver、etcd、scheduler、controller-manager）本身就是以<strong>静态 Pod</strong> 的形式运行的——kubelet 监视这个目录，发现 YAML 文件就直接创建 Pod，不经过调度器和 apiserver。这是解决"鸡生蛋"问题的巧妙设计：如果 apiserver 本身需要被 apiserver 调度才能启动，就会陷入循环。</p>
+<p>在 <strong>kubeadm 风格部署</strong>中，控制面常由 staticPodPath 下的静态 Pod 启动，kubelet 直接管理它们，不经 scheduler 调度。托管控制面、systemd 服务等部署方式可能不同，不能把静态 Pod 当作所有集群的固定形式。</p>
 <p>静态 Pod 的特点：Pod 名称会带上节点名后缀，无法通过 <code>kubectl delete</code> 删除（删除文件才行），<code>kubectl get pods</code> 中能看到但处于特殊的只读状态。</p>
 </div>
 
@@ -2566,8 +2584,8 @@ etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yam
 <tbody>
 <tr><td><code>iptables</code></td><td>内核 netfilter 规则</td><td>规则数量随 Service 增长而线性增加，大规模集群下性能下降</td></tr>
 <tr><td><code>nftables</code></td><td>新一代内核包过滤框架</td><td>规则组织更高效，是大规模集群的推荐方向</td></tr>
-<tr><td><code>IPVS</code></td><td>内核四层负载均衡</td><td>查找复杂度为常数级，支持多种调度算法；但已在较新版本中被移除</td></tr>
-<tr><td>无 kube-proxy</td><td>由 CNI 插件直接实现（如 Cilium）</td><td>用 eBPF 在数据面直接转发，性能最佳</td></tr>
+<tr><td><code>IPVS</code></td><td>内核四层负载均衡</td><td>自 Kubernetes v1.35 起弃用；弃用不等于已移除。新部署应评估 nftables 模式及其内核、网络插件兼容性</td></tr>
+<tr><td>无 kube-proxy</td><td>由 CNI 插件直接实现（如 Cilium）</td><td>用 eBPF 在数据面直接转发，性能取决于工作负载与实现</td></tr>
 </tbody>
 </table>
 </div>
@@ -2607,12 +2625,12 @@ KUBE-SEP-CCCC   tcp  --  0.0.0.0/0   0.0.0.0/0    /* default/nginx:http */
 <table>
 <thead><tr><th>插件</th><th>作用</th><th>缺失的后果</th></tr></thead>
 <tbody>
-<tr><td>CoreDNS</td><td>集群内 DNS 解析</td><td>Service 名称无法解析，服务间调用全部失败</td></tr>
+<tr><td>CoreDNS</td><td>集群内 DNS 解析</td><td>依赖集群 DNS 的调用失败；已知 IP、缓存或其他解析方式可能继续工作</td></tr>
 <tr><td>CNI 插件</td><td>Pod 网络与 IP 分配</td><td>Pod 无法启动（卡在 ContainerCreating）</td></tr>
-<tr><td>Metrics Server</td><td>提供资源指标</td><td><code>kubectl top</code> 不可用，HPA 无法工作</td></tr>
-<tr><td>Ingress / Gateway 控制器</td><td>集群外流量入口</td><td>外部无法访问集群服务</td></tr>
-<tr><td>CSI 驱动</td><td>持久化存储</td><td>PVC 无法绑定，有状态应用无法启动</td></tr>
-<tr><td>日志与监控采集</td><td>可观测性</td><td>无指标、无日志，故障不可见</td></tr>
+<tr><td>Metrics Server</td><td>提供资源指标 API</td><td>缺少资源指标提供者时 kubectl top 与基于 CPU/内存资源指标的 HPA 不可用；自定义/外部指标另需适配器</td></tr>
+<tr><td>Ingress / Gateway 控制器</td><td>HTTP 等入口流量治理</td><td>对应 Ingress/Gateway 规则不生效；仍可通过 NodePort、LoadBalancer 或端口转发访问</td></tr>
+<tr><td>CSI 驱动</td><td>对接特定存储后端</td><td>依赖该驱动的卷无法供给或挂载；静态 NFS/local 等卷并非都依赖 CSI</td></tr>
+<tr><td>日志与监控采集</td><td>集中存储、查询与告警</td><td>缺少集中可观测性；节点日志、kubectl logs 和组件原始指标仍可能存在</td></tr>
 </tbody>
 </table>
 </div>
@@ -2724,19 +2742,21 @@ KUBE-SEP-CCCC   tcp  --  0.0.0.0/0   0.0.0.0/0    /* default/nginx:http */
 <li><strong>apiserver 是无状态的</strong>，可以多实例同时对外服务，通过负载均衡分发请求。所有实例共享同一个 etcd 后端，因此看到的状态完全一致。</li>
 <li><strong>scheduler 和 controller-manager 是有状态的（需要避免重复决策）</strong>，采用<strong>领导者选举</strong>：多个实例同时运行，但只有 leader 真正工作，其余待命。leader 心跳超时后自动重新选举。</li>
 </ul>
-<p>etcd 则通过 Raft 协议保证一致性，要求<strong>多数派</strong>可用：3 节点容忍 1 节点故障，5 节点容忍 2 节点故障。因此必须部署奇数个节点。</p>
+<p>etcd 使用 Raft，多数派为 floor(N/2)+1。偶数成员合法，但相邻偶数成员通常不比前一个奇数成员提高故障容忍数；因此常推荐 3 或 5 个成员。</p>
 </div>
 
 <h3>9.7 本章小结</h3>
 
 <ul>
 <li>集群由<strong>控制平面</strong>（apiserver、etcd、scheduler、controller-manager）与<strong>工作节点</strong>（kubelet、kube-proxy、运行时、CNI）组成。</li>
-<li><strong>apiserver 是唯一入口</strong>，所有组件只与它通信；<strong>etcd 是唯一数据源</strong>，必须备份。</li>
+<li>apiserver 是 API 对象的入口，etcd 存储其持久化状态；组件还会与运行时、节点及插件通信。etcd 与应用数据应分别备份。</li>
 <li><strong>调度器只做绑定，不创建 Pod</strong>；Pod 由控制器创建。</li>
 <li>控制平面组件以<strong>静态 Pod</strong> 形式运行，解决自举问题。</li>
 <li>高可用策略不同：apiserver 多活，scheduler/controller-manager 选主，etcd 需要多数派。</li>
 <li>掌握"<strong>apply → apiserver → 控制器 → 调度器 → kubelet → 容器</strong>"这条链路，是排查一切问题的地图。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/overview/components/">集群组件</a> · <a href="https://kubernetes.io/docs/reference/networking/virtual-ips/">Service 数据平面</a></p></div>
 
 <hr>
 
@@ -2885,7 +2905,7 @@ managedFields:
 
 <div class="box note">
 <div class="bt">字段所有权的价值</div>
-<p>SSA 让"谁负责哪个字段"变得明确。当两个工具试图修改同一字段时，apiserver 会报冲突而不是静默覆盖。这解决了 GitOps 实践中的一个经典难题：<strong>CI 流水线管理镜像版本，HPA 管理副本数，两者互不干扰</strong>。</p>
+<p>SSA 在 Apply 操作间检测字段所有权冲突，但普通 Update/Patch 的行为不同；HPA 更新 replicas 并不会因此自动免于清单覆盖。启用 HPA 时按官方流程移交或移除声明式清单的 replicas，管理好字段归属；不要默认使用 force-conflicts。</p>
 </div>
 
 <h3>10.4 标签与选择器：对象的组织方式</h3>
@@ -2903,7 +2923,13 @@ metadata:
 
 <h4>两种选择器语法</h4>
 
-<pre><span class="lang">yaml</span><code><span class="tk-c"># 基于等值（Equality-based）—— 用于 Service、ReplicaSet 等</span>
+<pre><span class="lang">yaml</span><code># Service 的 spec.selector（片段）：只支持键值映射
+selector:
+  app: order-service
+  tier: backend
+---
+# Deployment/ReplicaSet 的 spec.selector（另一片段）
+# matchLabels 与每个 matchExpressions 条目之间均为 AND
 selector:
   matchLabels:
     app: order-service
@@ -2911,12 +2937,13 @@ selector:
   matchExpressions:
   - key: environment
     operator: In
-    values: [production, staging]
+    values: [production, staging]  # 同一个键的值之间是 OR
   - key: version
     operator: NotIn
     values: [v1.0.0]
   - key: deprecated
-    operator: DoesNotExist</code></pre>
+    operator: DoesNotExist
+</code></pre>
 
 <pre><span class="lang">bash</span><code><span class="tk-c"># 基于集合（Set-based）—— kubectl 中的选择器表达式</span>
 <span class="tk-p">$</span> kubectl get pods -l 'environment in (production,staging)'
@@ -2928,7 +2955,7 @@ selector:
 
 <div class="box warn">
 <div class="bt">标签选择器的匹配是"与"关系</div>
-<p>在 <code>matchLabels</code> 中写多个键值对表示<strong>全部满足</strong>才匹配，而不是"满足任一"。如果需要"或"语义，必须使用多个 <code>matchExpressions</code> 配合 <code>In</code> 操作符。</p>
+<p><code>matchLabels</code> 的各项以及所有 <code>matchExpressions</code> 之间都是 <strong>AND</strong>。同一个 <code>In</code> 条目的多个 values 表示该键可取任一值（OR），不能通过增加表达式实现不同键之间的 OR。Service 的 selector 是简单键值映射，不支持 matchExpressions。</p>
 </div>
 
 <h4>推荐的标准标签集</h4>
@@ -3113,6 +3140,8 @@ selector:
 <li>控制器模式是"<strong>观测 → 比较 → 行动</strong>"的循环，多个控制器通过 API 对象分层协作，这是 Kubernetes 可扩展性的根本。</li>
 </ul>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">标签选择器</a> · <a href="https://kubernetes.io/docs/reference/using-api/server-side-apply/">Server-Side Apply</a></p></div>
+
 <hr>
 
 <h2 id="ch11"><span class="num">11</span>Pod 深入剖析</h2>
@@ -3212,6 +3241,8 @@ selector:
 </div>
 
 <h3>11.3 一个完整的 Pod 清单</h3>
+<div class="box note"><div class="bt">示例前置条件与范围</div><p>生产形态示意：先创建 production 命名空间、app-config/app-secrets/db-credentials、web-app-data PVC、web-app-sa，并提供可访问的镜像与 postgres-svc；节点须满足 disktype=ssd。log-shipper 仅收集写到共享 logs 卷的文件，stdout 日志由节点采集链路处理。</p></div>
+
 
 <pre><span class="lang">yaml</span><code>apiVersion: v1
 kind: Pod
@@ -3222,7 +3253,7 @@ metadata:
     app: web-app
     version: v2.1.0
 spec:
-  <span class="tk-c"># ---------- 调度相关 ----------</span>
+  # ---------- 调度相关 ----------
   nodeSelector:
     disktype: ssd
   tolerations:
@@ -3231,7 +3262,7 @@ spec:
     value: "web"
     effect: "NoSchedule"
 
-  <span class="tk-c"># ---------- 初始化容器 ----------</span>
+  # ---------- 初始化容器 ----------
   initContainers:
   - name: wait-for-db
     image: busybox:1.36
@@ -3245,23 +3276,23 @@ spec:
       done
       echo "database is ready"
 
-  <span class="tk-c"># ---------- 主容器 ----------</span>
+  # ---------- 主容器 ----------
   containers:
   - name: app
     image: registry.example.com/web-app:v2.1.0
     imagePullPolicy: IfNotPresent
 
-    <span class="tk-c"># 启动命令</span>
+    # 启动命令
     command: ["/app/server"]
     args: ["--config=/etc/app/config.yaml"]
 
-    <span class="tk-c"># 端口声明（仅为文档作用，不实际限制）</span>
+    # 端口声明（仅为文档作用，不实际限制）
     ports:
     - name: http
       containerPort: 8080
       protocol: TCP
 
-    <span class="tk-c"># 环境变量</span>
+    # 环境变量
     env:
     - name: APP_ENV
       value: "production"
@@ -3284,14 +3315,14 @@ spec:
           name: db-credentials
           key: password
 
-    <span class="tk-c"># 从 ConfigMap 批量注入</span>
+    # 从 ConfigMap 批量注入
     envFrom:
     - configMapRef:
         name: app-config
     - secretRef:
         name: app-secrets
 
-    <span class="tk-c"># 资源规格</span>
+    # 资源规格
     resources:
       requests:
         cpu: "250m"
@@ -3300,7 +3331,7 @@ spec:
         cpu: "1000m"
         memory: "512Mi"
 
-    <span class="tk-c"># 挂载卷</span>
+    # 挂载卷
     volumeMounts:
     - name: config
       mountPath: /etc/app
@@ -3309,8 +3340,12 @@ spec:
       mountPath: /var/cache/app
     - name: data
       mountPath: /data
+    - name: logs
+      mountPath: /var/log/app
+    - name: tmp
+      mountPath: /tmp
 
-    <span class="tk-c"># 探针</span>
+    # 探针
     startupProbe:
       httpGet:
         path: /healthz/startup
@@ -3333,16 +3368,16 @@ spec:
       timeoutSeconds: 2
       failureThreshold: 2
 
-    <span class="tk-c"># 生命周期钩子</span>
+    # 生命周期钩子
     lifecycle:
       postStart:
         exec:
-          command: ["/bin/sh", "-c", "echo started > /tmp/status"]
+          command: ["/bin/sh", "-c", "echo started &gt; /tmp/status"]
       preStop:
         exec:
           command: ["/bin/sh", "-c", "sleep 5"]
 
-    <span class="tk-c"># 安全上下文</span>
+    # 安全上下文
     securityContext:
       runAsNonRoot: true
       runAsUser: 10001
@@ -3352,7 +3387,7 @@ spec:
       capabilities:
         drop: ["ALL"]
 
-  <span class="tk-c"># ---------- 辅助容器 ----------</span>
+  # ---------- 辅助容器 ----------
   - name: log-shipper
     image: registry.example.com/log-shipper:v1.2.0
     resources:
@@ -3366,7 +3401,7 @@ spec:
       mountPath: /var/log/app
       readOnly: true
 
-  <span class="tk-c"># ---------- 卷定义 ----------</span>
+  # ---------- 卷定义 ----------
   volumes:
   - name: config
     configMap:
@@ -3382,8 +3417,10 @@ spec:
       claimName: web-app-data
   - name: logs
     emptyDir: {}
+  - name: tmp
+    emptyDir: {}
 
-  <span class="tk-c"># ---------- Pod 级配置 ----------</span>
+  # ---------- Pod 级配置 ----------
   restartPolicy: Always
   terminationGracePeriodSeconds: 30
   serviceAccountName: web-app-sa
@@ -3461,7 +3498,7 @@ spec:
 
 <h4>探测方式</h4>
 
-<pre><span class="lang">yaml</span><code><span class="tk-c"># 方式一：HTTP GET（最常用）</span>
+<pre><span class="lang">yaml</span><code># 方式一：HTTP GET（最常用）
 livenessProbe:
   httpGet:
     path: /healthz
@@ -3475,13 +3512,15 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
 
-<span class="tk-c"># 方式二：TCP 端口检查（适合非 HTTP 服务）</span>
+---
+# 方式二：TCP 端口检查（适合非 HTTP 服务）
 readinessProbe:
   tcpSocket:
     port: 5432
   periodSeconds: 5
 
-<span class="tk-c"># 方式三：执行命令（退出码 0 为成功）</span>
+---
+# 方式三：执行命令（退出码 0 为成功）
 livenessProbe:
   exec:
     command:
@@ -3490,7 +3529,8 @@ livenessProbe:
     - "pg_isready -U postgres || exit 1"
   periodSeconds: 10
 
-<span class="tk-c"># 方式四：gRPC 健康检查协议（需要应用实现标准健康检查服务）</span>
+---
+# 方式四：gRPC 健康检查协议（需要应用实现标准健康检查服务）
 readinessProbe:
   grpc:
     port: 50051
@@ -3501,7 +3541,7 @@ readinessProbe:
 <div class="bt">探针配置的常见错误</div>
 <p><strong>错误一：livenessProbe 检查外部依赖。</strong>如果存活探针检查数据库连接，那么数据库抖动会导致所有应用容器被重启——重启并不能修复数据库问题，反而会让服务雪上加霜。存活探针只应检查"应用自身是否还能正常工作"（如主循环是否卡死）。</p>
 <p><strong>错误二：readinessProbe 过于激进。</strong>失败阈值设为 1、周期设为 1 秒，会导致瞬时抖动就把 Pod 踢出后端，造成流量震荡。建议给一定的容错空间。</p>
-<p><strong>错误三：忘记配置 preStop 与优雅关闭。</strong>Pod 被删除时，kubelet 会同时做两件事：通知容器停止、从 Service 后端移除。这两件事是并行的，因此存在一个时间窗——Service 规则还没更新完，容器已经开始关闭，导致部分请求失败。解决办法是在 <code>preStop</code> 中 sleep 几秒，等规则更新完成再退出。</p>
+<p><strong>错误三：未实现优雅关闭。</strong>Pod 终止时，端点状态更新和 kubelet 的本地终止流程并行进行。preStop 可短暂等待，为端点传播与在途请求留出时间，但不能保证规则已经同步完成。宽限期从 hook 执行前开始计时，hook 返回后 kubelet 才通知容器终止；应用还必须处理 TERM 并在余下时间退出。</p>
 <p><strong>错误四：terminationGracePeriodSeconds 小于应用关闭所需时间。</strong>超时后 kubelet 会发送 <code>SIGKILL</code> 强制杀死进程，导致正在处理的请求失败、数据可能损坏。</p>
 </div>
 
@@ -3567,7 +3607,7 @@ readinessProbe:
 <thead><tr><th>Phase</th><th>含义</th><th>典型原因</th></tr></thead>
 <tbody>
 <tr><td><code>Pending</code></td><td>已被接受但未完全运行</td><td>等待调度、拉取镜像、挂载卷</td></tr>
-<tr><td><code>Running</code></td><td>已绑定节点，至少一个容器在运行</td><td>正常状态</td></tr>
+<tr><td><code>Running</code></td><td>已绑定节点且容器已创建，至少一个正在运行或启动/重启</td><td>不代表 Ready；应结合容器状态和就绪条件判断</td></tr>
 <tr><td><code>Succeeded</code></td><td>所有容器成功终止且不会重启</td><td>Job 完成</td></tr>
 <tr><td><code>Failed</code></td><td>所有容器已终止，至少一个失败</td><td>应用错误退出</td></tr>
 <tr><td><code>Unknown</code></td><td>无法获取 Pod 状态</td><td>节点失联</td></tr>
@@ -3577,7 +3617,7 @@ readinessProbe:
 
 <h4>容器等待原因（Waiting Reason）</h4>
 
-<p>当 <code>kubectl get pod</code> 显示的状态不是 Running 时，通常是容器的 <code>waiting.reason</code> 字段。这些原因直接对应故障类型：</p>
+<p>kubectl 的 STATUS 列是展示摘要，可能来自 Pod phase、容器 waiting/terminated reason 或删除状态。OOMKilled 是容器 terminated reason，CrashLoopBackOff 常是 waiting reason；排障时应读取结构化状态，不把它们都当作 Pod phase。</p>
 
 <div class="tw">
 <table>
@@ -3599,7 +3639,7 @@ readinessProbe:
 
 <div class="box tip">
 <div class="bt">退避重启机制</div>
-<p>注意 <code>CrashLoopBackOff</code> 中的 "BackOff"——kubelet 不会无限制地快速重启容器，而是采用指数退避：10 秒、20 秒、40 秒……最长 5 分钟。这样避免了崩溃的容器耗尽节点资源。</p>
+<p>CrashLoopBackOff 表示容器重启采用退避等待。传统默认从 10 秒递增至 300 秒；启用相关特性门控或 kubelet 退避配置后可能不同。它属于 kubectl 的展示状态，并非 Pod phase。</p>
 <p>这也意味着一个反复崩溃的应用会"看起来"重启间隔越来越长。排查时不要被这个现象迷惑，真正需要关注的是容器为什么崩溃。</p>
 </div>
 
@@ -3663,7 +3703,7 @@ readinessProbe:
 <div class="box tip">
 <div class="bt">生产环境的标准优雅关闭配置</div>
 <pre><span class="lang">yaml</span><code>spec:
-  terminationGracePeriodSeconds: 60     <span class="tk-c"># 给足时间</span>
+  terminationGracePeriodSeconds: 60     # 给足时间
   containers:
   - name: app
     lifecycle:
@@ -3673,12 +3713,10 @@ readinessProbe:
           - /bin/sh
           - -c
           - |
-            # 等待 Service 规则更新完成，避免请求被转发到正在关闭的实例
-            sleep 10
-            # 通知应用开始优雅关闭（如果应用支持通过文件或信号触发）
-            touch /tmp/shutdown
-            # 等待应用自行退出
-            while [ -f /tmp/shutdown ]; do sleep 1; done</code></pre>
+            # 暂缓关闭，给端点更新和在途请求留出时间；按实测调整
+            sleep 5
+            # hook 返回后 kubelet 发出 TERM；应用必须实现优雅退出
+</code></pre>
 <p>应用侧需要正确处理 <code>SIGTERM</code>：停止接受新连接、等待正在处理的请求完成、关闭数据库连接池、然后退出。总耗时必须小于 <code>terminationGracePeriodSeconds</code> 减去 preStop 的耗时。</p>
 </div>
 
@@ -3740,8 +3778,9 @@ readinessProbe:
 <p>Sidecar 是与主容器并行运行的辅助容器，用于扩展主容器的能力。Kubernetes 现在支持将 sidecar 声明为<strong>原生 sidecar</strong>（通过将 init 容器的 <code>restartPolicy</code> 设为 <code>Always</code>），从而获得正确的生命周期语义。</p>
 
 <pre><span class="lang">yaml</span><code>initContainers:
-<span class="tk-c"># 原生 sidecar：作为 init 容器声明，但 restartPolicy 为 Always</span>
-<span class="tk-c"># 效果：在主容器启动前就绪，在主容器退出后自动终止</span>
+# 原生 sidecar：作为 init 容器声明，但 restartPolicy 为 Always
+# 已启动不等于 Ready；若需等待代理可用，配置合适的 startupProbe
+# Pod 终止时，在主容器停止后按反向顺序停止原生 sidecar
 - name: log-collector
   image: registry.example.com/fluent-bit:v2.2
   restartPolicy: Always
@@ -3754,7 +3793,11 @@ containers:
   image: registry.example.com/web-app:v2.1.0
   volumeMounts:
   - name: logs
-    mountPath: /var/log/app</code></pre>
+    mountPath: /var/log/app
+volumes:
+- name: logs
+  emptyDir: {}
+</code></pre>
 
 <div class="box note">
 <div class="bt">原生 sidecar 解决了什么问题</div>
@@ -3763,7 +3806,7 @@ containers:
 <li><strong>启动顺序不可控</strong>：无法保证 sidecar 比主容器先就绪。对于代理类 sidecar（如 Envoy），主容器可能在代理就绪前就发起了请求，导致连接失败。</li>
 <li><strong>生命周期不匹配</strong>：Job 类负载中，主容器完成后 sidecar 仍在运行，导致 Job 永远无法完成。</li>
 </ul>
-<p>原生 sidecar 通过 <code>restartPolicy: Always</code> 的 init 容器语义解决了这两点：它会在主容器启动前完成启动，并在所有主容器退出后被自动终止。</p>
+<p>原生 sidecar 是可重启的 init 容器。kubelet 在其 started 条件满足后继续启动后续容器；有 startupProbe 时需要先通过该探针。“启动”不等于业务 Ready；readinessProbe 参与整个 Pod 的就绪状态。Pod 终止时，sidecar 在主容器退出后按反向顺序停止。</p>
 </div>
 
 <h4>常见的 Sidecar 模式</h4>
@@ -3814,17 +3857,19 @@ containers:
 <li>Pod 是<strong>逻辑主机</strong>，容器在其中共享网络命名空间、IPC 命名空间与卷，但共享文件系统与 PID 命名空间需显式开启。</li>
 <li><strong>pause 容器</strong>持有命名空间，使业务容器可以自由重启而不改变 Pod IP。</li>
 <li><strong>三种探针职责不同</strong>：liveness 失败重启容器、readiness 失败移出后端、startup 保护慢启动应用。</li>
-<li>Pod 终止时<strong>移除后端与通知容器是并行的</strong>，必须用 <code>preStop</code> 的 sleep 来覆盖时间窗。</li>
+<li>端点状态更新与容器终止并行进行。可按实测配置短暂 preStop 等待，同时实现应用优雅关闭；sleep 不是同步屏障，也不是所有应用必须使用的方案。</li>
 <li><strong>Init 容器</strong>顺序执行且必须成功，用于等待依赖、初始化数据、修复权限。</li>
 <li><strong>原生 sidecar</strong>（restartPolicy: Always 的 init 容器）解决了启动顺序与生命周期问题。</li>
 <li>只有当进程<strong>真正需要共享命名空间或文件系统</strong>时才应放入同一 Pod，否则应拆分以获得独立扩缩容能力。</li>
 </ul>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/">Pod 生命周期</a> · <a href="https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/">探针</a></p></div>
+
 <hr>
 
 <h2 id="ch12"><span class="num">12</span>工作负载控制器</h2>
 
-<p class="lead">直接创建 Pod 在生产环境中几乎没有意义——Pod 崩溃后不会被重建，节点故障后不会迁移。真正承载业务的是各类工作负载控制器，它们为 Pod 提供了副本管理、升级、回滚与稳定标识等能力。</p>
+<p class="lead">直接创建的裸 Pod 没有控制器负责替换。其容器仍可按 restartPolicy 重启，但 Pod 删除或节点故障后不会自动在其他节点创建替代 Pod。业务部署通常使用 Deployment、StatefulSet 等控制器。</p>
 
 <h3>12.1 工作负载类型总览</h3>
 
@@ -3892,30 +3937,30 @@ metadata:
     app.kubernetes.io/name: order-service
     app.kubernetes.io/version: "1.4.2"
 spec:
-  <span class="tk-c"># 副本数（注意：使用 HPA 时此处为初始值）</span>
+  # 副本数；启用 HPA 后应按官方流程将 replicas 字段从声明式清单移交/移除
   replicas: 3
 
-  <span class="tk-c"># 选择器：必须与 template 的标签匹配，且创建后不可更改</span>
+  # 选择器：必须与 template 的标签匹配，且创建后不可更改
   selector:
     matchLabels:
       app.kubernetes.io/name: order-service
 
-  <span class="tk-c"># ---------- 滚动更新策略 ----------</span>
+  # ---------- 滚动更新策略 ----------
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      <span class="tk-c"># 最多可以超出期望副本数的数量（可整数或百分比）</span>
+      # 最多可以超出期望副本数的数量（可整数或百分比）
       maxSurge: 1
-      <span class="tk-c"># 更新期间最多有多少副本不可用</span>
+      # 更新期间最多有多少副本不可用
       maxUnavailable: 0
 
-  <span class="tk-c"># 保留的历史版本数量（用于回滚）</span>
+  # 保留的历史版本数量（用于回滚）
   revisionHistoryLimit: 5
 
-  <span class="tk-c"># 等待新 Pod 就绪的时间，超时则判定失败</span>
+  # rollout 无进展的期限；超时记录 ProgressDeadlineExceeded，不自动回滚
   progressDeadlineSeconds: 600
 
-  <span class="tk-c"># 缩容时保留 Pod 的时长（Kubernetes 1.33+ 稳定），减少连接中断</span>
+  # 新 Pod 连续 Ready 且无容器崩溃这么多秒，才计为 Available
   minReadySeconds: 10
 
   template:
@@ -3927,7 +3972,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9090"
     spec:
-      <span class="tk-c"># 亲和性：尽量分散到不同节点与可用区</span>
+      # 亲和性：尽量分散到不同节点与可用区
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: topology.kubernetes.io/zone
@@ -3942,7 +3987,7 @@ spec:
           matchLabels:
             app.kubernetes.io/name: order-service
 
-      <span class="tk-c"># 优雅终止时间</span>
+      # 优雅终止时间
       terminationGracePeriodSeconds: 60
 
       containers:
@@ -4017,7 +4062,7 @@ spec:
       securityContext:
         fsGroup: 10001
 
-      <span class="tk-c"># 分散到不同节点，避免单节点故障导致全部副本不可用</span>
+      # 分散到不同节点，避免单节点故障导致全部副本不可用
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -4153,6 +4198,8 @@ order-service-5f4e3d2a1    0         0         0       2h
 </div>
 
 <h3>12.3 StatefulSet：有状态应用</h3>
+<div class="box note"><div class="bt">示例前置条件与范围</div><p>以下 MySQL 副本拥有各自的卷，但不会自动组成主从或高可用集群。需准备 database 命名空间、mysql-secret、mysql-config、fast-ssd 存储类，以及复制、初始化与备份机制。</p></div>
+
 
 <p>Deployment 的 Pod 是完全等价的、可互换的——它们共享同一个存储，名字随机，没有顺序。这对无状态服务没问题，但对数据库、消息队列这类有状态应用就不适用了。</p>
 
@@ -4276,7 +4323,7 @@ spec:
 <div class="box note">
 <div class="bt">volumeClaimTemplates 的命名规则</div>
 <p>StatefulSet 为每个 Pod 创建的 PVC 命名为 <code>&lt;volume-name&gt;-&lt;statefulset-name&gt;-&lt;ordinal&gt;</code>，例如 <code>data-mysql-0</code>、<code>data-mysql-1</code>。</p>
-<p>关键点：<strong>Pod 删除后 PVC 不会自动删除</strong>。这通常正是我们想要的（数据比 Pod 更重要），但也意味着缩容后遗留的 PVC 会持续占用存储和费用。清理时必须手动执行，且要确认数据不再需要。</p>
+<p>StatefulSet 的 PVC 保留策略默认是 <strong>Retain</strong>。可用 <code>persistentVolumeClaimRetentionPolicy</code> 分别配置 whenDeleted 与 whenScaled；该能力在 v1.32 稳定，Delete 策略会改变删除/缩容时的 PVC 生命周期。删除前检查策略与备份。</p>
 </div>
 
 <h4>有序性的具体表现</h4>
@@ -4634,6 +4681,8 @@ spec:
 <li>复杂有状态应用应使用 <strong>Operator</strong> 而非裸 StatefulSet。</li>
 </ul>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployment</a> · <a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">StatefulSet</a></p></div>
+
 <hr>
 
 <h2 id="ch13"><span class="num">13</span>Service 与服务发现</h2>
@@ -4654,7 +4703,7 @@ spec:
 <div class="box deep">
 <div class="bt">Service 的核心抽象</div>
 <p>Service 为一组 Pod 提供一个<strong>稳定的虚拟 IP 和 DNS 名称</strong>，并在其后端自动维护健康的 Pod 列表。调用方只需访问这个稳定地址，无需关心后端的实际变化。</p>
-<p>需要强调的是：<strong>Service 的 IP 是"虚拟"的</strong>——它不对应任何真实的网络接口，无法被 ping 通。它只是 iptables/eBPF 规则中的一个匹配目标，被命中后流量会被转发到真实的后端 Pod。这一点是理解 Service 实现原理的关键。</p>
+<p>ClusterIP 是 Service 的虚拟地址，具体实现可使用 iptables、nftables、IPVS 或 eBPF。IPVS 可能将它绑定到 kube-ipvs0 接口；因此“绝不对应接口、绝不能 ping”不适用于所有实现。Service 只定义 TCP/UDP/SCTP 端口语义，ICMP 结果不能证明服务可用，应测试实际服务端口。</p>
 </div>
 
 <h3>13.2 四种 Service 类型</h3>
@@ -4788,10 +4837,10 @@ spec:
 <table>
 <thead><tr><th>字段</th><th>取值</th><th>行为</th><th>影响</th></tr></thead>
 <tbody>
-<tr><td rowspan="2"><code>externalTrafficPolicy</code></td><td><code>Cluster</code></td><td>流量可转发到任意节点的 Pod</td><td>负载均衡更均匀，但客户端源 IP 会被 SNAT 丢失</td></tr>
+<tr><td rowspan="2"><code>externalTrafficPolicy</code></td><td><code>Cluster</code></td><td>可转发到其他节点的后端</td><td>是否保留客户端 IP 取决于代理模式、转发路径与负载均衡实现；常见路径会 SNAT</td></tr>
 <tr><td><code>Local</code></td><td>只转发到本节点的 Pod</td><td><strong>保留客户端源 IP</strong>，但流量分布可能不均（节点上无 Pod 则丢弃）</td></tr>
 <tr><td rowspan="2"><code>internalTrafficPolicy</code></td><td><code>Cluster</code></td><td>集群内流量可到任意节点的 Pod</td><td>默认，均衡性好</td></tr>
-<tr><td><code>Local</code></td><td>只到本节点的 Pod</td><td>减少一跳网络，降低延迟；配合拓扑感知路由使用</td></tr>
+<tr><td><code>Local</code></td><td>只到本节点就绪后端</td><td>无本地后端时流量失败，不自动回退其他节点；与拓扑提示的行为要分别核对</td></tr>
 </tbody>
 </table>
 </div>
@@ -4848,7 +4897,7 @@ ports:
 <p><strong>EndpointSlice</strong> 把端点列表切分成多个较小的分片（默认每片最多 100 个端点），并附带拓扑信息（节点、可用区）。这样：</p>
 <ul>
 <li>单个对象大小可控，变更只影响相关分片；</li>
-<li>kube-proxy 可以只关注与自身节点相关的分片；</li>
+<li>kube-proxy 需要汇总相关 Service 的 EndpointSlice，包括跨节点后端；不能仅订阅本节点端点。切片减少单对象大小和单次端点变更的传输量。</li>
 <li>拓扑信息支持"就近路由"等高级特性。</li>
 </ul>
 </div>
@@ -4945,7 +4994,7 @@ spec:
   <rect x="24" y="160" width="632" height="120" rx="6" fill="#0e1116" stroke="#252d38"/>
   <text x="40" y="182" fill="#4a9eff" font-size="11.5" font-family="sans-serif" font-weight="700">三个关键事实</text>
 
-  <text x="40" y="206" fill="#dbe3ec" font-size="10.5" font-family="sans-serif">1. Service IP 是虚拟的，没有对应网络接口，因此无法 ping 通（ICMP 不走 DNAT 规则）。</text>
+  <text x="40" y="206" fill="#dbe3ec" font-size="10.5" font-family="sans-serif">1. iptables 模式按服务端口转发；ICMP 不能用来判断 Service 是否可用。</text>
   <text x="40" y="226" fill="#dbe3ec" font-size="10.5" font-family="sans-serif">2. 转发发生在内核态，用户态进程不参与，因此性能开销很小。</text>
   <text x="40" y="246" fill="#dbe3ec" font-size="10.5" font-family="sans-serif">3. 规则由 kube-proxy（或 CNI 插件）在 EndpointSlice 变化时自动更新，无需人工干预。</text>
   <text x="40" y="268" fill="#5f6b7a" font-size="10" font-family="sans-serif">详细实现原理见第 17 章。</text>
@@ -5051,12 +5100,14 @@ endpoints:
 <ul>
 <li>Service 为动态变化的 Pod 提供<strong>稳定虚拟 IP 与 DNS 名称</strong>，并自动维护健康后端列表。</li>
 <li>四种类型：<strong>ClusterIP</strong>（集群内）、<strong>NodePort</strong>（节点端口）、<strong>LoadBalancer</strong>（云负载均衡）、<strong>ExternalName</strong>（DNS 别名）。</li>
-<li><strong>Service IP 是虚拟的，无法 ping 通</strong>；转发由内核规则完成，用户态不参与。</li>
+<li>ClusterIP 的转发由选用的数据平面实现；请用实际 TCP/UDP/SCTP 服务端口验证，不能靠 ping 判断可用性。</li>
 <li><strong>EndpointSlice</strong> 才是真正的后端列表，排障时应优先检查它。</li>
 <li><strong>Headless Service</strong> 不分配虚拟 IP，DNS 直接返回所有 Pod IP，用于 StatefulSet 与客户端侧负载均衡。</li>
 <li>服务发现<strong>应使用 DNS 而非环境变量</strong>，避免顺序依赖问题。</li>
 <li>无选择器的 Service 可以把外部服务纳入集群统一寻址体系。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/services-networking/service/">Service</a> · <a href="https://kubernetes.io/docs/reference/networking/virtual-ips/">虚拟 IP 实现</a></p></div>
 
 <hr>
 
@@ -5117,7 +5168,7 @@ staging           Active   1h
 <table>
 <thead><tr><th>命名空间</th><th>用途</th><th>是否可删除</th></tr></thead>
 <tbody>
-<tr><td><code>default</code></td><td>未指定命名空间时的默认位置</td><td>可以，但会导致未指定命名空间的资源无处安放</td></tr>
+<tr><td>default</td><td>未指定命名空间时的默认位置</td><td>默认 NamespaceLifecycle 准入插件保护它不被删除；建议另建业务命名空间</td></tr>
 <tr><td><code>kube-system</code></td><td>Kubernetes 自身组件（DNS、kube-proxy、CNI 等）</td><td><strong>绝对不要</strong>，会导致集群功能失效</td></tr>
 <tr><td><code>kube-public</code></td><td>所有用户可读的公共信息（如集群信息 ConfigMap）</td><td>不推荐</td></tr>
 <tr><td><code>kube-node-lease</code></td><td>节点心跳 Lease 对象，用于快速检测节点故障</td><td><strong>不要</strong></td></tr>
@@ -5426,11 +5477,13 @@ services                15      50
 <li>命名空间划分应遵循"<strong>谁能管、谁付费、谁受影响</strong>"的原则。</li>
 </ul>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://github.com/kubernetes/apiserver/blob/master/pkg/admission/plugin/namespace/lifecycle/admission.go">NamespaceLifecycle 源码</a></p></div>
+
 <hr>
 
 <h2 id="ch15"><span class="num">15</span>Kubernetes 网络模型</h2>
 
-<p class="lead">Kubernetes 网络是学习者最容易感到困惑的部分。困惑的根源在于：Service 的 IP 无法 ping 通、Pod 的 IP 却能直接访问、不同节点上的 Pod 又似乎"天然"互通。本章先把模型讲清楚，后续章节再讲实现。</p>
+<p class="lead">Kubernetes 网络学习需要区分 Pod IP、Service 虚拟 IP 与外部入口地址。连通性受路由、网络策略和数据平面实现影响；本章先说明模型，后续章节再解释实现。</p>
 
 <h3>15.1 网络模型的三条基本规则</h3>
 
@@ -5608,7 +5661,7 @@ payment-yyy     1/1     Running   10.244.2.23  node-2</code></pre>
 
   <rect x="490" y="36" width="166" height="72" rx="5" fill="#14351f" stroke="#3fb950"/>
   <text x="573" y="56" fill="#3fb950" font-size="10" text-anchor="middle" font-family="sans-serif" font-weight="700">优点</text>
-  <text x="573" y="74" fill="#8f9bab" font-size="9" text-anchor="middle" font-family="sans-serif">性能最佳，无额外开销</text>
+  <text x="573" y="74" fill="#8f9bab" font-size="9" text-anchor="middle" font-family="sans-serif">性能取决于工作负载与实现，无额外开销</text>
   <text x="573" y="92" fill="#8f9bab" font-size="9" text-anchor="middle" font-family="sans-serif">源 IP 天然保留</text>
   <text x="573" y="104" fill="#f0574d" font-size="8.5" text-anchor="middle" font-family="sans-serif">需要底层网络支持</text>
 
@@ -5642,7 +5695,7 @@ payment-yyy     1/1     Running   10.244.2.23  node-2</code></pre>
   <text x="40" y="314" fill="#39c5cf" font-size="11" font-family="sans-serif" font-weight="700">在数据包进入网络栈的早期阶段就完成转发决策</text>
   <text x="40" y="334" fill="#dbe3ec" font-size="10" font-family="sans-serif">绕过 iptables 的链式匹配，直接根据目标 IP 查表并改写，再发出</text>
   <text x="40" y="352" fill="#8f9bab" font-size="10" font-family="sans-serif">可以同时替代 kube-proxy、网络策略、部分负载均衡功能</text>
-  <text x="40" y="370" fill="#3fb950" font-size="10" font-family="sans-serif">优势：性能最佳（绕过 netfilter）、规则规模与 Service 数量解耦、可观测性更强</text>
+  <text x="40" y="370" fill="#3fb950" font-size="10" font-family="sans-serif">优势：性能取决于工作负载与实现（绕过 netfilter）、规则规模与 Service 数量解耦、可观测性更强</text>
 </svg>
 <figcaption>图 15-3 跨节点通信的三种主要实现方式</figcaption>
 </figure>
@@ -5678,7 +5731,7 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
 
 <div class="box note">
 <div class="bt">出站流量的源 IP</div>
-<p>Pod 访问外部服务时，外部服务看到的源 IP 是<strong>节点 IP</strong>（因为做了 SNAT）。这在需要白名单的场景下会造成困扰——你需要把所有节点的 IP 都加入白名单。</p>
+<p>Pod 访问外部时的源地址取决于 CNI、路由与出口配置：可能是 Pod IP、节点 SNAT 地址或 NAT 网关/专用出口地址。需要 IP 白名单时应从实际外部观测验证出口，不能直接假定等于节点 IP。</p>
 <p>如果需要固定出口 IP，常见方案有：</p>
 <ul>
 <li><strong>专用出口节点</strong>：让特定 Pod 通过指定的节点出站（使用 <code>nodeSelector</code> + 该节点作为 NAT 网关）。</li>
@@ -5823,10 +5876,12 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
 <ul>
 <li>Kubernetes 网络模型的三大要求：<strong>每个 Pod 有唯一 IP、Pod 间无 NAT 直连、节点与 Pod 互通</strong>。</li>
 <li>集群涉及<strong>三层地址空间</strong>：节点网络、Pod 网络、Service 网络，三者<strong>绝不能重叠</strong>。</li>
-<li>跨节点通信有三类实现：<strong>直接路由</strong>（性能最佳，需底层支持）、<strong>覆盖网络</strong>（适配性最好，有封装开销）、<strong>eBPF 转发</strong>（性能最佳且功能丰富）。</li>
-<li>Pod 出集群需 SNAT，外部看到的源 IP 是节点 IP；需要固定出口 IP 时使用专用出口节点或代理。</li>
+<li>跨节点连接可采用直接路由或覆盖网络；eBPF 是可与两者结合的数据平面技术。常见方案：<strong>直接路由</strong>（性能取决于工作负载与实现，需底层支持）、<strong>覆盖网络</strong>（适配性最好，有封装开销）、<strong>eBPF 转发</strong>（性能取决于工作负载与实现且功能丰富）。</li>
+<li>Pod 出集群是否需 SNAT，以及外部看到的源地址，由网络与出口配置决定；需要固定出口时配置专用出口或 NAT 服务。</li>
 <li>网络排障应按 <strong>DNS → Service → 转发 → Pod → 策略 → 应用</strong> 的层次逐层排查。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/cluster-administration/networking/">集群网络</a></p></div>
 
 <hr>
 
@@ -5949,7 +6004,7 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
 <thead><tr><th>模式</th><th>分配方式</th><th>特点</th></tr></thead>
 <tbody>
 <tr><td>Host-local</td><td>每个节点维护本节点的 IP 池（如 10.244.1.0/24）</td><td>简单、无中心依赖；但 IP 池需预先划分</td></tr>
-<tr><td>云厂商 IPAM</td><td>从云 VPC 子网分配真实 IP</td><td>Pod IP 在 VPC 内可路由，性能最佳；受子网容量限制</td></tr>
+<tr><td>云厂商 IPAM</td><td>从云 VPC 子网分配真实 IP</td><td>Pod IP 在 VPC 内可路由，性能取决于工作负载与实现；受子网容量限制</td></tr>
 <tr><td>集中式 IPAM</td><td>由独立组件统一分配（如 Whereabouts、Cilium 的 cluster-pool）</td><td>支持跨节点协调，适合复杂拓扑</td></tr>
 <tr><td>基于块的分配</td><td>按需向节点分配 IP 块</td><td>减少节点 IP 浪费，适合弹性伸缩</td></tr>
 </tbody>
@@ -5978,7 +6033,7 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
   <text x="366" y="58" fill="#d6a02c" font-size="12" font-family="sans-serif" font-weight="700">Calico</text>
   <text x="366" y="78" fill="#dbe3ec" font-size="10" font-family="sans-serif">技术基础：BGP 路由 + iptables/eBPF</text>
   <text x="366" y="96" fill="#8f9bab" font-size="9.5" font-family="sans-serif">数据面：默认 iptables，可选 eBPF 模式</text>
-  <text x="366" y="113" fill="#8f9bab" font-size="9.5" font-family="sans-serif">直接路由（BGP）性能最佳</text>
+  <text x="366" y="113" fill="#8f9bab" font-size="9.5" font-family="sans-serif">直接路由（BGP）性能取决于工作负载与实现</text>
   <text x="366" y="130" fill="#8f9bab" font-size="9.5" font-family="sans-serif">支持 IPIP / VXLAN 隧道模式</text>
   <text x="366" y="147" fill="#3fb950" font-size="9.5" font-family="sans-serif">成熟稳定，企业部署广泛</text>
   <text x="366" y="164" fill="#3fb950" font-size="9.5" font-family="sans-serif">网络策略功能完整，文档丰富</text>
@@ -6000,7 +6055,7 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
   <text x="366" y="238" fill="#dbe3ec" font-size="10" font-family="sans-serif">技术基础：VPC 原生网络</text>
   <text x="366" y="256" fill="#8f9bab" font-size="9.5" font-family="sans-serif">Pod 直接使用 VPC 子网 IP</text>
   <text x="366" y="273" fill="#8f9bab" font-size="9.5" font-family="sans-serif">由云平台路由，无需隧道</text>
-  <text x="366" y="290" fill="#3fb950" font-size="9.5" font-family="sans-serif">性能最佳，与云服务无缝集成</text>
+  <text x="366" y="290" fill="#3fb950" font-size="9.5" font-family="sans-serif">性能取决于工作负载与实现，与云服务无缝集成</text>
   <text x="366" y="307" fill="#f0574d" font-size="9.5" font-family="sans-serif">受 VPC 子网容量限制</text>
   <text x="366" y="326" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">适用：托管 Kubernetes 服务</text>
 </svg>
@@ -6016,7 +6071,7 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
 <pre><span class="lang">bash</span><code><span class="tk-c"># 传统 iptables 模式：Service 数量增长导致规则爆炸</span>
 <span class="tk-p">$</span> iptables -t nat -L | wc -l
 38472        <span class="tk-c"># 5000 个 Service 时，规则数可达数万行</span>
-<span class="tk-c"># 每个数据包都要线性遍历这些规则，延迟随 Service 数量增长</span>
+<span class="tk-c"># 新连接首包可能遍历 Service 规则；后续包使用 conntrack 状态</span>
 
 <span class="tk-c"># Cilium eBPF 模式：使用哈希表查找，复杂度为 O(1)</span>
 <span class="tk-p">$</span> kubectl exec -n kube-system ds/cilium -- cilium bpf lb list | wc -l
@@ -6051,7 +6106,7 @@ Hubble:                 Ok   [Current/Max flows: 1234/4096]
 <p>开启 Cilium 的 <code>kubeProxyReplacement</code> 后，节点上不再需要 kube-proxy。带来几个好处：</p>
 <ul>
 <li><strong>性能提升</strong>：eBPF 哈希查找替代 iptables 线性遍历，在大规模 Service 场景下延迟显著降低。</li>
-<li><strong>规则规模可控</strong>：不会随 Service 数量增长而膨胀。</li>
+<li><strong>数据平面使用映射表。</strong>eBPF 可以减少长规则链查找，但 Service/端点映射和内存用量仍随规模增长，需关注 map 容量、更新成本与实测性能。</li>
 <li><strong>源 IP 保留</strong>：可以更好地保留客户端源 IP，无需依赖 externalTrafficPolicy 的权衡。</li>
 <li><strong>组件减少</strong>：少一个 DaemonSet 要维护。</li>
 </ul>
@@ -6066,9 +6121,9 @@ Hubble:                 Ok   [Current/Max flows: 1234/4096]
 <tbody>
 <tr><td>学习环境、简单集群</td><td>Flannel 或 Cilium（默认配置）</td><td>部署简单，满足基础连通性</td></tr>
 <tr><td>企业自建、需要成熟稳定</td><td>Calico</td><td>部署广泛、文档丰富、网络策略完整</td></tr>
-<tr><td>追求性能与可观测性</td><td>Cilium</td><td>eBPF 性能最佳，Hubble 提供深度观测</td></tr>
+<tr><td>追求性能与可观测性</td><td>Cilium</td><td>eBPF 数据平面，性能需实测，Hubble 提供深度观测</td></tr>
 <tr><td>需要 L7 网络策略</td><td>Cilium</td><td>原生支持 HTTP/gRPC 级别的策略</td></tr>
-<tr><td>托管 Kubernetes 服务</td><td>云厂商 CNI（通常可叠加 Cilium）</td><td>与 VPC 集成，性能最佳</td></tr>
+<tr><td>托管 Kubernetes 服务</td><td>云厂商 CNI（通常可叠加 Cilium）</td><td>与 VPC 集成，性能取决于工作负载与实现</td></tr>
 <tr><td>多集群互联</td><td>Cilium Cluster Mesh</td><td>原生支持跨集群服务发现与策略</td></tr>
 <tr><td>Windows 节点混合</td><td>Calico</td><td>Windows 支持相对成熟</td></tr>
 </tbody>
@@ -6094,7 +6149,7 @@ Hubble:                 Ok   [Current/Max flows: 1234/4096]
 <ul>
 <li><strong>CNI</strong> 通过"执行二进制 + 传递 JSON"的方式工作，只负责<strong>接口创建、IP 分配、路由配置</strong>三件事。</li>
 <li><strong>IPAM</strong> 决定 Pod 从哪个网段取 IP，有 host-local、云原生、集中式等模式。</li>
-<li><strong>Cilium</strong> 基于 eBPF，可替代 kube-proxy，性能与可观测性最佳，但对内核有要求。</li>
+<li><strong>Cilium</strong> 基于 eBPF，可替代 kube-proxy，可提供网络观测，性能需实测，但对内核有要求。</li>
 <li><strong>Calico</strong> 成熟稳定，BGP 直接路由性能优秀，网络策略功能完整。</li>
 <li><strong>Flannel</strong> 极简，只做基础连通，适合学习环境。</li>
 <li>CNI <strong>更换成本极高</strong>，应在集群建设初期慎重选型。</li>
@@ -6133,7 +6188,7 @@ Hubble:                 Ok   [Current/Max flows: 1234/4096]
   <text x="40" y="292" fill="#39c5cf" font-size="12" font-family="sans-serif" font-weight="700">模式三：eBPF（Cilium 等，无 kube-proxy）</text>
   <text x="40" y="314" fill="#dbe3ec" font-size="10.5" font-family="sans-serif">eBPF 程序挂载在内核网络栈的关键位置（如 socket、TC 层）</text>
   <text x="40" y="334" fill="#8f9bab" font-size="10" font-family="sans-serif">数据包在进入 netfilter 之前就被处理，直接查哈希表完成转发</text>
-  <text x="40" y="354" fill="#3fb950" font-size="10" font-family="sans-serif">优点：性能最佳（O(1) 查找），规则规模与 Service 数量解耦，可观测性强</text>
+  <text x="40" y="354" fill="#3fb950" font-size="10" font-family="sans-serif">优点：性能取决于工作负载与实现（O(1) 查找），规则规模与 Service 数量解耦，可观测性强</text>
   <text x="40" y="372" fill="#f0574d" font-size="10" font-family="sans-serif">缺点：对内核版本有要求，调试方式与传统 iptables 完全不同</text>
 </svg>
 <figcaption>图 17-1 Service 转发的三种实现方式对比</figcaption>
@@ -6174,7 +6229,7 @@ DNAT            tcp  --  0.0.0.0/0   0.0.0.0/0    /* default/order:http */ tcp t
 <span class="tk-c"># 到这里，目标地址被改写为真实的 Pod IP:PORT</span></code></pre>
 
 <div class="box note">
-<div class="bt">为什么 Service IP 无法 ping 通</div>
+<div class="bt">为什么不能用 ping 验证 Service</div>
 <p>从上面的规则可以看到，iptables 中只定义了 <code>tcp</code> 和 <code>udp</code> 的转发规则，<strong>没有针对 ICMP 的规则</strong>。因此当你 ping 一个 Service IP 时，数据包找不到匹配的规则，直接被丢弃或返回不可达。</p>
 <p>这是设计使然，不是故障。验证 Service 是否可用应该用 <code>curl</code>、<code>nc</code>、<code>telnet</code> 等工具测试 TCP 连通性，而不是 ping。</p>
 </div>
@@ -6184,9 +6239,9 @@ DNAT            tcp  --  0.0.0.0/0   0.0.0.0/0    /* default/order:http */ tcp t
 <p>假设集群有 5000 个 Service，每个 Service 平均 3 个后端：</p>
 <ul>
 <li>规则总数约为 5000（KUBE-SERVICES）+ 5000（KUBE-SVC）+ 15000（KUBE-SEP）= 25000 条。</li>
-<li>每个数据包都要从 <code>KUBE-SERVICES</code> 链的<strong>第一条规则开始线性匹配</strong>，直到命中。</li>
+<li>iptables nat 的规则选择主要发生在新连接首包，后续包由 conntrack 使用已建立的转换状态。大规模 Service 会增加规则同步和新连接匹配成本，但不能说每个包都从第一条重新查找。</li>
 <li>如果目标 Service 恰好排在链的末尾，需要遍历 5000 条规则才能匹配到。</li>
-<li>Service 变化时，kube-proxy 需要<strong>重写整个 iptables 规则集</strong>，这会短暂锁定 iptables，在大集群中可能耗时数秒甚至更长，期间新连接可能被丢弃。</li>
+<li>kube-proxy 的 iptables 同步开销受版本和规模影响；现代版本已做增量更新优化。规则更新有锁与同步延迟，但不能笼统说每次都会重写全部规则并丢弃新连接。</li>
 </ul>
 <p>这就是为什么大规模集群推荐使用 nftables 或 eBPF 模式。</p>
 </div>
@@ -6350,14 +6405,16 @@ mysql-headless   ClusterIP   None         &lt;none&gt;        3306/TCP   5d
 <h3>17.7 本章小结</h3>
 
 <ul>
-<li>Service 转发有三种实现：<strong>iptables</strong>（兼容性好但大规模性能差）、<strong>nftables</strong>（当前推荐）、<strong>eBPF</strong>（性能最佳）。</li>
+<li>Service 转发有三种实现：<strong>iptables</strong>（兼容性好但大规模性能差）、<strong>nftables</strong>（当前推荐）、<strong>eBPF</strong>（性能取决于工作负载与实现）。</li>
 <li>iptables 规则结构为 <code>KUBE-SERVICES</code>（匹配 Service IP）→ <code>KUBE-SVC-*</code>（负载均衡）→ <code>KUBE-SEP-*</code>（DNAT 到真实 Pod）。</li>
-<li><strong>Service IP 无法 ping 通</strong>，因为 iptables 中没有 ICMP 规则。</li>
+<li>iptables 模式的 Service 规则按服务协议与端口转发，未提供 ICMP 服务语义；其他实现的 ping 行为可能不同，应验证实际服务端口。</li>
 <li><strong>会话亲和性</strong>基于源 IP，粒度粗且后端变化时失效，应用应尽量无状态化。</li>
 <li><strong>拓扑感知路由</strong>优先将流量送到同可用区后端，可降低延迟与跨区流量成本。</li>
 <li><strong>internalTrafficPolicy: Local</strong> 减少网络跳数，但要求每个节点都有后端。</li>
 <li><strong>Headless Service</strong> 由客户端负责负载均衡，适合 gRPC 等长连接协议。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/reference/networking/virtual-ips/">Service 代理实现</a></p></div>
 
 <hr>
 
@@ -6445,7 +6502,7 @@ coredns   2/2     2            2           30d
 <tr><td>Headless Service</td><td><code>svc.ns.svc.cluster.local</code></td><td>所有就绪 Pod 的 IP 列表</td></tr>
 <tr><td>StatefulSet Pod</td><td><code>pod-0.svc.ns.svc.cluster.local</code></td><td>该 Pod 的 IP（需配合 Headless Service）</td></tr>
 <tr><td>SRV 记录</td><td><code>_port-name._protocol.svc.ns.svc.cluster.local</code></td><td>端口号与主机名</td></tr>
-<tr><td>Pod（需手动创建）</td><td><code>pod-ip-dashed.ns.pod.cluster.local</code></td><td>该 Pod IP（如 <code>10-244-1-15.production.pod.cluster.local</code>）</td></tr>
+<tr><td>Pod 地址记录（取决于 DNS 插件配置）</td><td>如 pod-ip-dashed.ns.pod.cluster.local</td><td>CoreDNS 的 pods 模式控制是否创建/校验此类记录，默认 disabled；不是让用户手动创建 DNS 记录</td></tr>
 </tbody>
 </table>
 </div>
@@ -6492,7 +6549,7 @@ Address 1: 140.82.121.6
 
 <p>这是最常见也最容易被忽视的问题。Pod 的 <code>/etc/resolv.conf</code> 默认包含 <code>options ndots:5</code>，意味着域名中点少于 5 个时会先尝试所有 search 域。</p>
 
-<pre><span class="lang">bash</span><code><span class="tk-c"># 解析 api.stripe.com（1 个点）时的实际查询序列</span>
+<pre><span class="lang">bash</span><code><span class="tk-c"># 解析 api.stripe.com（2 个点）时的实际查询序列</span>
 api.stripe.com.production.svc.cluster.local.  → NXDOMAIN（无效查询）
 api.stripe.com.svc.cluster.local.             → NXDOMAIN（无效查询）
 api.stripe.com.cluster.local.                 → NXDOMAIN（无效查询）
@@ -6559,7 +6616,7 @@ coredns-7d8f9c6b5-def34    975m         43Mi
 
 <div class="box warn">
 <div class="bt">关于并发 DNS 查询的经典问题</div>
-<p>许多语言的标准库（尤其是较老版本的 glibc 和 Go 的某些版本）在解析 DNS 时会<strong>并发向所有 nameserver 发送查询</strong>，取最先返回的结果。这在 Kubernetes 环境中会引发问题：</p>
+<p>DNS 行为取决于应用与解析器。glibc 常并发查询 A/AAAA，但默认并非向所有 nameserver 同时发送所有查询；备用服务器、超时和重试规则也因实现而异。应结合抓包定位，避免把所有 DNS 延迟都归因于并发访问 nameserver。</p>
 <ul>
 <li>如果 DNS 查询走 UDP，且响应较大（如 Headless Service 返回多个 IP），UDP 包可能被分片。若中间网络设备丢弃分片，查询就会失败。</li>
 <li>并发查询会放大 CoreDNS 负载。</li>
@@ -6589,8 +6646,8 @@ coredns-7d8f9c6b5-def34    975m         43Mi
   <line x1="140" y1="86" x2="172" y2="86" stroke="#f0574d" stroke-width="1.5"/>
   <rect x="174" y="68" width="140" height="36" rx="4" fill="#3d1a18" stroke="#f0574d"/>
   <text x="244" y="84" fill="#f0574d" font-size="9.5" text-anchor="middle" font-family="sans-serif">iptables DNAT</text>
-  <text x="244" y="98" fill="#8f9bab" font-size="8.5" text-anchor="middle" font-family="sans-serif">每次都要经过内核规则</text>
-  <text x="40" y="128" fill="#8f9bab" font-size="9.5" font-family="sans-serif">• 每个查询都要走 iptables 规则</text>
+  <text x="244" y="98" fill="#8f9bab" font-size="8.5" text-anchor="middle" font-family="sans-serif">经 Service 转发与连接跟踪</text>
+  <text x="40" y="128" fill="#8f9bab" font-size="9.5" font-family="sans-serif">• 新连接经 NAT，后续由 conntrack 处理</text>
   <text x="40" y="146" fill="#8f9bab" font-size="9.5" font-family="sans-serif">• 连接跟踪表压力大</text>
   <text x="40" y="164" fill="#8f9bab" font-size="9.5" font-family="sans-serif">• 跨节点查询，延迟较高</text>
 
@@ -6604,7 +6661,7 @@ coredns-7d8f9c6b5-def34    975m         43Mi
   <text x="563" y="84" fill="#3fb950" font-size="9.5" text-anchor="middle" font-family="sans-serif">本节点 DNS 缓存</text>
   <text x="563" y="98" fill="#8f9bab" font-size="8.5" text-anchor="middle" font-family="sans-serif">169.254.20.10</text>
   <text x="366" y="128" fill="#3fb950" font-size="9.5" font-family="sans-serif">• 命中缓存则无需出节点</text>
-  <text x="366" y="146" fill="#3fb950" font-size="9.5" font-family="sans-serif">• 使用本地 socket，绕过 iptables</text>
+  <text x="366" y="146" fill="#3fb950" font-size="9.5" font-family="sans-serif">• 通过本节点 UDP/TCP DNS，绕过 Service DNAT/conntrack</text>
   <text x="366" y="164" fill="#3fb950" font-size="9.5" font-family="sans-serif">• 延迟降低，CoreDNS 负载降低</text>
 
   <!-- 部署命令 -->
@@ -6727,6 +6784,8 @@ EOF
 <li><strong>NodeLocal DNSCache</strong> 把缓存下沉到节点，显著降低延迟与 CoreDNS 负载，并规避 conntrack 相关的超时问题。</li>
 <li>DNS 排障应遵循：<strong>确认范围 → 检查 Pod → 检查端点 → 看日志 → 查配置 → 查策略 → 直连测试</strong>的顺序。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/">DNS 记录</a> · <a href="https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/">NodeLocal DNSCache</a></p></div>
 
 <hr>
 
@@ -6914,6 +6973,8 @@ spec:
 </div>
 
 <h3>19.4 Gateway API</h3>
+<div class="box note"><div class="bt">示例前置条件与范围</div><p>先安装匹配版本的 Gateway API CRD 与支持这些字段的控制器，准备命名空间、TLS Secret 与后端 Service；production 需标记 gateway-access=true。TCPRoute/UDPRoute 属于 Experimental channel（Alpha），不能把所有 Route 视为 GA；超时等扩展能力也须查控制器支持矩阵。</p></div>
+
 
 <p>Gateway API 是 Ingress 的官方继任者，它通过<strong>角色分离</strong>和<strong>更强的表达能力</strong>解决了上述问题。</p>
 
@@ -6980,7 +7041,7 @@ spec:
 
 <h4>完整的 Gateway API 示例</h4>
 
-<pre><span class="lang">yaml</span><code><span class="tk-c"># ---------- 1. GatewayClass：由基础设施提供者定义（通常已预装）----------</span>
+<pre><span class="lang">yaml</span><code># ---------- 1. GatewayClass：由基础设施提供者定义（通常已预装）----------
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
@@ -6989,7 +7050,7 @@ spec:
   controllerName: io.cilium/gateway-controller
 
 ---
-<span class="tk-c"># ---------- 2. Gateway：由平台团队定义，声明监听器 ----------</span>
+# ---------- 2. Gateway：由平台团队定义，声明监听器 ----------
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -6998,7 +7059,7 @@ metadata:
 spec:
   gatewayClassName: cilium
   listeners:
-  <span class="tk-c"># HTTP 监听器（自动重定向到 HTTPS）</span>
+  # HTTP 监听器；监听器自身不会自动重定向
   - name: http
     protocol: HTTP
     port: 80
@@ -7009,7 +7070,7 @@ spec:
           matchLabels:
             gateway-access: "true"
 
-  <span class="tk-c"># HTTPS 监听器</span>
+  # HTTPS 监听器
   - name: https
     protocol: HTTPS
     port: 443
@@ -7027,7 +7088,7 @@ spec:
             gateway-access: "true"
 
 ---
-<span class="tk-c"># ---------- 3. ReferenceGrant：授权 Gateway 访问其他命名空间的证书 ----------</span>
+# ---------- 3. ReferenceGrant：授权 Gateway 访问其他命名空间的证书 ----------
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
@@ -7043,25 +7104,25 @@ spec:
     kind: Secret
 
 ---
-<span class="tk-c"># ---------- 4. HTTPRoute：由应用团队定义，在自己的命名空间内 ----------</span>
+# ---------- 4. HTTPRoute：由应用团队定义，在自己的命名空间内 ----------
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: order-service-route
   namespace: production
 spec:
-  <span class="tk-c"># 挂载到哪个 Gateway</span>
+  # 挂载到哪个 Gateway
   parentRefs:
   - name: shared-gateway
     namespace: gateway-system
     sectionName: https
 
-  <span class="tk-c"># 匹配的主机名</span>
+  # 匹配的主机名
   hostnames:
   - "api.example.com"
 
   rules:
-  <span class="tk-c"># 规则一：按路径前缀路由</span>
+  # 规则一：按路径前缀路由
   - matches:
     - path:
         type: PathPrefix
@@ -7070,12 +7131,12 @@ spec:
     - name: order-service
       port: 80
       weight: 100
-    <span class="tk-c"># 路由级别的超时配置</span>
+    # 路由级别的超时配置
     timeouts:
       request: 30s
       backendRequest: 25s
 
-  <span class="tk-c"># 规则二：按请求头匹配（Ingress 无法做到）</span>
+  # 规则二：按请求头匹配（Ingress 无法做到）
   - matches:
     - path:
         type: PathPrefix
@@ -7087,7 +7148,7 @@ spec:
     - name: payment-service-v2
       port: 8080
 
-  <span class="tk-c"># 规则三：金丝雀发布（按权重分流，Ingress 需要注解实现）</span>
+  # 规则三：金丝雀发布（按权重分流，Ingress 需要注解实现）
   - matches:
     - path:
         type: PathPrefix
@@ -7101,7 +7162,7 @@ spec:
       weight: 10
 
 ---
-<span class="tk-c"># ---------- 5. GRPCRoute：gRPC 原生支持 ----------</span>
+# ---------- 5. GRPCRoute：gRPC 原生支持 ----------
 apiVersion: gateway.networking.k8s.io/v1
 kind: GRPCRoute
 metadata:
@@ -7120,7 +7181,28 @@ spec:
         method: GetStock
     backendRefs:
     - name: inventory-service
-      port: 50051</code></pre>
+      port: 50051
+---
+# 额外 HTTPRoute：显式把 HTTP 重定向至 HTTPS
+# production 命名空间需已有 gateway-access: "true" 标签
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: redirect-http
+  namespace: production
+spec:
+  parentRefs:
+  - name: shared-gateway
+    namespace: gateway-system
+    sectionName: http
+  hostnames: ["api.example.com", "grpc.example.com"]
+  rules:
+  - filters:
+    - type: RequestRedirect
+      requestRedirect:
+        scheme: https
+        statusCode: 301
+</code></pre>
 
 <div class="box tip">
 <div class="bt">Gateway API 的核心优势</div>
@@ -7130,7 +7212,7 @@ spec:
 <li><strong>原生支持 gRPC</strong>：通过 GRPCRoute 按服务名与方法名路由。</li>
 <li><strong>支持第四层路由</strong>：TCPRoute/UDPRoute 让数据库、DNS 等非 HTTP 服务也能通过同一入口暴露。</li>
 <li><strong>标准化的状态反馈</strong>：每个资源都有清晰的 <code>status.conditions</code>，配置错误时能明确看到原因。</li>
-<li><strong>策略与路由分离</strong>：超时、重试、限流等通过独立的 Policy 资源管理，可跨路由复用。</li>
+<li><strong>核对字段与实现。</strong>HTTPRoute 可包含标准的路由配置，超时、重试等能力随 Gateway API 版本与支持级别演进；部分控制器另有 Policy 扩展。不要假定存在统一的标准 Policy 资源涵盖全部能力。</li>
 </ul>
 </div>
 
@@ -7219,6 +7301,8 @@ spec:
 <li>Gateway API 原生支持<strong>权重分流、请求头匹配、gRPC、第四层路由</strong>，无需依赖注解。</li>
 <li>迁移应遵循<strong>并存 → 影子验证 → 逐域名切换 → 观察后退役</strong>的渐进路径，避免一次性切换。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://gateway-api.sigs.k8s.io/guides/getting-started/introduction/">Gateway API 安装与通道</a> · <a href="https://gateway-api.sigs.k8s.io/guides/http-redirect-rewrite/">HTTPS 重定向</a> · <a href="https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/">Ingress NGINX 退役公告</a></p></div>
 
 <hr>
 
@@ -7699,7 +7783,7 @@ spec:
       - port: "8080"
         protocol: TCP
       rules:
-        <span class="tk-c"># 第七层：只允许特定的 HTTP 方法与路径</span>
+        # 第七层：只允许特定的 HTTP 方法与路径
         http:
         - method: GET
           path: "/v1/orders/.*"
@@ -7715,10 +7799,8 @@ spec:
     - ports:
       - port: "5432"
         protocol: TCP
-      rules:
-        <span class="tk-c"># 只允许特定的 SQL 操作（基于 PostgreSQL 协议解析）</span>
-        - kind: L7Parser
-          ...
+      # 此处只允许到数据库的 TCP 5432，不能据此限制 SQL 语句。
+      # SQL 权限需通过数据库账号、授权或支持该协议的专用代理实施。
 </code></pre>
 
 <div class="box note">
@@ -7744,6 +7826,8 @@ spec:
 <li>依赖自定义命名空间标签匹配存在<strong>权限绕过风险</strong>，优先使用 <code>kubernetes.io/metadata.name</code>。</li>
 <li><strong>第七层策略</strong>（Cilium）提供精细控制，但维护成本高，建议在核心服务上按需使用。</li>
 </ul>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">NetworkPolicy</a> · <a href="https://docs.cilium.io/en/stable/security/policy/language/">Cilium 策略语法</a></p></div>
 
 <hr>
 
@@ -7842,32 +7926,32 @@ spec:
 
 <p><code>emptyDir</code> 在 Pod 被调度到节点时创建，初始为空目录。只要 Pod 还在这个节点上运行，目录就存在。容器崩溃重启，数据仍在；<strong>Pod 被删除或漂移，数据永久丢失</strong>。</p>
 
-<pre><code class="lang-yaml"><span class="tk-f">apiVersion</span>: v1
-<span class="tk-f">kind</span>: Pod
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: emptydir-demo
-<span class="tk-f">spec</span>:
-  <span class="tk-f">containers</span>:
-    <span class="tk-c"># 主容器：写入日志</span>
-    - <span class="tk-f">name</span>: app
-      <span class="tk-f">image</span>: nginx:1.27
-      <span class="tk-f">volumeMounts</span>:
-        - <span class="tk-f">name</span>: shared-logs
-          <span class="tk-f">mountPath</span>: /var/log/nginx
-    <span class="tk-c"># 边车容器：读取同一份日志并转发</span>
-    - <span class="tk-f">name</span>: log-shipper
-      <span class="tk-f">image</span>: busybox:1.36
-      <span class="tk-f">command</span>: ["sh", "-c", "tail -F /logs/access.log"]
-      <span class="tk-f">volumeMounts</span>:
-        - <span class="tk-f">name</span>: shared-logs
-          <span class="tk-f">mountPath</span>: /logs
-          <span class="tk-f">readOnly</span>: true
-  <span class="tk-f">volumes</span>:
-    - <span class="tk-f">name</span>: shared-logs
-      <span class="tk-f">emptyDir</span>: {}
-        <span class="tk-c"># medium: Memory  # 取消注释则使用内存文件系统</span>
-        <span class="tk-c"># sizeLimit: 500Mi</span>
-<span class="lang">yaml</span></code></pre>
+<pre><code class="lang-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: emptydir-demo
+spec:
+  containers:
+    # 主容器：写入日志
+    - name: app
+      image: nginx:1.27
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /var/log/nginx
+    # 边车容器：读取同一份日志并转发
+    - name: log-shipper
+      image: busybox:1.36
+      command: ["sh", "-c", "tail -F /logs/access.log"]
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /logs
+          readOnly: true
+  volumes:
+    - name: shared-logs
+      emptyDir: {}
+        # medium: Memory  # 取消注释则使用内存文件系统
+        # sizeLimit: 500Mi
+</code></pre>
 
 <div class="box warn">
 <div class="bt">emptyDir 的两个坑</div>
@@ -8032,7 +8116,7 @@ spec:
 
 <div class="box warn">
 <div class="bt">subPath 不会热更新</div>
-<p>这是生产上最常见的"改了配置不生效"事故来源。<strong>普通挂载的 ConfigMap/Secret 会自动同步更新</strong>（kubelet 定期同步，约 1 分钟），但<strong>使用 subPath 挂载的文件不会更新</strong>——因为它本质上是把单个文件 bind mount 进容器，kubelet 无法替换挂载点。</p>
+<p>普通目录挂载的 ConfigMap/Secret 最终会同步更新，延迟取决于 kubelet 同步周期和缓存/watch 传播，并非固定约一分钟。subPath 挂载不会接收这些更新；通过环境变量注入的值也不会在现有容器中自动更新。</p>
 <p>所以：需要热更新的配置用目录挂载；用 subPath 时，配置变更必须重启 Pod（滚动更新）。</p>
 </div>
 
@@ -8088,6 +8172,8 @@ spec:
 </ul>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/storage/volumes/">卷</a></p></div>
+
 <hr>
 
 <h2 id="ch22"><span class="num">22</span>PV / PVC / StorageClass</h2>
@@ -8101,7 +8187,7 @@ spec:
 <figure>
 <svg viewBox="0 0 680 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PV PVC StorageClass 关系">
   <defs>
-    <marker id="ar22" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+    <marker id="ar22-unique-1" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
       <path d="M0,0 L7,3.5 L0,7 z" fill="#4a9eff"/>
     </marker>
     <marker id="ar22b" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
@@ -8129,7 +8215,7 @@ spec:
   <rect x="382" y="64" width="120" height="38" rx="5" fill="#1e3a5f" stroke="#4a9eff"/>
   <text x="442" y="80" fill="#fff" font-size="11" text-anchor="middle" font-family="sans-serif" font-weight="700">PV 存储资源</text>
   <text x="442" y="94" fill="#8f9bab" font-size="9.5" text-anchor="middle" font-family="sans-serif">实际存储后端</text>
-  <line x1="442" y1="102" x2="442" y2="118" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar22)"/>
+  <line x1="442" y1="102" x2="442" y2="118" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar22-unique-1)"/>
   <rect x="382" y="120" width="120" height="22" rx="5" fill="#1e3a5f" stroke="#4a9eff"/>
   <text x="442" y="135" fill="#fff" font-size="10.5" text-anchor="middle" font-family="sans-serif">StorageClass</text>
   <text x="522" y="82" fill="#8f9bab" font-size="10" font-family="sans-serif">"我有 NFS、</text>
@@ -8138,7 +8224,7 @@ spec:
   <text x="382" y="162" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">只管供给，不管谁用</text>
 
   <!-- 绑定 -->
-  <line x1="160" y1="131" x2="382" y2="131" stroke="#d6a02c" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#ar22)"/>
+  <line x1="160" y1="131" x2="382" y2="131" stroke="#d6a02c" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#ar22-unique-1)"/>
   <rect x="196" y="112" width="150" height="26" rx="5" fill="#3a2f10" stroke="#d6a02c"/>
   <text x="271" y="129" fill="#d6a02c" font-size="10.5" text-anchor="middle" font-family="sans-serif" font-weight="700">Binding 绑定</text>
 
@@ -8148,15 +8234,15 @@ spec:
 
   <rect x="40" y="216" width="104" height="34" rx="5" fill="#0e1116" stroke="#39c5cf"/>
   <text x="92" y="237" fill="#39c5cf" font-size="10.5" text-anchor="middle" font-family="sans-serif">① 创建 PVC</text>
-  <line x1="144" y1="233" x2="172" y2="233" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar22)"/>
+  <line x1="144" y1="233" x2="172" y2="233" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar22-unique-1)"/>
 
   <rect x="174" y="216" width="120" height="34" rx="5" fill="#0e1116" stroke="#39c5cf"/>
   <text x="234" y="237" fill="#39c5cf" font-size="10.5" text-anchor="middle" font-family="sans-serif">② 匹配 StorageClass</text>
-  <line x1="294" y1="233" x2="322" y2="233" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar22)"/>
+  <line x1="294" y1="233" x2="322" y2="233" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar22-unique-1)"/>
 
   <rect x="324" y="216" width="140" height="34" rx="5" fill="#0e1116" stroke="#39c5cf"/>
   <text x="394" y="237" fill="#39c5cf" font-size="10.5" text-anchor="middle" font-family="sans-serif">③ 供给器创建 PV</text>
-  <line x1="464" y1="233" x2="492" y2="233" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar22)"/>
+  <line x1="464" y1="233" x2="492" y2="233" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar22-unique-1)"/>
 
   <rect x="494" y="216" width="146" height="34" rx="5" fill="#0e1116" stroke="#39c5cf"/>
   <text x="567" y="237" fill="#39c5cf" font-size="10.5" text-anchor="middle" font-family="sans-serif">④ 自动绑定并挂载</text>
@@ -8207,7 +8293,7 @@ spec:
 
 <div class="box warn">
 <div class="bt">RWO 的"Once"指的是节点，不是 Pod</div>
-<p>这是最经典的误解。<code>ReadWriteOnce</code> 的约束粒度是<strong>节点</strong>：同一个节点上的多个 Pod 可以同时挂载同一个 RWO 卷。如果底层是块设备（如云盘），多个 Pod 同时写入会导致文件系统损坏。</p>
+<p>ReadWriteOnce 限制单个节点挂载，同一节点的多个 Pod 可使用同一 RWO 卷。这不必然破坏文件系统，但多个数据库实例并发写同一数据目录可能损坏应用数据。需要限制单 Pod 使用时，可选 ReadWriteOncePod（仅支持 CSI，v1.29 稳定），并确认驱动兼容。</p>
 <p>如果你的应用需要"绝对只有一个 Pod 能挂载"，应使用 <code>ReadWriteOncePod</code>（Kubernetes 1.29+ 稳定）。数据库类应用在无法保证单副本调度时，尤其需要注意这一点。</p>
 </div>
 
@@ -8273,7 +8359,7 @@ kubectl patch pv pv-nfs-50gi -p '{"spec":{"claimRef":null}}'</code></pre>
 <p>静态供给时，控制器为 PVC 寻找 PV 的规则是：</p>
 <ul>
 <li><strong>容量 ≥ 请求容量</strong>（不需要相等）。请求 20Gi 可以绑定到 50Gi 的 PV。</li>
-<li><strong>访问模式必须覆盖</strong>请求的模式。PV 支持 RWX 就能满足 RWO 的请求，反之不行。</li>
+<li>PV 的 accessModes 列表必须显式包含 PVC 请求的每一种模式；只列 RWX 的 PV 不会因为“能力更强”就自动匹配 RWO 请求。</li>
 <li><strong>storageClassName 必须一致</strong>。</li>
 <li>在满足条件的 PV 中，选择<strong>容量最小</strong>的那个，以减少浪费。</li>
 </ul>
@@ -8397,6 +8483,8 @@ kubectl get csidrivers                    <span class="tk-c"># 确认 CSI 驱动
 kubectl -n kube-system get pods | grep csi <span class="tk-c"># 确认 CSI 组件健康</span>
 </code></pre>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">持久卷与访问模式</a></p></div>
+
 <hr>
 
 <h2 id="ch23"><span class="num">23</span>CSI 与有状态存储</h2>
@@ -8424,7 +8512,7 @@ kubectl -n kube-system get pods | grep csi <span class="tk-c"># 确认 CSI 组�
 <figure>
 <svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CSI 架构">
   <defs>
-    <marker id="ar23" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+    <marker id="ar23-unique-2" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
       <path d="M0,0 L7,3.5 L0,7 z" fill="#4a9eff"/>
     </marker>
   </defs>
@@ -8439,13 +8527,13 @@ kubectl -n kube-system get pods | grep csi <span class="tk-c"># 确认 CSI 组�
   <rect x="40" y="98" width="120" height="28" rx="5" fill="#141920" stroke="#252d38"/>
   <text x="100" y="116" fill="#8f9bab" font-size="10" text-anchor="middle" font-family="sans-serif">external-provisioner</text>
 
-  <line x1="160" y1="112" x2="230" y2="112" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar23)"/>
+  <line x1="160" y1="112" x2="230" y2="112" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar23-unique-2)"/>
 
   <rect x="232" y="72" width="150" height="52" rx="5" fill="#2c1f4a" stroke="#a371f7"/>
   <text x="307" y="92" fill="#fff" font-size="10.5" text-anchor="middle" font-family="sans-serif" font-weight="700">CSI Controller 插件</text>
   <text x="307" y="108" fill="#c792ea" font-size="9.5" text-anchor="middle" font-family="sans-serif">Deployment / StatefulSet</text>
 
-  <line x1="382" y1="98" x2="452" y2="98" stroke="#a371f7" stroke-width="1.5" marker-end="url(#ar23)"/>
+  <line x1="382" y1="98" x2="452" y2="98" stroke="#a371f7" stroke-width="1.5" marker-end="url(#ar23-unique-2)"/>
 
   <rect x="454" y="72" width="180" height="52" rx="5" fill="#0e1116" stroke="#39c5cf"/>
   <text x="544" y="92" fill="#39c5cf" font-size="10.5" text-anchor="middle" font-family="sans-serif" font-weight="700">存储后端</text>
@@ -8463,13 +8551,13 @@ kubectl -n kube-system get pods | grep csi <span class="tk-c"># 确认 CSI 组�
   <rect x="40" y="230" width="120" height="28" rx="5" fill="#141920" stroke="#252d38"/>
   <text x="100" y="248" fill="#8f9bab" font-size="10" text-anchor="middle" font-family="sans-serif">CSI Driver Registrar</text>
 
-  <line x1="160" y1="244" x2="230" y2="244" stroke="#3fb950" stroke-width="1.5" marker-end="url(#ar23)"/>
+  <line x1="160" y1="244" x2="230" y2="244" stroke="#3fb950" stroke-width="1.5" marker-end="url(#ar23-unique-2)"/>
 
   <rect x="232" y="204" width="150" height="52" rx="5" fill="#123236" stroke="#39c5cf"/>
   <text x="307" y="224" fill="#fff" font-size="10.5" text-anchor="middle" font-family="sans-serif" font-weight="700">CSI Node 插件</text>
   <text x="307" y="240" fill="#39c5cf" font-size="9.5" text-anchor="middle" font-family="sans-serif">NodeStage / NodePublish</text>
 
-  <line x1="382" y1="230" x2="452" y2="230" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar23)"/>
+  <line x1="382" y1="230" x2="452" y2="230" stroke="#39c5cf" stroke-width="1.5" marker-end="url(#ar23-unique-2)"/>
 
   <rect x="454" y="204" width="180" height="52" rx="5" fill="#0e1116" stroke="#39c5cf"/>
   <text x="544" y="224" fill="#39c5cf" font-size="10.5" text-anchor="middle" font-family="sans-serif" font-weight="700">挂载到 Pod</text>
@@ -8587,9 +8675,9 @@ kubectl -n kube-system get pods | grep csi <span class="tk-c"># 确认 CSI 组�
 <p>CSI 快照通常是<strong>崩溃一致性（crash-consistent）</strong>，而非<strong>应用一致性（application-consistent）</strong>。含义是：</p>
 <ul>
 <li>快照反映的是"某一瞬间磁盘的状态"，但内存中未落盘的数据不在其中。</li>
-<li>恢复后，文件系统是一致的（不会损坏），但应用可能需要崩溃恢复（如数据库重放 WAL 日志）。</li>
+<li>恢复后可能需要文件系统日志回放与数据库崩溃恢复。能否恢复一致状态取决于存储、文件系统和应用；崩溃一致快照不承诺应用数据无损。</li>
 </ul>
-<p>要获得应用一致性快照，必须<strong>在打快照前让应用把数据刷盘并暂停写入</strong>。标准做法是使用 <code>VolumeSnapshot</code> 的 <code>pre-backup</code> hook（需要配合 Velero 等工具），或对数据库执行 <code>FLUSH TABLES WITH READ LOCK</code> 之类的操作。</p>
+<p>VolumeSnapshot API 本身没有 pre-backup hook。应用一致性需要数据库自身的备份/冻结机制，或由 Velero 等工具执行备份 hook，再协调存储快照；仅创建 VolumeSnapshot 无法保证应用一致性。</p>
 </div>
 
 <p>除了从快照恢复，CSI 还支持<strong>卷克隆</strong>——直接从现有 PVC 复制一份：</p>
@@ -8737,7 +8825,7 @@ mysql-2.mysql.default.svc.cluster.local  →  10.244.3.9</code></pre>
 <li><strong>扩缩容不是瞬时的</strong>。缩容时按序号从大到小删除，每个 Pod 都要等优雅终止完成。3 副本缩到 1 副本可能需要几分钟。</li>
 <li><strong>Pod 卡在 Terminating 会阻塞整个流程</strong>。如果 <code>mysql-2</code> 无法正常终止，<code>mysql-1</code> 不会被删除。</li>
 <li><strong>更新策略默认是 RollingUpdate 但逆序执行</strong>。从最大序号开始更新，与 Deployment 的滚动方向相反。</li>
-<li><strong>PVC 不会被自动清理</strong>。缩容后遗留的 PVC 会持续占存储，需要显式删除。</li>
+<li>StatefulSet 的 PVC 默认保留，但可通过 persistentVolumeClaimRetentionPolicy 改为自动删除；运维前检查实际策略。</li>
 </ul>
 </div>
 
@@ -8754,6 +8842,8 @@ mysql-2.mysql.default.svc.cluster.local  →  10.244.3.9</code></pre>
 </ol>
 
 <p>每一层都在解决上一层的局限，最终形成了一套"应用只管声明需求，平台负责满足"的完整抽象。</p>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/storage/volume-snapshots/">卷快照</a></p></div>
 
 <hr>
 
@@ -8786,7 +8876,7 @@ mysql-2.mysql.default.svc.cluster.local  →  10.244.3.9</code></pre>
 </div>
 <div class="card">
 <h5>Secret</h5>
-<p>存放敏感数据：密码、Token、TLS 证书、SSH 密钥。在 etcd 中可以选择加密存储，kubelet 在挂载时使用 tmpfs（内存文件系统），不会落盘到节点磁盘。</p>
+<p>Secret 用于密码、Token、TLS 证书等敏感数据；data 是 Base64 编码，静态加密需另配。Linux 节点通常用 tmpfs 挂载 Secret；Windows 行为不同，Linux 启用 swap 时也需评估敏感页落盘风险，不能保证所有场景永不落盘。</p>
 </div>
 </div>
 
@@ -8918,7 +9008,7 @@ kubectl create configmap app-env --from-env-file=./app.env
 <thead><tr><th>方式</th><th>变更后是否生效</th><th>原因</th></tr></thead>
 <tbody>
 <tr><td>环境变量（env / envFrom）</td><td><strong>不会</strong></td><td>环境变量在容器进程启动时确定，之后无法修改</td></tr>
-<tr><td>Volume 目录挂载</td><td><strong>会</strong>（约 1 分钟内）</td><td>kubelet 定期同步，用原子替换方式更新文件</td></tr>
+<tr><td>Volume 目录挂载</td><td><strong>会</strong>（最终一致，延迟取决于同步与缓存配置）</td><td>kubelet 定期同步，用原子替换方式更新文件</td></tr>
 <tr><td>Volume + subPath 挂载</td><td><strong>不会</strong></td><td>subPath 是 bind mount 单文件，挂载点无法替换</td></tr>
 </tbody>
 </table>
@@ -8982,7 +9072,7 @@ kubectl create secret docker-registry regcred \
 
 <div class="box tip">
 <div class="bt">优先使用 stringData</div>
-<p><code>stringData</code> 让你直接写明文，API Server 在写入时自动转成 <code>data</code>。这避免了手工 Base64 编码时的错误，也让 YAML 更易读。但注意：<strong>写在 <code>stringData</code> 里的明文仍然会出现在 <code>kubectl get -o yaml</code> 的输出里</strong>（以 Base64 形式），所以不要把明文 Secret 提交到 Git 仓库。</p>
+<p>stringData 方便输入明文，API Server 写入时转换为 data，读取时只显示 Base64 编码的 data。它与 Server-Side Apply 配合不佳；使用 SSA 时优先生成 data。两者都不应把明文或可还原的敏感数据提交到 Git。</p>
 </div>
 
 <h3>24.5 镜像拉取凭证</h3>
@@ -9098,6 +9188,8 @@ kubectl create secret docker-registry regcred \
 <p>所以生产上的稳妥做法是：<strong>配置变更 → 触发滚动更新 → 所有副本以新配置统一重启</strong>。这样变更过程可控、可回滚、状态一致。</p>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/configuration/configmap/">ConfigMap</a> · <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Secret</a></p></div>
+
 <hr>
 
 <h2 id="ch25"><span class="num">25</span>认证、授权与 RBAC</h2>
@@ -9111,7 +9203,7 @@ kubectl create secret docker-registry regcred \
 <figure>
 <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="API Server 请求处理链路">
   <defs>
-    <marker id="ar25" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+    <marker id="ar25-unique-3" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
       <path d="M0,0 L7,3.5 L0,7 z" fill="#4a9eff"/>
     </marker>
   </defs>
@@ -9123,7 +9215,7 @@ kubectl create secret docker-registry regcred \
   <text x="77" y="70" fill="#dbe3ec" font-size="11" text-anchor="middle" font-family="sans-serif" font-weight="700">客户端</text>
   <text x="77" y="88" fill="#5f6b7a" font-size="9.5" text-anchor="middle" font-family="sans-serif">kubectl / Pod / CI</text>
 
-  <line x1="130" y1="74" x2="158" y2="74" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar25)"/>
+  <line x1="130" y1="74" x2="158" y2="74" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar25-unique-3)"/>
 
   <!-- 认证 -->
   <rect x="160" y="36" width="150" height="76" rx="6" fill="#0e1116" stroke="#3fb950"/>
@@ -9131,7 +9223,7 @@ kubectl create secret docker-registry regcred \
   <text x="235" y="78" fill="#8f9bab" font-size="10" text-anchor="middle" font-family="sans-serif">你是谁？</text>
   <text x="235" y="96" fill="#5f6b7a" font-size="9" text-anchor="middle" font-family="sans-serif">证书 / Token / OIDC</text>
 
-  <line x1="310" y1="74" x2="338" y2="74" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar25)"/>
+  <line x1="310" y1="74" x2="338" y2="74" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar25-unique-3)"/>
 
   <!-- 授权 -->
   <rect x="340" y="36" width="150" height="76" rx="6" fill="#0e1116" stroke="#d6a02c"/>
@@ -9139,7 +9231,7 @@ kubectl create secret docker-registry regcred \
   <text x="415" y="78" fill="#8f9bab" font-size="10" text-anchor="middle" font-family="sans-serif">你能做什么？</text>
   <text x="415" y="96" fill="#5f6b7a" font-size="9" text-anchor="middle" font-family="sans-serif">RBAC / ABAC / Webhook</text>
 
-  <line x1="490" y1="74" x2="518" y2="74" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar25)"/>
+  <line x1="490" y1="74" x2="518" y2="74" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#ar25-unique-3)"/>
 
   <!-- 准入 -->
   <rect x="520" y="36" width="136" height="76" rx="6" fill="#0e1116" stroke="#a371f7"/>
@@ -9259,7 +9351,7 @@ kubectl config use-context alice@cluster
 <tr><td><strong>RBAC</strong></td><td>基于角色的访问控制，通过 Role/ClusterRole 与 Binding 授权</td><td>生产标准，默认启用</td></tr>
 <tr><td><strong>Node</strong></td><td>专门给 kubelet 用的授权器，限制其只能访问本节点的资源</td><td>默认启用，与 RBAC 配合</td></tr>
 <tr><td><strong>Webhook</strong></td><td>把授权决策委托给外部 HTTP 服务</td><td>用于对接企业权限系统</td></tr>
-<tr><td><strong>ABAC</strong></td><td>基于属性的策略文件</td><td>已废弃，不推荐</td></tr>
+<tr><td>ABAC</td><td>基于属性的策略文件</td><td>仍受支持的旧式授权方式；新部署通常选 RBAC</td></tr>
 <tr><td><strong>AlwaysAllow</strong></td><td>允许一切</td><td><strong>绝不能在生产使用</strong></td></tr>
 <tr><td><strong>AlwaysDeny</strong></td><td>拒绝一切</td><td>仅测试用</td></tr>
 </tbody>
@@ -9491,7 +9583,7 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 </tbody>
 </table>
 </div>
-<p style="margin-top:12px"><strong>重点</strong>：<code>system:masters</code> 组会绕过 RBAC。签发客户端证书时若 O 字段写成 <code>system:masters</code>，等于发了张万能通行证，且这种绕过<strong>不会出现在 RBAC 的审计里</strong>。审计时要特别检查证书的 O 字段。</p>
+<p style="margin-top:12px"><code>system:masters</code> 绕过授权检查，并不等于绕过 API 审计。成员资格和签发权限应严格受控；请求是否被记录及详细程度由 audit policy 决定。</p>
 </div>
 
 <h3>25.7 权限设计的原则</h3>
@@ -9518,12 +9610,14 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 <li><strong>create pods/exec</strong>：可以 exec 进任何有权限的 Pod，读取其环境变量和挂载的 Secret。</li>
 <li><strong>get secrets</strong>：直接读取所有密钥。</li>
 <li><strong>create serviceaccounts/token</strong>：为任意 SA 签发 Token。</li>
-<li><strong>create clusterrolebindings</strong>：给自己绑定 cluster-admin。</li>
-<li><strong>patch/patch nodes</strong>：修改节点状态。</li>
+<li><strong>create clusterrolebindings</strong> 的风险取决于所引用角色及授权范围：绑定自己不拥有的权限通常还需对应角色的 bind 权限；不能仅凭 create 就任意绑定 cluster-admin。</li>
+<li><strong>patch nodes</strong> 可修改获准的节点对象字段；修改 status 还需 nodes/status 子资源权限，不能把所有节点状态修改归到同一个授权项。</li>
 <li><strong>create validatingwebhookconfigurations</strong>：注入恶意准入控制器。</li>
-<li><strong>create csidrivers</strong>：注册恶意 CSI 驱动，以 root 挂载任意路径。</li>
+<li><strong>create csidrivers</strong> 可以修改存储驱动注册信息，但不会自动部署驱动程序或获得节点 root。部署具备特权/hostPath 的驱动 Pod 还涉及其他 API 权限与准入控制；应联合审计。</li>
 </ul>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">RBAC</a> · <a href="https://kubernetes.io/docs/reference/access-authn-authz/authorization/">授权</a></p></div>
 
 <hr>
 
@@ -9554,7 +9648,7 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 <figure>
 <svg viewBox="0 0 680 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pod 安全纵深防御">
   <defs>
-    <marker id="ar26" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
+    <marker id="ar26-unique-4" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto">
       <path d="M0,0 L7,3.5 L0,7 z" fill="#4a9eff"/>
     </marker>
   </defs>
@@ -9686,7 +9780,7 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 <ul>
 <li>限制在专用节点上（用污点隔离）。</li>
 <li>配合强化的准入策略，只允许特定 ServiceAccount 创建特权 Pod。</li>
-<li>用 <code>allowedCapabilities</code> 白名单替代整体 privileged。</li>
+<li>Pod/容器 securityContext 没有 allowedCapabilities 字段（这是旧 PSP 的字段）。使用 capabilities.drop/add 精确声明能力，并用 PSA 或准入策略约束允许的集合。</li>
 </ul>
 </div>
 
@@ -9713,7 +9807,7 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 <thead><tr><th>级别</th><th>限制内容</th><th>适用场景</th></tr></thead>
 <tbody>
 <tr><td><code>privileged</code></td><td>无限制，允许一切</td><td>系统组件、CNI/CSI 插件所在命名空间</td></tr>
-<tr><td><code>baseline</code></td><td>禁止特权容器、hostNetwork/hostPID/hostIPC、多数 capabilities、hostPath（有限允许）</td><td>常规业务应用的<strong>最低要求</strong></td></tr>
+<tr><td><code>baseline</code></td><td>禁止特权容器、hostNetwork/hostPID/hostIPC、多数 capabilities、hostPath（禁止）</td><td>常规业务应用的<strong>最低要求</strong></td></tr>
 <tr><td><code>restricted</code></td><td>在 baseline 基础上，强制 runAsNonRoot、drop ALL capabilities、seccompProfile 必须设置、禁止特权提升</td><td>安全要求高的生产环境</td></tr>
 </tbody>
 </table>
@@ -9823,7 +9917,7 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 </table>
 </div>
 
-<p>这些字段在 <code>baseline</code> 级别中除 <code>hostPath</code> 外基本被禁止，正是出于安全考虑。</p>
+<p>baseline 禁止 hostNetwork、hostPID、hostIPC 与 hostPath；shareProcessNamespace 并不在 baseline 的禁止项中。特权容器以及 restricted 的附加限制需按 Pod Security Standards 分别核对。</p>
 
 <h3>26.8 网络策略与最小权限</h3>
 
@@ -9901,6 +9995,8 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 </ul>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/">Pod 安全标准</a></p></div>
+
 <hr>
 
 <h2 id="ch27"><span class="num">27</span>调度器工作原理</h2>
@@ -9977,8 +10073,8 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 
 <div class="box deep">
 <div class="bt">为什么需要 Reserve 阶段</div>
-<p>调度器是<strong>并发工作</strong>的——它同时为多个 Pod 寻找节点。如果没有 Reserve 阶段，两个 Pod 可能同时看到"节点 A 还有 1 核空闲"，于是都被调度到 A，导致 A 超卖。</p>
-<p>Reserve 的作用是<strong>在打分前就把资源在调度器的缓存中"扣掉"</strong>，形成一个乐观锁。如果最终绑定失败（如遇到竞争），会执行 Unreserve 归还资源。这保证了调度决策的一致性，也解释了为什么调度器能"看到"集群实时状态——它维护了一份节点资源的本地缓存副本，通过 watch 事件持续更新。</p>
+<p>默认调度器的 scheduling cycle 串行执行，binding cycle 可以并发。调度器维护基于 watch 的本地缓存，并用 Assume 记录已选节点、尚未完成绑定的 Pod，避免后续调度忽略这些资源占用。</p>
+<p>Reserve 扩展点发生在节点筛选、打分和选定之后，允许插件预留自身管理的资源；后续失败时执行 Unreserve。它与调度器缓存的 Assume 机制相关但不是同一操作，不能描述成“打分前扣资源”。</p>
 </div>
 
 <h3>27.2 调度失败的诊断</h3>
@@ -10159,7 +10255,7 @@ kubectl get events --field-selector involvedObject.name=myapp-xxx --sort-by=.las
 <li>集群只有 2 个节点。</li>
 </ul>
 <p>结果：第 3 个 Pod <strong>永远 Pending</strong>，事件显示 <code>node(s) didn't match pod anti-affinity rules</code>。因为硬约束要求每个节点只能有一个 Pod，而节点数不够。</p>
-<p>更危险的是它与<strong>自动扩缩容的相互死锁</strong>：HPA 因为负载高要扩到 5 副本，但集群只有 3 个节点，多余 2 个 Pod 一直 Pending；而集群自动扩缩容器（Cluster Autoscaler）看到有 Pending Pod 想扩容节点，但反亲和性使它无法为这些 Pod 找到合法节点，于是也不扩容。最终卡死。</p>
+<p>hostname 硬反亲和性会限制现有节点上的副本数，但若 CA 管理的节点组可以增加符合条件的新节点，扩节点通常能解决该限制。节点组已到上限、标签不符或无法增加所需拓扑域时，新 Pod 才会持续不可调度。</p>
 <p><strong>建议</strong>：反亲和性优先用 <code>preferred</code>；必须用 <code>required</code> 时，确保节点数 ≥ 副本数，并留有余量。</p>
 </div>
 
@@ -10190,7 +10286,7 @@ kubectl get events --field-selector involvedObject.name=myapp-xxx --sort-by=.las
 <div class="bt">maxSkew 的含义</div>
 <p><code>maxSkew</code> 是"最大偏斜度"，定义为：<strong>某个拓扑域中的 Pod 数量 − 所有拓扑域中 Pod 数量的最小值</strong>。</p>
 <p>例如 3 个可用区，Pod 分布为 [2, 1, 1]，最小值为 1，最大偏差为 2−1=1。若 <code>maxSkew: 1</code> 则允许；若新 Pod 要放到已有 2 个的区（变成 3,1,1，偏差 2），则被拒绝，必须放到 1 个的区。</p>
-<p><code>minDomains</code> 用于处理"可用区数量少"的情况：如果实际只有 1 个可用区可用，不设置 <code>minDomains</code> 时分布约束会"退化"为总是满足（因为最小值就是最大值）；设置后会强制要求至少这么多域，否则不调度。</p>
+<p>当符合条件的拓扑域数量小于 minDomains 时，计算 skew 使用的全局最小值按 0 处理。是否能调度仍取决于 maxSkew 与各域匹配 Pod 数量，并非域不足就禁止所有调度。</p>
 </div>
 
 <h3>27.7 污点与容忍（Taint &amp; Toleration）</h3>
@@ -10254,7 +10350,7 @@ kubectl describe node node-gpu-1 | grep -i taint
 </tbody>
 </table>
 </div>
-<p style="margin-top:12px">Deployment 等控制器创建的 Pod 会<strong>自动</strong>获得对 <code>not-ready</code> 和 <code>unreachable</code> 的 300 秒容忍。而手工创建的 Pod 没有这个容忍，节点一失联就会被立即标记删除。</p>
+<p style="margin-top:12px">默认启用的 DefaultTolerationSeconds 准入插件会给普通 Pod 补充 not-ready/unreachable 的 300 秒容忍，手工创建的 Pod 也在范围内；显式配置可改变时长。DaemonSet 对这两类污点通常自动添加无限期容忍。</p>
 </div>
 
 <div class="box tip">
@@ -10336,6 +10432,8 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
 <p>实践中常见组合：核心在线业务用 LeastAllocated 保证稳定性，批处理/离线任务用 MostAllocated 提高利用率。</p>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/">调度框架</a> · <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/">拓扑分布</a> · <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">污点容忍</a></p></div>
+
 <hr>
 
 <h2 id="ch28"><span class="num">28</span>资源请求、限制与 QoS</h2>
@@ -10347,7 +10445,7 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
 <div class="grid2">
 <div class="card">
 <h5>requests（请求量）</h5>
-<p><strong>给调度器看的</strong>。调度器把节点上所有 Pod 的 requests 加起来，确保不超过节点可分配容量。<strong>它不影响容器实际能用多少</strong>。</p>
+<p>requests 主要用于调度计账和 QoS，同时也影响运行时资源分配，例如 CPU 竞争时的 shares/weight。它不是实际用量，也不是硬上限；内存 request 并不保证预分配等量物理内存。</p>
 <p style="color:#3fb950;margin-top:8px">作用：资源预留、调度依据、QoS 判定</p>
 </div>
 <div class="card">
@@ -10425,7 +10523,7 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
 <thead><tr><th>资源</th><th>超过 limits 时</th><th>后果</th></tr></thead>
 <tbody>
 <tr><td><strong>CPU</strong></td><td>被 CFS 限流（throttle）</td><td>进程变慢，不被杀。表现为延迟升高、P99 抖动</td></tr>
-<tr><td><strong>内存</strong></td><td>触发 OOM Killer</td><td>容器内进程被<strong>杀死</strong>，Pod 重启</td></tr>
+<tr><td><strong>内存</strong></td><td>达到硬限制且无法回收足够内存时可能触发 cgroup OOM</td><td>进程可能被杀，容器是否重启由 restartPolicy 决定；Pod 对象通常不因此重建</td></tr>
 </tbody>
 </table>
 </div>
@@ -10452,7 +10550,7 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
 <div class="bt">不设内存 limits 的真实风险</div>
 <p>看起来"不设 limits 就能用更多内存"，但风险在于：</p>
 <ul>
-<li><strong>内存泄漏会拖垮整个节点</strong>。应用慢慢吃内存，直到节点内存耗尽，kubelet 触发驱逐，把节点上<strong>所有</strong> Pod 赶走——包括无辜的其他服务。</li>
+<li><strong>内存泄漏可能影响整个节点。</strong>kubelet 在内存压力下按驱逐规则选择 Pod，未必驱逐全部 Pod；若回收或驱逐不够及时，还可能发生节点级 OOM。</li>
 <li><strong>无法定位问题</strong>。没有 limits 就没有明确的"谁超了"信号，排查困难。</li>
 <li><strong>节点级 OOM 更难恢复</strong>。内核 OOM Killer 可能杀掉 kubelet 或容器运行时本身，导致节点失联。</li>
 </ul>
@@ -10461,7 +10559,7 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
 
 <h3>28.4 QoS 等级</h3>
 
-<p>Kubernetes 根据 requests 与 limits 的关系，自动给 Pod 分配三种 QoS 等级。这个等级决定了<strong>节点资源紧张时谁先被驱逐</strong>。</p>
+<p>QoS 反映 Pod 的资源保障配置，但节点压力驱逐不是单纯按 QoS 排队。kubelet 会比较使用量是否超过 requests、Pod 优先级，以及相对 requests 的超额使用；容器级 OOM、节点级 OOM 与 kubelet 驱逐必须分别分析。</p>
 
 <figure>
 <svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QoS 等级">
@@ -10477,36 +10575,36 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
   <rect x="24" y="40" width="632" height="76" rx="6" fill="#0e1116" stroke="#3fb950"/>
   <text x="40" y="62" fill="#3fb950" font-size="12" font-family="sans-serif" font-weight="700">Guaranteed（最高保障）</text>
   <text x="40" y="82" fill="#8f9bab" font-size="10" font-family="sans-serif">条件：每个容器都设置了 CPU 和内存的 requests 与 limits，且两者相等</text>
-  <text x="40" y="100" fill="#5f6b7a" font-size="10" font-family="sans-serif">OOM 评分最低（最不容易被杀）· 最后被驱逐 · 适合核心在线服务、数据库</text>
+  <text x="40" y="100" fill="#5f6b7a" font-size="10" font-family="sans-serif">调整值较低 · 不保证免于 OOM 或驱逐 · 适合核心在线服务、数据库</text>
 
   <!-- Burstable -->
   <rect x="24" y="126" width="632" height="76" rx="6" fill="#0e1116" stroke="#d6a02c"/>
   <text x="40" y="148" fill="#d6a02c" font-size="12" font-family="sans-serif" font-weight="700">Burstable（可突发）</text>
   <text x="40" y="168" fill="#8f9bab" font-size="10" font-family="sans-serif">条件：设置了 requests/limits 但不满足 Guaranteed 的条件（最宽松的中间态）</text>
-  <text x="40" y="186" fill="#5f6b7a" font-size="10" font-family="sans-serif">OOM 评分按"实际使用超出 requests 的比例"计算 · 适合绝大多数业务应用</text>
+  <text x="40" y="186" fill="#5f6b7a" font-size="10" font-family="sans-serif">oom_score_adj 按内存 request / 节点容量计算；内核另计实际用量 · 适合绝大多数业务应用</text>
 
   <!-- BestEffort -->
   <rect x="24" y="212" width="632" height="76" rx="6" fill="#0e1116" stroke="#f0574d"/>
   <text x="40" y="234" fill="#f0574d" font-size="12" font-family="sans-serif" font-weight="700">BestEffort（最低保障）</text>
   <text x="40" y="254" fill="#8f9bab" font-size="10" font-family="sans-serif">条件：所有容器都没有设置任何 requests 和 limits</text>
-  <text x="40" y="272" fill="#5f6b7a" font-size="10" font-family="sans-serif">OOM 评分最高（最先被杀）· 最先被驱逐 · 仅适合可随时中断的任务</text>
+  <text x="40" y="272" fill="#5f6b7a" font-size="10" font-family="sans-serif">调整值最高 · 驱逐还取决于优先级和资源使用 · 仅适合可随时中断的任务</text>
 
   <!-- 驱逐箭头 -->
   <line x1="656" y1="284" x2="656" y2="48" stroke="#f0574d" stroke-width="1.5" marker-end="url(#ar28b)" transform="translate(-24,0)"/>
-  <text x="600" y="300" fill="#f0574d" font-size="10" font-family="sans-serif">驱逐顺序：BestEffort → Burstable → Guaranteed</text>
+  <text x="640" y="300" fill="#f0574d" font-size="10" text-anchor="end" font-family="sans-serif">驱逐综合超额使用、优先级与相对用量</text>
 </svg>
-<figcaption>图 28-2 QoS 等级由 requests/limits 的关系自动推导，决定了资源紧张时的存亡顺序</figcaption>
+<figcaption>图 28-2 QoS 等级由 requests/limits 的关系自动推导，影响资源保障，但不构成绝对驱逐顺序</figcaption>
 </figure>
 
 <div class="box deep">
 <div class="bt">OOM 评分的计算逻辑</div>
-<p>内核为每个进程计算一个 <code>oom_score_adj</code>（−1000 到 1000，值越大越容易被杀）：</p>
+<p>kubelet 根据 QoS 与资源请求为容器设置 <code>oom_score_adj</code>；内核再结合进程内存使用等因素计算最终 OOM 分数。以下是普通 Pod 在节点级 OOM 下的调整值，并非 kubelet 的驱逐排序公式。</p>
 <ul>
-<li><strong>Guaranteed</strong>：固定为 <code>-997</code>，几乎不会被杀。</li>
+<li><strong>Guaranteed</strong>：普通容器的 oom_score_adj 为 <code>-997</code>；命中自身 cgroup 内存上限时仍可能被 OOM 杀死。</li>
 <li><strong>BestEffort</strong>：固定为 <code>1000</code>，最优先被杀。</li>
-<li><strong>Burstable</strong>：动态计算，公式大致为 <code>1000 × (实际使用 − requests) / (limits − requests)</code>。也就是说，<strong>超出 requests 越多，越容易被杀</strong>。</li>
+<li><strong>Burstable</strong>：普通容器的调整值为 <code>min(max(2, 1000 - 1000 × memoryRequestBytes / machineMemoryCapacityBytes), 999)</code>。它不使用 limits，也不使用“实际使用减 requests”的比例。节点关键 Pod 另有处理。</li>
 </ul>
-<p>这带来一个重要推论：<strong>Burstable 的 Pod 之间，requests 设得越低越危险</strong>。如果你把 requests 设成实际用量的十分之一，那么一旦节点内存紧张，你的 Pod 会最先被 OOM Killer 挑中。所以 requests 应该接近真实用量，而不是"越小越好"。</p>
+<p>较小的内存 request 通常意味着较高的 oom_score_adj，但不能据此保证某个容器先被杀。合理 request 应基于工作负载观测；结合节点可用内存、容器 limit 与应用内存行为分析风险。</p>
 </div>
 
 <h3>28.5 如何设定合理的值</h3>
@@ -10569,7 +10667,7 @@ kubectl describe node node-1 | grep -A8 "Allocated resources"
 </ol>
 <p>防御措施：</p>
 <ul>
-<li>配置容器运行时的日志轮转（<code>max-size</code>、<code>max-file</code>）。</li>
+<li>使用 kubelet 的 containerLogMaxSize / containerLogMaxFiles 配置 CRI 容器日志轮转；Docker 独立运行场景的 max-size/max-file 是另一套配置。</li>
 <li>应用侧控制日志级别，避免 DEBUG 日志进入生产。</li>
 <li>设置 ephemeral-storage 的 requests/limits。</li>
 <li>监控节点磁盘使用率，提前告警。</li>
@@ -10677,6 +10775,8 @@ kubectl describe node node-1 | grep -A8 "Allocated resources"
 </tbody>
 </table>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/">节点压力驱逐与 OOM 调整</a> · <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">资源管理</a></p></div>
 
 <hr>
 
@@ -10975,15 +11075,17 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 <div class="box tip">
 <div class="bt">调度配置的实践原则</div>
 <ul>
-<li><strong>优先用 topologySpreadConstraints 而非 podAntiAffinity</strong>。前者更灵活、更可预测，且不会因为节点数不足而死锁。</li>
+<li><strong>按可用性要求选择约束。</strong>topologySpreadConstraints 更直接表达分布偏差；DoNotSchedule、minDomains 与节点组范围仍可能限制扩容，不能承诺永远不会因容量或域不足而 Pending。</li>
 <li><strong>硬约束要克制</strong>。<code>required</code> 只在确实不可妥协时使用（如 GPU 必需、数据必须本地）。其余场景用 <code>preferred</code>。</li>
-<li><strong>预留扩展余量</strong>。如果用了硬反亲和性且副本数接近节点数，集群将无法扩容——HPA 扩出的 Pod 会一直 Pending。至少保留 30% 的节点余量。</li>
+<li><strong>硬反亲和性会限制容量。</strong>基于 hostname 的约束可能通过 CA 新增节点解决；如果节点组到达上限，或约束固定在无法增加的拓扑域，则新副本仍不可调度。余量按失效域与容量规划评估，不能一概说硬反亲和性使集群无法扩容。</li>
 <li><strong>标签命名要规范</strong>。用统一的命名空间前缀（如 <code>example.com/node-pool</code>）避免冲突，并记录在文档中。</li>
 <li><strong>节点池要成组管理</strong>。手工给节点打标签容易遗漏，应该用节点池（NodePool/节点组）在云平台层面统一配置，新节点自动带上标签和污点。</li>
 <li><strong>用 PriorityClass 表达业务重要性</strong>。这样在资源紧张时，关键业务能自动获得资源，而不需要人工干预。</li>
 <li><strong>定期审计调度约束</strong>。随着业务演进，早期设置的约束可能已经不合理，定期检查能发现"过度约束"和"约束失效"的情况。</li>
 </ul>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/">亲和性</a></p></div>
 
 <hr>
 
@@ -11099,7 +11201,7 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
   <rect x="356" y="270" width="300" height="98" rx="6" fill="#0e1116" stroke="#39c5cf"/>
   <text x="372" y="292" fill="#39c5cf" font-size="11" font-family="sans-serif" font-weight="700">关键约束</text>
   <text x="372" y="312" fill="#8f9bab" font-size="10" font-family="sans-serif">• 只能抢占优先级更低的 Pod</text>
-  <text x="372" y="330" fill="#8f9bab" font-size="10" font-family="sans-serif">• 遵守 PDB（可能拒绝驱逐）</text>
+  <text x="372" y="330" fill="#8f9bab" font-size="10" font-family="sans-serif">• 尽力避免违反 PDB，但不强制保证</text>
   <text x="372" y="348" fill="#8f9bab" font-size="10" font-family="sans-serif">• 抢占是"尽力而为"，不保证成功</text>
   <text x="372" y="362" fill="#8f9bab" font-size="10" font-family="sans-serif">• 被抢占的 Pod 可能落到其他节点</text>
 </svg>
@@ -11110,7 +11212,7 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 <div class="bt">抢占的两个重要细节</div>
 <p><strong>细节一：抢占会"跨节点"尝试。</strong>调度器会在所有节点上模拟，找出"驱逐代价最小"的方案。代价用"被驱逐 Pod 的优先级之和"衡量，选择总和最小的节点。</p>
 <p><strong>细节二：抢占不会驱逐同等或更高优先级的 Pod。</strong>如果新 Pod 的优先级不够高，抢占无法生效，Pod 只能保持 Pending。这引出一个重要实践：<strong>不要把所有业务都设为高优先级</strong>，否则抢占失效，大家互相等不到资源。</p>
-<p><strong>细节三：抢占不保证成功。</strong>即使调度器发起了驱逐，被驱逐的 Pod 可能因为 PDB 限制而拒绝退出，或者退出过程中资源被其他 Pod 抢走。此时新 Pod 会重新进入调度队列等待。</p>
+<p><strong>细节三：抢占不保证调度成功。</strong>调度器尽力选择不违反 PDB 的牺牲者，但必要时可违反 PDB；PDB 不会拒绝抢占删除。资源释放、其他约束和并发绑定仍可能使新 Pod 等待。</p>
 </div>
 
 <div class="box warn">
@@ -11125,7 +11227,7 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 
 <h3>30.3 PodDisruptionBudget：保护可用性</h3>
 
-<p>抢占、节点维护、集群升级、自动缩容——这些都会<strong>主动驱逐</strong>Pod。PDB 用于限制"同时可以被驱逐的 Pod 数量"，保证业务不中断。</p>
+<p>PDB 约束经 <strong>Eviction API</strong> 发起的自愿中断，例如正常 drain 与节点自动缩容。它不强制约束调度器抢占、Deployment/StatefulSet 滚动更新或直接删除 Pod，也不能保证业务零中断。</p>
 
 <pre><code class="lang-yaml"><span class="tk-c"># 方式一：保证至少 2 个副本始终可用</span>
 <span class="tk-f">apiVersion</span>: policy/v1
@@ -11183,7 +11285,7 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 <li>节点维护需要驱逐这个 Pod，但 PDB 不允许（驱逐后可用数会降到 0）。</li>
 <li>驱逐请求被无限拒绝，<strong>节点排空操作卡死</strong>，整个集群升级流程停滞。</li>
 </ol>
-<p><strong>规则</strong>：<code>minAvailable</code> 必须小于副本数。<strong>单副本应用不要配 PDB</strong>（配了也没意义，因为无法容忍任何中断）。PDB 只对 2 副本以上的应用有意义。</p>
+<p>单副本应用配置 minAvailable: 1 可以阻止经 Eviction API 的维护中断，但会阻塞 drain；这可能是有意的保护，需要停机窗口或先增加副本。多副本应用通常留出至少一个可驱逐名额，具体预算取决于服务和仲裁要求。</p>
 </div>
 
 <h3>30.4 主动驱逐 vs 被动驱逐</h3>
@@ -11194,7 +11296,7 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 <table>
 <thead><tr><th>类型</th><th>触发方式</th><th>是否受 PDB 保护</th><th>例子</th></tr></thead>
 <tbody>
-<tr><td><strong>主动驱逐（Voluntary）</strong></td><td>通过 Eviction API 发起</td><td><strong>是</strong></td><td><code>kubectl drain</code>、抢占、集群自动缩容、Descheduler</td></tr>
+<tr><td><strong>Eviction API 中断</strong></td><td>提交 eviction 请求</td><td><strong>是</strong></td><td>正常 kubectl drain、集群自动缩容、使用 eviction 的 Descheduler</td></tr>
 <tr><td><strong>被动驱逐（Involuntary）</strong></td><td>节点故障或资源耗尽</td><td><strong>否</strong></td><td>节点宕机、内存不足被 OOM、磁盘压力、kubelet 驱逐</td></tr>
 </tbody>
 </table>
@@ -11215,23 +11317,26 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 
 <p>集群运维中，节点维护（升级内核、更换硬件、缩容）是常规操作。标准流程如下：</p>
 
-<pre><code class="lang-bash"><span class="tk-c"># 1. 标记节点不可调度（阻止新 Pod 进入）</span>
+<pre><code class="lang-bash"># 1. 标记节点不可调度（阻止新 Pod 进入）
 kubectl cordon node-1
 
-<span class="tk-c"># 2. 驱逐节点上的 Pod（走 PDB 保护）</span>
+# 2. 驱逐节点上的 Pod（走 PDB 保护）
+# 忽略 DaemonSet（它们无法被驱逐）
 kubectl drain node-1 \
-  --ignore-daemonsets \        <span class="tk-c"># 忽略 DaemonSet（它们无法被驱逐）</span>
-  --delete-emptydir-data \     <span class="tk-c"># 确认可删除 emptyDir 数据</span>
-  --grace-period=120 \         <span class="tk-c"># 优雅终止时间</span>
-  --timeout=600s               <span class="tk-c"># 超时时间</span>
+  # 确认可删除 emptyDir 数据
+  --ignore-daemonsets \
+  # 优雅终止时间
+  --delete-emptydir-data \
+  --grace-period=120 \
+  --timeout=600s               # 超时时间
 
-<span class="tk-c"># 3. 执行维护操作（升级、重启、换硬件）</span>
-<span class="tk-c"># ...</span>
+# 3. 执行维护操作（升级、重启、换硬件）
+# ...
 
-<span class="tk-c"># 4. 恢复调度</span>
+# 4. 恢复调度
 kubectl uncordon node-1
 
-<span class="tk-c"># 5. 确认 Pod 回流并健康</span>
+# 5. 确认 Pod 回流并健康
 kubectl get pods -o wide --field-selector spec.nodeName=node-1
 </code></pre>
 
@@ -11268,7 +11373,7 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
   <!-- 时间轴 -->
   <line x1="60" y1="60" x2="640" y2="60" stroke="#252d38" stroke-width="2"/>
   <text x="60" y="48" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">t=0</text>
-  <text x="620" y="48" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">t=gracePeriod</text>
+  <text x="612.0" y="48" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">t=gracePeriod</text>
 
   <!-- 轨道1：Endpoint -->
   <rect x="24" y="80" width="632" height="60" rx="6" fill="#0e1116" stroke="#3fb950"/>
@@ -11311,7 +11416,7 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
 <li><strong>应用必须正确处理 SIGTERM</strong>。收到信号后停止接受新请求、完成进行中的请求、关闭连接、释放资源，然后退出。很多应用默认不处理 SIGTERM，导致被 SIGKILL 强杀。</li>
 <li><strong>加 preStop sleep</strong>，给 Endpoint 摘除留出时间。5~15 秒是常见值，具体取决于集群规模和 kube-proxy 更新速度。</li>
 <li><strong>terminationGracePeriodSeconds 要足够大</strong>。应大于 <code>preStop 时间 + 应用最长关闭时间</code>。数据库、有长连接的网关需要特别设置。</li>
-<li><strong>配合 PDB 使用</strong>，确保滚动更新和节点维护时不会同时失去过多副本。</li>
+<li><strong>分别配置 rollout 策略与 PDB。</strong>滚动更新的可用性由控制器的 maxUnavailable/maxSurge 等策略管理；经 Eviction API 的节点维护再由 PDB 约束。</li>
 <li><strong>验证效果</strong>。用压测工具在滚动更新期间持续打流量，观察是否有失败请求。这是唯一可靠的验证方式。</li>
 </ul>
 </div>
@@ -11385,6 +11490,8 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
 </ul>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/workloads/pods/disruptions/">中断预算</a> · <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/">抢占</a></p></div>
+
 <hr>
 
 <h2 id="ch31"><span class="num">31</span>自动扩缩容</h2>
@@ -11437,7 +11544,7 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
 <li><strong>新节点就绪</strong> → Pending Pod 被调度，服务容量提升。</li>
 </ol>
 <p>反向流程：负载下降 → HPA 减少副本 → 节点利用率降低 → Cluster Autoscaler 排空并移除空闲节点。</p>
-<p>任何一环缺失都会导致弹性失效：<strong>只有 HPA 没有 CA，扩容会卡在 Pending；只有 CA 没有 HPA，节点数不会随负载变化</strong>。</p>
+<p>HPA 与节点扩缩容解决不同问题。有足够空闲节点资源时，仅 HPA 也可正常扩容；手工增加副本或新工作负载也可能触发 CA。CA 能否扩节点取决于节点组范围、上限和调度约束，并非所有 Pending 都能通过扩节点解决。</p>
 </div>
 
 <h3>31.2 HPA 工作原理</h3>
@@ -11448,53 +11555,54 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
 
 <p>例如：目标 CPU 利用率 50%，当前 3 个副本平均利用率 90%。则期望副本数 = ceil(3 × 90/50) = ceil(5.4) = 6。</p>
 
-<pre><code class="lang-yaml"><span class="tk-c"># 基于 CPU/内存的 HPA（autoscaling/v2）</span>
-<span class="tk-f">apiVersion</span>: autoscaling/v2
-<span class="tk-f">kind</span>: HorizontalPodAutoscaler
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: web-hpa
-<span class="tk-f">spec</span>:
-  <span class="tk-f">scaleTargetRef</span>:
-    <span class="tk-f">apiVersion</span>: apps/v1
-    <span class="tk-f">kind</span>: Deployment
-    <span class="tk-f">name</span>: web
-  <span class="tk-f">minReplicas</span>: 2
-  <span class="tk-f">maxReplicas</span>: 20
-  <span class="tk-f">metrics</span>:
-    <span class="tk-c"># 基于 CPU 利用率（相对于 requests 的百分比）</span>
-    - <span class="tk-f">type</span>: Resource
-      <span class="tk-f">resource</span>:
-        <span class="tk-f">name</span>: cpu
-        <span class="tk-f">target</span>:
-          <span class="tk-f">type</span>: Utilization
-          <span class="tk-f">averageUtilization</span>: 60
-    <span class="tk-c"># 基于内存利用率（谨慎使用，见下方说明）</span>
-    - <span class="tk-f">type</span>: Resource
-      <span class="tk-f">resource</span>:
-        <span class="tk-f">name</span>: memory
-        <span class="tk-f">target</span>:
-          <span class="tk-f">type</span>: Utilization
-          <span class="tk-f">averageUtilization</span>: 70
-  <span class="tk-f">behavior</span>:
-    <span class="tk-c"># 扩容策略：快速响应</span>
-    <span class="tk-f">scaleUp</span>:
-      <span class="tk-f">stabilizationWindowSeconds</span>: 0
-      <span class="tk-f">policies</span>:
-        - <span class="tk-f">type</span>: Percent
-          <span class="tk-f">value</span>: 100              <span class="tk-c"># 每周期最多翻倍</span>
-          <span class="tk-f">periodSeconds</span>: 15
-        - <span class="tk-f">type</span>: Pods
-          <span class="tk-f">value</span>: 4                <span class="tk-c"># 每周期最多加 4 个</span>
-          <span class="tk-f">periodSeconds</span>: 15
-      <span class="tk-f">selectPolicy</span>: Max          <span class="tk-c"># 取最激进策略</span>
-    <span class="tk-c"># 缩容策略：缓慢保守</span>
-    <span class="tk-f">scaleDown</span>:
-      <span class="tk-f">stabilizationWindowSeconds</span>: 300   <span class="tk-c"># 5 分钟内取最大值，避免抖动</span>
-      <span class="tk-f">policies</span>:
-        - <span class="tk-f">type</span>: Percent
-          <span class="tk-f">value</span>: 25
-          <span class="tk-f">periodSeconds</span>: 60
-      <span class="tk-f">selectPolicy</span>: Max
+<pre><code class="lang-yaml"># 基于 CPU/内存的 HPA（autoscaling/v2）
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-hpa
+  namespace: prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+    # 基于 CPU 利用率（相对于 requests 的百分比）
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    # 基于内存利用率（谨慎使用，见下方说明）
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    # 扩容策略：快速响应
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100              # 每周期最多翻倍
+          periodSeconds: 15
+        - type: Pods
+          value: 4                # 每周期最多加 4 个
+          periodSeconds: 15
+      selectPolicy: Max          # 取最激进策略
+    # 缩容策略：缓慢保守
+    scaleDown:
+      stabilizationWindowSeconds: 300   # 5 分钟内取最大值，避免抖动
+      policies:
+        - type: Percent
+          value: 25
+          periodSeconds: 60
+      selectPolicy: Max
 </code></pre>
 
 <div class="box deep">
@@ -11532,10 +11640,8 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
 <div class="box tip">
 <div class="bt">HPA 工作检查清单</div>
 <ol>
-<li><strong>metrics-server 必须部署</strong>。没有它，HPA 拿不到 CPU/内存指标，状态会显示 <code>&lt;unknown&gt;</code>。
-<pre style="margin:8px 0 0"><code class="lang-bash">kubectl top pods          <span class="tk-c"># 能输出说明 metrics-server 正常</span></code></pre>
-</li>
-<li><strong>容器必须设置 requests</strong>。<code>Utilization</code> 类型的指标是"相对于 requests 的百分比"，没有 requests 就无法计算。这是最常被忽略的一点。</li>
+<li><strong>资源指标需要提供者。</strong>CPU/内存 Resource 或 ContainerResource 指标通常由 Metrics Server 提供；custom/external 指标使用对应适配器。kubectl top 有输出只能验证资源指标 API 可用，不能验证所有 HPA 指标链路。</li>
+<li><strong>Utilization 目标需要相应 requests。</strong>它表示用量/request 的百分比；AverageValue、Value 等目标不是该百分比，不能笼统说所有 HPA 都必须有 request 才能计算。资源 request 对合理调度仍很重要。</li>
 <li><strong>目标工作负载必须支持 scale 子资源</strong>。Deployment、StatefulSet、ReplicaSet 支持；裸 Pod 不支持。</li>
 <li><strong>自定义指标需要适配器</strong>。基于 QPS、队列长度等指标需要 Prometheus Adapter 或 KEDA 提供。</li>
 <li><strong>HPA 与 VPA 不要基于同一指标同时启用</strong>。两者会互相干扰，导致扩缩容振荡。</li>
@@ -11586,7 +11692,7 @@ kubectl describe hpa web-hpa
 <table>
 <thead><tr><th>指标类型</th><th>数据来源</th><th>典型指标</th><th>需要什么</th></tr></thead>
 <tbody>
-<tr><td><code>Resource</code></td><td>metrics-server</td><td>CPU、内存利用率</td><td>metrics-server（内置）</td></tr>
+<tr><td><code>Resource</code></td><td>metrics-server</td><td>CPU、内存利用率</td><td>Metrics Server（需单独安装或由发行版预装）</td></tr>
 <tr><td><code>Pods</code></td><td>自定义指标 API</td><td>QPS、并发数、GC 次数</td><td>Prometheus Adapter</td></tr>
 <tr><td><code>Object</code></td><td>自定义指标 API</td><td>Ingress 的请求数、Service 的连接数</td><td>Prometheus Adapter</td></tr>
 <tr><td><code>External</code></td><td>外部指标 API</td><td>MQ 队列深度、云服务指标</td><td>Prometheus Adapter / KEDA</td></tr>
@@ -11641,7 +11747,7 @@ kubectl describe hpa web-hpa
 <tr><td><code>Off</code></td><td>只计算并给出建议值，不修改 Pod</td><td><strong>推荐起步</strong>：先观察建议是否合理</td></tr>
 <tr><td><code>Initial</code></td><td>只在 Pod 创建时设置资源，运行中不改</td><td>新建工作负载，避免重启</td></tr>
 <tr><td><code>Recreate</code></td><td>需要调整时重建 Pod</td><td>资源波动大的场景，但会有中断</td></tr>
-<tr><td><code>InPlaceOrRecreate</code></td><td>优先原地调整，不支持时重建</td><td>需要集群开启 InPlacePodVerticalScaling 特性</td></tr>
+<tr><td><code>InPlaceOrRecreate</code></td><td>优先原地调整，不支持时重建</td><td>需兼容的 VPA 版本/配置与集群原地调整能力；不是仅开 Kubernetes 特性门控即可</td></tr>
 </tbody>
 </table>
 </div>
@@ -11681,7 +11787,7 @@ kubectl describe vpa web-vpa
 <div class="card">
 <h5>扩容条件</h5>
 <ul style="margin-bottom:0">
-<li>存在因资源不足而 Pending 的 Pod。</li>
+<li>存在调度器判定不可调度、且扩展受管理节点组可解决约束的 Pod；不仅限于资源不足，也不是所有 Pending 都触发 CA。</li>
 <li>该 Pod 的调度约束（亲和性、污点容忍、卷位置）能被新节点满足。</li>
 <li>扩容后的节点数量未超过 max 限制。</li>
 </ul>
@@ -11757,6 +11863,8 @@ kubectl describe vpa web-vpa
 <li><strong>考虑预热</strong>。对启动慢的应用（如 JVM），提前扩容比等到负载上来再扩容更有效，可以用定时 HPA（CronHPA）或 KEDA 的定时触发器。</li>
 </ul>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">HPA</a> · <a href="https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler">VPA</a></p></div>
 
 <hr>
 
@@ -12270,14 +12378,16 @@ http_request_duration_seconds_count{path="/api/users"} 12345
 
 <div class="box danger">
 <div class="bt">容器日志的三个陷阱</div>
-<p><strong>陷阱一：日志写文件而非标准输出。</strong>Kubernetes 只能采集容器的 stdout/stderr。如果应用把日志写到容器内的文件，<code>kubectl logs</code> 看不到，日志采集器也采集不到，而且会消耗临时存储。</p>
+<p><strong>陷阱一：应用写文件日志。</strong>kubectl logs 只读取容器 stdout/stderr 日志，不能直接读取任意应用文件。文件日志仍可通过共享卷的 Sidecar 或获准的文件采集代理收集；优先输出 stdout/stderr 以简化流程，并规划临时存储与轮转。</p>
 <p><strong>正确做法</strong>：应用日志一律输出到 stdout/stderr，由平台统一采集。这是"十二要素应用"的基本原则之一。</p>
-<p><strong>陷阱二：日志不轮转撑爆磁盘。</strong>容器运行时（containerd/docker）会把 stdout 写到节点文件，默认可能不限制大小。必须在运行时配置中设置轮转：</p>
-<pre style="margin:8px 0 0"><code class="lang-toml"><span class="tk-c"># containerd 配置</span>
-[<span class="tk-f">plugins</span>."<span class="tk-f">io.containerd.grpc.v1.cri</span>"]
-  [<span class="tk-f">plugins</span>."<span class="tk-f">io.containerd.grpc.v1.cri</span>".<span class="tk-f">containerd</span>.<span class="tk-f">runtimes</span>.<span class="tk-f">options</span>]
-    [<span class="tk-f">plugins</span>."<span class="tk-f">io.containerd.grpc.v1.cri</span>".<span class="tk-f">containerd</span>.<span class="tk-f">runtimes</span>.<span class="tk-f">options</span>.<span class="tk-f">max_container_log_line_size</span>]
-    [<span class="tk-f">plugins</span>."<span class="tk-f">io.containerd.grpc.v1.cri</span>".<span class="tk-f">containerd</span>.<span class="tk-f">runtimes</span>.<span class="tk-f">options</span>.<span class="tk-f">max_concurrent_downloads</span>]</code></pre>
+<p><strong>陷阱二：日志轮转配置错误。</strong>CRI 容器把 stdout/stderr 写入节点日志文件，由 kubelet 管理轮转；默认 containerLogMaxSize=10Mi、containerLogMaxFiles=5。根据磁盘容量与采集延迟调整 kubelet 配置，避免误把 containerd 下载参数当成轮转设置。</p>
+<pre style="margin:8px 0 0"><code class="lang-yaml"># kubelet 配置片段：合并到已有 KubeletConfiguration，并按部署方式重启 kubelet
+# 不要用本片段覆盖整份节点配置；不是应用 Pod 清单
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+containerLogMaxSize: 100Mi
+containerLogMaxFiles: 5
+</code></pre>
 <p>更常见的是通过 kubelet 参数：<code>--container-log-max-size=100Mi --container-log-max-files=5</code>。</p>
 <p><strong>陷阱三：Pod 删除后日志丢失。</strong>日志文件随 Pod 删除而清理。如果日志采集器来不及读取（如 Pod 快速崩溃重启），日志就永久丢失了。<strong>关键应用应在应用层同时写入集中式日志系统</strong>，不要只依赖容器日志。</p>
 </div>
@@ -12421,7 +12531,7 @@ http_request_duration_seconds_count{path="/api/users"} 12345
 
 <h4>OpenTelemetry：统一的可观测性标准</h4>
 
-<p>OpenTelemetry（OTel）是 CNCF 的毕业项目，目标是<strong>统一指标的采集与传输标准</strong>，避免厂商锁定。</p>
+<p>OpenTelemetry（OTel）提供生成、采集和导出<strong>指标、日志、链路</strong>的开放规范与工具。不同语言 SDK 和信号的成熟度分别演进，应按使用的组件版本核对。</p>
 
 <div class="tw">
 <table>
@@ -12580,6 +12690,8 @@ http_request_duration_seconds_count{path="/api/users"} 12345
 </ul>
 <p><strong>规则</strong>：指标标签的取值应该是<strong>有限可枚举</strong>的（如 status_code、method、service、region）。高基数的信息应该放在<strong>日志或链路</strong>里，而不是指标标签里。这是使用 Prometheus 最容易犯的错误之一。</p>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/cluster-administration/logging/">日志轮转</a></p></div>
 
 <hr>
 
@@ -13008,9 +13120,9 @@ hubble observe --output json | jq '.flow.source.namespace, .flow.destination.nam
 <div class="bt">etcd 是集群最脆弱的环节</div>
 <p>etcd 保存集群的全部状态。它一旦不可用，整个集群就无法进行任何变更（已有 Pod 仍会运行，但无法调度、无法创建、无法更新）。关键要点：</p>
 <ul>
-<li><strong>必须是奇数个成员</strong>。Raft 需要多数派（quorum）才能写入。3 个成员可容忍 1 个故障，4 个成员反而只能容忍 1 个（quorum=3），所以 4 不如 3。推荐 3 或 5。</li>
+<li><strong>推荐奇数个投票成员。</strong>偶数成员可运行，但 4 个与 3 个成员都只容忍 1 个成员故障，且 4 个需要 3 票；通常选 3 或 5 个。</li>
 <li><strong>必须用 SSD</strong>。etcd 对磁盘延迟极其敏感，官方要求 fsync 的 P99 延迟 &lt; 10ms。使用机械盘或共享存储（如 NFS）会导致集群性能严重下降甚至不可用。</li>
-<li><strong>跨可用区部署要权衡</strong>。跨 AZ 部署提高容灾能力，但会增加写入延迟（Raft 需要多数派确认）。同城双活场景下，跨 AZ 的延迟通常在可接受范围；跨地域部署则不可行。</li>
+<li><strong>跨可用区部署要权衡</strong>。跨 AZ 部署提高容灾能力，但会增加写入延迟（Raft 需要多数派确认）。同城双活场景下，跨 AZ 的延迟通常在可接受范围；跨地域部署通常延迟很高，应评估 Raft 写入延迟与可用性，通常不推荐。</li>
 <li><strong>定期备份</strong>。etcd 快照是集群恢复的最后手段。
 <pre style="margin:8px 0 0"><code class="lang-bash">ETCDCTL_API=3 etcdctl snapshot save backup.db \
   --endpoints=https://127.0.0.1:2379 \
@@ -13039,28 +13151,30 @@ hubble observe --output json | jq '.flow.source.namespace, .flow.destination.nam
 </table>
 </div>
 
-<pre><code class="lang-bash"><span class="tk-c"># kubeadm 部署的核心流程</span>
-<span class="tk-c"># 1. 初始化第一个控制面节点</span>
+<pre><code class="lang-bash"># kubeadm 部署的核心流程
+# 1. 初始化第一个控制面节点
 kubeadm init \
-  --control-plane-endpoint="k8s-api.example.com:6443" \   <span class="tk-c"># 指向 LB，不是单个节点</span>
-  --upload-certs \                                         <span class="tk-c"># 自动分发证书给新控制面</span>
+  # 指向 LB，不是单个节点
+  --control-plane-endpoint="k8s-api.example.com:6443" \
+  # 自动分发证书给新控制面
+  --upload-certs \
   --pod-network-cidr=10.244.0.0/16 \
   --service-cidr=10.96.0.0/12 \
   --kubernetes-version=v1.31.0
 
-<span class="tk-c"># 2. 加入其他控制面节点（实现高可用）</span>
+# 2. 加入其他控制面节点（实现高可用）
 kubeadm join k8s-api.example.com:6443 \
   --token &lt;token&gt; \
   --discovery-token-ca-cert-hash sha256:&lt;hash&gt; \
   --control-plane --certificate-key &lt;key&gt;
 
-<span class="tk-c"># 3. 加入工作节点</span>
+# 3. 加入工作节点
 kubeadm join k8s-api.example.com:6443 \
   --token &lt;token&gt; \
   --discovery-token-ca-cert-hash sha256:&lt;hash&gt;
 
-<span class="tk-c"># 4. 安装 CNI（必须，否则 Pod 无法通信）</span>
-kubectl apply -f https://.../cilium.yaml   <span class="tk-c"># 或 Calico/Flannel</span>
+# 4. 安装 CNI（必须，否则 Pod 无法通信）
+kubectl apply -f https://.../cilium.yaml   # 或 Calico/Flannel
 </code></pre>
 
 <div class="box tip">
@@ -13096,26 +13210,26 @@ kubectl apply -f https://.../cilium.yaml   <span class="tk-c"># 或 Calico/Flann
 <table>
 <thead><tr><th>参数</th><th>默认值</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td><code>node-monitor-grace-period</code></td><td>40s</td><td>多久没心跳就标记 NotReady</td></tr>
+<tr><td><code>node-monitor-grace-period</code></td><td>50s（v1.33 官方默认；检查实际配置）</td><td>超过心跳宽限期后可能将节点 Ready 标为 Unknown</td></tr>
 <tr><td><code>node-monitor-period</code></td><td>5s</td><td>检查间隔</td></tr>
 <tr><td><code>pod-eviction-timeout</code></td><td>5m（已被 tolerationSeconds 取代）</td><td>标记 NotReady 后多久开始驱逐 Pod</td></tr>
 </tbody>
 </table>
 </div>
 
-<pre><code class="lang-yaml"><span class="tk-c"># 生产环境常见的做法：用 DaemonSet 自动修复 NotReady 节点</span>
-<span class="tk-c"># （使用 node-problem-detector + 自定义控制器，或云厂商的节点自动修复）</span>
-<span class="tk-c"># 也可以配置更短的容忍时间，加快故障转移</span>
-<span class="tk-f">spec</span>:
-  <span class="tk-f">tolerations</span>:
-    - <span class="tk-f">key</span>: node.kubernetes.io/not-ready
-      <span class="tk-f">operator</span>: Exists
-      <span class="tk-f">effect</span>: NoExecute
-      <span class="tk-f">tolerationSeconds</span>: 60      <span class="tk-c"># 默认 300，缩短以加快故障转移</span>
-    - <span class="tk-f">key</span>: node.kubernetes.io/unreachable
-      <span class="tk-f">operator</span>: Exists
-      <span class="tk-f">effect</span>: NoExecute
-      <span class="tk-f">tolerationSeconds</span>: 60
+<pre><code class="lang-yaml"># 生产环境常见的做法：node-problem-detector 检测并上报问题，不负责自动修复
+# 修复需要自定义控制器或云厂商节点修复服务；缩短容忍时间只影响驱逐
+# 也可以配置更短的容忍时间，加快故障转移
+spec:
+  tolerations:
+    - key: node.kubernetes.io/not-ready
+      operator: Exists
+      effect: NoExecute
+      tolerationSeconds: 60      # 默认 300，缩短以加快故障转移
+    - key: node.kubernetes.io/unreachable
+      operator: Exists
+      effect: NoExecute
+      tolerationSeconds: 60
 </code></pre>
 
 <div class="box warn">
@@ -13131,6 +13245,8 @@ kubectl apply -f https://.../cilium.yaml   <span class="tk-c"># 或 Calico/Flann
 </div>
 
 <h3>35.5 备份与恢复</h3>
+<div class="box note"><div class="bt">示例前置条件与范围</div><p>etcd 备份与应用数据备份是两条链路。恢复时用兼容版本 etcdutl，所有成员使用同一快照与一致的 initial-cluster，各成员 name/peer URL/data-dir 不同；Kubernetes watch 缓存还需要适当的 --bump-revision 与 --mark-compacted。停止相关组件、恢复路径与重启步骤按部署方案演练，不能直接替换正在使用的数据目录。</p></div>
+
 
 <p>备份不是"做了就行"，而是"能恢复才算数"。需要备份的内容和方式都不同。</p>
 
@@ -13159,40 +13275,23 @@ kubectl apply -f https://.../cilium.yaml   <span class="tk-c"># 或 Calico/Flann
 <p>这些必须<strong>加密后离线备份</strong>（不要放在集群内的 Git 仓库里），并明确保管责任人。备份的加密密钥本身也要有妥善的存放方案（可以分片保管）。</p>
 </div>
 
-<pre><code class="lang-bash"><span class="tk-c"># 完整的 etcd 备份脚本（含校验）</span>
-<span class="tk-c">#!/bin/bash</span>
-<span class="tk-f">BACKUP_DIR</span>=/backup/etcd
-<span class="tk-f">DATE</span>=$(date +%Y%m%d-%H%M%S)
-<span class="tk-f">FILE</span>=$BACKUP_DIR/etcd-$DATE.db
-
-mkdir -p $BACKUP_DIR
-
-ETCDCTL_API=3 etcdctl snapshot save $FILE \
+<pre><code class="lang-bash">#!/bin/bash
+# kubeadm 风格节点的备份示例：按实际部署调整证书与端点；工具版本需兼容
+set -euo pipefail
+BACKUP_DIR=/backup/etcd
+DATE=$(date +%Y%m%d-%H%M%S)
+FILE="$BACKUP_DIR/etcd-$DATE.db"
+mkdir -p "$BACKUP_DIR"
+etcdctl snapshot save "$FILE" \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/kubernetes/pki/etcd/ca.crt \
-  --cert=/etc/kubernetes/pki/etcd/server.crt \
-  --key=/etc/kubernetes/pki/etcd/server.key
-
-<span class="tk-c"># 验证备份完整性（关键步骤！）</span>
-ETCDCTL_API=3 etcdctl snapshot status $FILE --write-out=table
-
-<span class="tk-c"># 只保留最近 7 天的备份</span>
-find $BACKUP_DIR -name "etcd-*.db" -mtime +7 -delete
-
+  --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
+  --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+etcdutl snapshot status "$FILE" --write-out=table
+# save/status 成功后才清理过期本地副本；还应上传独立备份存储
+find "$BACKUP_DIR" -type f -name 'etcd-*.db' -mtime +7 -delete
 echo "Backup completed: $FILE"
-
-<span class="tk-c"># ---- 恢复流程（在故障时使用）----</span>
-<span class="tk-c"># 1. 在所有控制面节点停止 apiserver 和 etcd</span>
-<span class="tk-c"># 2. 在第一个节点上恢复</span>
-ETCDCTL_API=3 etcdctl snapshot restore /backup/etcd/etcd-xxx.db \
-  --data-dir=/var/lib/etcd-restore \
-  --initial-cluster="cp1=https://10.0.0.1:2380,cp2=https://10.0.0.2:2380,cp3=https://10.0.0.3:2380" \
-  --initial-advertise-peer-urls=https://10.0.0.1:2380 \
-  --name=cp1
-
-<span class="tk-c"># 3. 替换 etcd 数据目录并重启 etcd</span>
-<span class="tk-c"># 4. 其他节点同样恢复（使用相同的 snapshot）</span>
-<span class="tk-c"># 5. 重启 apiserver，验证集群状态</span>
+# 恢复是独立的灾备操作，绝不接在日常备份脚本中运行。
 </code></pre>
 
 <div class="box tip">
@@ -13283,6 +13382,8 @@ ETCDCTL_API=3 etcdctl snapshot restore /backup/etcd/etcd-xxx.db \
 </ul>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://etcd.io/docs/v3.6/op-guide/recovery/">etcd 灾备恢复</a></p></div>
+
 <hr>
 
 <h2 id="ch36"><span class="num">36</span>版本升级与变更管理</h2>
@@ -13347,9 +13448,9 @@ kubent</code></pre>
 </li>
 <li><strong>检查节点 OS 兼容性</strong>。新版本可能要求更新的内核或容器运行时。</li>
 <li><strong>备份 etcd</strong>。这是回滚的最后手段。</li>
-<li><strong>在测试环境完整演练一遍</strong>。包括升级和回滚。</li>
+<li><strong>在测试环境演练升级与失败处置。</strong>不要把恢复 etcd 快照当作 Kubernetes 的通用版本降级。kubeadm 不支持跳次版本升级或通用 downgrade，灾备恢复需保持组件、数据与配置相容。</li>
 <li><strong>选择升级窗口</strong>。业务低峰期，并提前通知相关方。</li>
-<li><strong>准备回滚方案</strong>。明确什么条件下回滚、怎么回滚。</li>
+<li><strong>准备变更失败处置方案。</strong>应用发布可以回滚 Deployment；集群版本升级失败需按官方支持流程修复或执行已演练的灾备恢复，不能直接套用应用回滚命令。</li>
 <li><strong>确认配额充足</strong>。升级过程中需要额外副本（maxSurge），需要预留资源。</li>
 </ol>
 </div>
@@ -13403,36 +13504,17 @@ kubent</code></pre>
 <figcaption>图 36-1 kubeadm 升级流程：先控制面后节点，逐个进行</figcaption>
 </figure>
 
-<pre><code class="lang-bash"><span class="tk-c"># 完整的升级脚本骨架（工作节点部分）</span>
-<span class="tk-c"># 升级前：确认可分配资源足够承接被驱逐的 Pod</span>
-kubectl describe nodes | grep -A5 "Allocated resources"
-
-<span class="tk-c"># 逐个节点升级</span>
-<span class="tk-f">for</span> node <span class="tk-f">in</span> node-1 node-2 node-3; <span class="tk-f">do</span>
-  echo "=== Upgrading $node ==="
-
-  <span class="tk-c"># 1. 停止调度新 Pod</span>
-  kubectl cordon $node
-
-  <span class="tk-c"># 2. 驱逐现有 Pod（走 PDB）</span>
-  kubectl drain $node \
-    --ignore-daemonsets \
-    --delete-emptydir-data \
-    --timeout=600s
-
-  <span class="tk-c"># 3. 在节点上执行升级（通过 ssh）</span>
-  ssh $node <span class="tk-c">'apt-get update && apt-get install -y kubeadm=1.31.* kubelet=1.31.* && kubeadm upgrade node && systemctl restart kubelet'</span>
-
-  <span class="tk-c"># 4. 确认节点 Ready</span>
-  kubectl wait --for=condition=Ready node/$node --timeout=300s
-
-  <span class="tk-c"># 5. 恢复调度</span>
-  kubectl uncordon $node
-
-  <span class="tk-c"># 6. 观察业务指标 5 分钟，正常才继续</span>
-  sleep 300
-  kubectl get nodes
-<span class="tk-f">done</span>
+<pre><code class="lang-bash"># 工作节点升级步骤示意，不是可直接执行的通用脚本。
+# 前提：已依官方版本差异策略先升级控制面；明确目标补丁版本与包仓库。
+# 1. 在管理端确认备份、PDB、剩余容量，然后逐节点 cordon / drain。
+#    drain 失败立即停止；--force 不能绕过 PDB，不忽略失败后继续升级。
+# 2. 登录该节点，按其操作系统/包管理器的官方流程：
+#    解锁并安装明确版本 kubeadm -&gt; kubeadm upgrade node
+#    -&gt; 解锁并安装匹配 kubelet/kubectl -&gt; 重新锁定 -&gt; 重启 kubelet。
+# 3. 验证节点 Ready、实际版本、CNI/CSI 与业务健康，再 uncordon。
+# 4. 观察业务正常后再升级下一节点。
+# 不使用 1.31.* 通配包版本，也不假定所有节点具备相同 ssh/root/apt 环境。
+# Kubernetes/kubeadm 不支持通用的版本降级；灾备恢复必须另行设计并演练。
 </code></pre>
 
 <div class="box warn">
@@ -13461,7 +13543,7 @@ kubectl describe nodes | grep -A5 "Allocated resources"
 <thead><tr><th>阶段</th><th>说明</th><th>信号</th></tr></thead>
 <tbody>
 <tr><td><strong>Alpha</strong></td><td>默认关闭，可能有 bug，随时可能变更或移除</td><td>API 版本含 <code>alpha</code>（如 <code>v1alpha1</code>）</td></tr>
-<tr><td><strong>Beta</strong></td><td>默认开启，API 相对稳定，但字段可能变化</td><td>API 版本含 <code>beta</code>（如 <code>v1beta1</code>）</td></tr>
+<tr><td><strong>Beta</strong></td><td>相对稳定但仍可能变更；特性门控与 API 的默认启用规则不同。自 v1.24 起新 Beta API 通常默认禁用，应查对应版本</td><td>API 版本可含 beta，例如 v1beta1</td></tr>
 <tr><td><strong>Stable</strong></td><td>稳定，向后兼容承诺</td><td>API 版本为 <code>v1</code>、<code>v2</code></td></tr>
 <tr><td><strong>Deprecated</strong></td><td>已弃用，仍可用但会返回警告头</td><td>API Server 响应带 <code>Warning</code> 头；日志有弃用提示</td></tr>
 <tr><td><strong>Removed</strong></td><td>已移除，使用会报错</td><td>请求返回 404 或 "no matches for kind"</td></tr>
@@ -13639,6 +13721,8 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 <p style="margin-top:12px"><strong>核心原则</strong>：先止损，后分析。不要在故障现场花时间找根因——先把服务恢复，再从容地做复盘。同时要注意"回滚是否安全"——如果变更不可逆，回滚反而会造成更大破坏。</p>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/">kubeadm 升级</a> · <a href="https://kubernetes.io/releases/version-skew-policy/">版本差异策略</a></p></div>
+
 <hr>
 
 <h2 id="ch37"><span class="num">37</span>多租户与资源治理</h2>
@@ -13672,7 +13756,7 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
   <line x1="260" y1="92" x2="420" y2="92" stroke="#252d38"/>
   <text x="256" y="112" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">在软多租户基础上：</text>
   <text x="256" y="130" fill="#7ec7ff" font-size="9.5" font-family="sans-serif">RuntimeClass（Kata/gVisor）</text>
-  <text x="256" y="146" fill="#7ec7ff" font-size="9.5" font-family="sans-serif">独立内核</text>
+  <text x="256" y="146" fill="#7ec7ff" font-size="9.5" font-family="sans-serif">VM guest 内核 / 用户态内核</text>
   <text x="256" y="162" fill="#7ec7ff" font-size="9.5" font-family="sans-serif">节点池隔离</text>
   <text x="256" y="178" fill="#7ec7ff" font-size="9.5" font-family="sans-serif">更严格的准入策略</text>
   <text x="256" y="200" fill="#5f6b7a" font-size="9.5" font-family="sans-serif">共享节点但内核隔离</text>
@@ -13822,7 +13906,7 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 <li><strong>启用配额后，Pod 必须显式设置 requests/limits</strong>。否则创建被拒绝（因为无法计入配额）。这是一个"意外但有教育意义"的行为——它强制了资源规范的落地。</li>
 <li><strong>配额是"命名空间级"的，不区分工作负载类型</strong>。可以通过 <code>scopeSelector</code> 做更细的划分（如只对 BestEffort 类型的 Pod 限制数量）。</li>
 <li><strong>配额用满后新 Pod 无法创建</strong>，但不会驱逐已有 Pod。这会导致滚动更新失败（新 Pod 建不出来，旧 Pod 不敢删）。<strong>必须为滚动更新预留配额余量</strong>（考虑 maxSurge）。</li>
-<li><strong>配额变更不会自动重新计算</strong>。修改配额后，超出新配额的已有对象不会被驱逐，但无法再创建新对象。</li>
+<li>ResourceQuota 控制器会重新统计配额使用量。降低 hard 配额不会自动驱逐或删除既有对象；后续会增加受限资源用量的请求仍受准入检查。</li>
 </ul>
 </div>
 
@@ -13970,7 +14054,7 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 <li><strong>先用 Audit 模式观察</strong>。把所有策略设为"只记录不拒绝"，看看有多少工作负载不合规。这能避免"一上线就把生产搞挂"。</li>
 <li><strong>通知相关团队修复</strong>。给出明确的清单和修复指引，设定整改期限。</li>
 <li><strong>从非关键环境开始 Enforce</strong>。dev/staging 先强制，验证策略不会误伤。</li>
-<li><strong>生产环境 Enforce</strong>，但要有紧急豁免机制（如通过特定注解临时绕过，并记录原因）。</li>
+<li><strong>生产启用 Enforce。</strong>豁免需由具体准入机制支持并限制授权范围。PSA 的内置豁免按用户名、RuntimeClass 或命名空间配置，不存在通用的“加任意注解即可绕过”机制。</li>
 <li><strong>持续监控违规趋势</strong>。如果违规数一直不降，说明策略太严或沟通不足。</li>
 </ol>
 </div>
@@ -13988,6 +14072,8 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 <li><strong>平台团队的定位</strong>。平台团队应该是"提供服务"而非"设卡审批"。让团队自助满足需求（如提供标准的命名空间模板），比逐个审批更有效。</li>
 </ul>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/policy/resource-quotas/">资源配额</a> · <a href="https://kubernetes.io/docs/concepts/security/pod-security-admission/">PSA 豁免</a></p></div>
 
 <hr>
 
@@ -14048,9 +14134,11 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 <div class="bt">提高装箱率的五个步骤</div>
 <ol>
 <li><strong>测量真实用量</strong>。用至少两周的数据，取 P95/P99 而非平均值：
-<pre style="margin:8px 0 0"><code class="lang-promql"><span class="tk-c"># 按 Pod 计算 CPU 使用的 P95（相对于 requests）</span>
+<pre style="margin:8px 0 0"><code class="lang-promql"># 按 Pod 计算 CPU 用量 P95（单位：核，不是相对 requests 的百分比）
 quantile_over_time(0.95,
-  rate(container_cpu_usage_seconds_total{container!=""}[5m])[14d:5m]
+  sum by (namespace, pod) (
+    rate(container_cpu_usage_seconds_total{container!="",container!="POD",pod!=""}[5m])
+  )[14d:5m]
 )</code></pre>
 </li>
 <li><strong>用 VPA 的 Off 模式获取建议值</strong>。让 VPA 基于历史数据给出推荐，人工审核后应用。这是最安全的方式。</li>
@@ -14063,7 +14151,7 @@ quantile_over_time(0.95,
 <div class="box warn">
 <div class="bt">下调 requests 的风险与防护</div>
 <ul>
-<li><strong>OOM 风险上升</strong>。requests 越接近 limits，OOM 评分越高（见第 28 章）。所以内存 requests 不要低于 P95 用量。</li>
+<li><strong>过度压低内存 requests 会降低保障。</strong>普通 Burstable 容器的 oom_score_adj 取决于 memory request / 节点内存容量，不取决于 request 与 limit 的接近程度。调整规格时同时观察容器 OOM、节点压力和应用峰值。</li>
 <li><strong>突发时资源不足</strong>。如果所有 Pod 的 requests 都贴近平均用量，突发流量时会出现资源争抢。</li>
 <li><strong>节点故障影响放大</strong>。装箱率高意味着节点上 Pod 多，单节点故障影响面大。需要配合反亲和性与 PDB。</li>
 <li><strong>防护措施</strong>：保留 20%~30% 的集群级空闲容量；对关键服务用较高的 requests；配置好监控与告警，能及时发现资源不足。</li>
@@ -14218,6 +14306,8 @@ kubectl top nodes
 </table>
 </div>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/">资源保障与 OOM</a></p></div>
 
 <hr>
 
@@ -14465,7 +14555,7 @@ iotop -o                  <span class="tk-c"># 哪个进程在大量 IO</span>
 <tr><td>卷写满（No space left）</td><td>容量不足、日志占用</td><td>扩容 PVC；清理文件</td></tr>
 <tr><td>卷扩容后 Pod 看不到新容量</td><td>需要重启 Pod 触发文件系统 resize</td><td>重启 Pod；检查是否有 <code>FileSystemResizePending</code></td></tr>
 <tr><td>PVC 删除后卡在 Terminating</td><td>Pod 仍在使用、finalizer 未清理</td><td>先删除使用它的 Pod</td></tr>
-<tr><td>多 Pod 挂载同一 RWO 卷导致损坏</td><td>RWO 是节点级约束，同节点多 Pod 可同时挂载</td><td>改用 <code>ReadWriteOncePod</code>；或确保单副本</td></tr>
+<tr><td>多个数据库实例写同一数据目录</td><td>RWO 只限制节点，不阻止同节点多 Pod 使用；应用可能不支持并发写</td><td>使用 RWOP 或可靠的单写者/数据库复制设计</td></tr>
 <tr><td>IO 性能差</td><td>存储类型不匹配（如用网络存储跑数据库）</td><td>换用高性能 StorageClass；检查节点 IO 压力</td></tr>
 <tr><td>快照恢复失败</td><td>快照与目标 StorageClass 不兼容、容量不足</td><td>确认 <code>dataSource</code> 配置；检查驱动支持</td></tr>
 </tbody>
@@ -14583,14 +14673,14 @@ kubeadm certs renew all
 <div class="bt">CPU 限流：最常被忽略的延迟元凶</div>
 <p>现象：<strong>容器 CPU 使用率看起来不高（如 30%），但请求延迟明显偏高且抖动</strong>。</p>
 <p>原因：CPU limits 通过 CFS（完全公平调度器）实现。每个周期（默认 100ms）内，容器只能用掉配额对应的时间。如果用完，就被<strong>强制暂停</strong>到下一个周期。这期间即使节点有大量空闲 CPU，容器也不能使用。</p>
-<pre style="margin:8px 0 0"><code class="lang-bash"><span class="tk-c"># 检查容器的 CPU 限流情况</span>
-<span class="tk-c"># PromQL：限流比例</span>
+<pre style="margin:8px 0 0"><code class="lang-text"># 检查容器的 CPU 限流情况
+# PromQL：限流比例
 rate(container_cpu_cfs_throttled_periods_total{container="myapp"}[5m])
 / rate(container_cpu_cfs_periods_total{container="myapp"}[5m])
 
-<span class="tk-c"># 如果这个比例 > 0.1（10%），说明限流严重</span>
+# 比例仅表示发生节流的周期占比；结合延迟、节流时长和应用负载判断
 
-<span class="tk-c"># 在容器内查看（需要 cgroup v2）</span>
+# 以下为另一种检查方式：在容器内的 shell 执行（需 cgroup v2）
 cat /sys/fs/cgroup/cpu.stat | grep throttled</code></pre>
 <p><strong>处理方式</strong>：</p>
 <ul>
@@ -15293,31 +15383,34 @@ istioctl proxy-config endpoint &lt;pod&gt; --cluster "outbound|8080||reviews.def
 </ul>
 </div>
 
-<pre><code class="lang-yaml"><span class="tk-c"># 超时链路的正确设计</span>
-<span class="tk-c"># 假设调用链：Client → Gateway → Service A → Service B → DB</span>
-<span class="tk-c"># 超时必须逐层递减，否则外层的超时毫无意义</span>
+<pre><code class="lang-yaml"># 超时链路的正确设计
+# 假设调用链：Client → Gateway → Service A → Service B → DB
+# 超时必须逐层递减，否则外层的超时毫无意义
 
-<span class="tk-c"># Client 超时：5s</span>
-<span class="tk-c"># Gateway → A：4s</span>
-<span class="tk-f">http</span>:
-  - <span class="tk-f">timeout</span>: 4s
-    <span class="tk-f">route</span>: [...]
+# Client 超时：5s
+# Gateway → A：4s（VirtualService.spec 片段，需替换 route 占位符）
+http:
+  - timeout: 4s
+    route: [...]
 
-<span class="tk-c"># A → B：2s（留出 A 自身处理时间）</span>
-<span class="tk-f">http</span>:
-  - <span class="tk-f">timeout</span>: 2s
-    <span class="tk-f">retries</span>:
-      <span class="tk-c"># 单次尝试 800ms，最多重试 1 次（总计不超过 2s）</span>
-      <span class="tk-f">attempts</span>: 2
-      <span class="tk-f">perTryTimeout</span>: 800ms
-      <span class="tk-c"># 只对可安全重试的情况重试</span>
-      <span class="tk-f">retryOn</span>: connect-failure,refused-stream,unavailable
-    <span class="tk-f">route</span>: [...]
+---
+# A → B：2s（留出 A 自身处理时间）
+http:
+  - timeout: 2s
+    retries:
+      # 单次尝试 800ms，最多重试 1 次（总计不超过 2s）
+      attempts: 1
+      perTryTimeout: 800ms
+      # 只对可安全重试的情况重试
+      retryOn: connect-failure,refused-stream,unavailable
+    route: [...]
 
-<span class="tk-c"># B → DB：1s（连接池超时）</span>
-<span class="tk-f">connectionPool</span>:
-  <span class="tk-f">tcp</span>:
-    <span class="tk-f">connectTimeout</span>: 1s
+---
+# B → DB：1s（连接池超时）
+trafficPolicy:
+  connectionPool:
+    tcp:
+      connectTimeout: 1s  # DestinationRule.spec 片段；仅约束建连，不是 SQL 执行期限
 </code></pre>
 
 <div class="box note">
@@ -15460,7 +15553,7 @@ istioctl proxy-config endpoint &lt;pod&gt; --cluster "outbound|8080||reviews.def
 <ul>
 <li><strong>确认所有服务都注入了 Sidecar</strong>。<code>kubectl get pods -A -o json | jq '.items[] | select(.metadata.annotations["sidecar.istio.io/inject"] == "false")'</code></li>
 <li><strong>检查是否有非网格服务需要访问</strong>（如外部的监控采集、直接的 Pod 访问）。这些需要用 ServiceEntry 或保持 PERMISSIVE。</li>
-<li><strong>检查探针配置</strong>。kubelet 的健康检查不经过 Sidecar，如果配置了 STRICT，探针可能失败。Istio 会通过 iptables 规则让探针绕过 Sidecar（<code>excludeInboundPorts</code>），但需要确认。</li>
+<li>Istio Sidecar 模式通常把 HTTP/TCP/gRPC 应用探针改写为访问 istio-agent，再由 agent 检查应用，以兼容 mTLS 与流量劫持。需检查注入后的实际探针和 rewriteAppHTTPProbers 配置；不能笼统描述成“kubelet 的检查不经过 Sidecar”。</li>
 <li><strong>检查 Job/CronJob</strong>。短生命周期任务可能来不及建立 mTLS 连接。</li>
 <li><strong>先在测试环境验证</strong>，观察是否有连接失败。</li>
 <li><strong>准备好回滚</strong>。改回 PERMISSIVE 是一条命令的事。</li>
@@ -15576,7 +15669,7 @@ istioctl proxy-config endpoint &lt;pod&gt; --cluster "outbound|8080||reviews.def
 <li><strong>如果没有 ALLOW 策略</strong>，则默认允许（这是"默认拒绝"需要显式配置空规则的原因）。</li>
 <li><strong>AUDIT 策略不参与决策</strong>，只记录。</li>
 </ol>
-<p><strong>关键理解</strong>：零信任需要"默认拒绝"。仅仅添加 ALLOW 规则是不够的——必须<strong>先添加一个空规则的策略</strong>（拒绝所有），再添加具体的 ALLOW 规则。这个顺序很容易搞错。</p>
+<p>一旦存在选择某工作负载的 ALLOW 策略，未匹配任一 ALLOW 规则的请求就被拒绝；不必先创建空规则策略，也不依赖创建顺序。空 rules 的 ALLOW 策略可用于明确表达默认拒绝，后续 ALLOW 策略的允许集合相加，DENY 规则仍优先拒绝。</p>
 </div>
 
 <div class="box tip">
@@ -15634,8 +15727,8 @@ kubectl logs &lt;pod&gt; -c istio-proxy | grep -i "rbac\|audit"
 <tr><td>策略生效但预期不符</td><td>DENY/ALLOW 优先级理解错误、selector 未匹配</td><td>用 AUDIT 模式验证；检查 selector 标签</td></tr>
 <tr><td>延迟明显增加</td><td>Sidecar 资源不足、连接池配置过小、日志级别过高</td><td>检查 Sidecar 资源使用；降低日志级别</td></tr>
 <tr><td>Sidecar 占用内存过高</td><td>服务数量多导致配置膨胀、Sidecar 范围未限制</td><td>用 <code>Sidecar</code> 资源限制可见范围</td></tr>
-<tr><td>Job 无法完成</td><td>Sidecar 不退出导致 Pod 永不终止</td><td>配置 <code>proxy.istio.io/config: '{"holdApplicationUntilProxyStarts": true}'</code>；或用 <code>istioctl kube-inject --exclude</code></td></tr>
-<tr><td>健康检查失败</td><td>STRICT mTLS 下探针被拦截</td><td>确认探针端口在 <code>excludeInboundPorts</code> 中</td></tr>
+<tr><td>Job 无法完成</td><td>普通 Sidecar 未退出</td><td>按 Istio 与集群支持版本评估原生 Sidecar；或对不需网格的 Job 用 Pod 模板 sidecar.istio.io/inject: "false" 禁用注入。holdApplicationUntilProxyStarts 控制启动等待，不能解决退出问题</td></tr>
+<tr><td>健康检查失败</td><td>探针与 STRICT mTLS/流量劫持不兼容</td><td>检查注入后实际探针与 rewriteAppHTTPProbers 设置；通常由 istio-agent 处理改写探针</td></tr>
 </tbody>
 </table>
 </div>
@@ -15669,6 +15762,8 @@ kubectl logs &lt;pod&gt; -c istio-proxy | grep -i "rbac\|audit"
 <p>默认情况下，istiod 会把集群中<strong>所有</strong>服务的配置下发给<strong>每个</strong> Sidecar。如果集群有 1000 个服务，每个 Sidecar 都要维护 1000 个服务的路由与端点信息，内存占用可能达到几百 MB。</p>
 <p>用 <code>Sidecar</code> 资源限定范围后，每个 Sidecar 只需要知道它实际会访问的服务，配置量能降低 80%~95%。这是大规模集群使用 Istio 的<strong>必做优化</strong>。</p>
 </div>
+
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://istio.io/latest/docs/reference/config/security/authorization-policy/">Istio 授权规则</a> · <a href="https://istio.io/latest/docs/ops/configuration/mesh/app-health-check/">探针改写</a></p></div>
 
 <hr>
 
@@ -16045,7 +16140,7 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
 <li><strong>Schema 校验</strong>。OpenAPI schema 在 API Server 层校验，错误配置无法提交（这就是"声明式 API 的护栏"）。</li>
 <li><strong>默认值与打印列</strong>。可以设置字段默认值，并定制 <code>kubectl get</code> 的输出列，让自定义资源用起来和内置资源一样自然。</li>
 <li><strong>版本演进</strong>。支持多版本共存与转换（通过 conversion webhook），实现平滑的 API 演进。</li>
-<li><strong>status 子资源</strong>。启用后，<code>status</code> 只能由控制器更新，<code>spec</code> 只能由用户更新，职责清晰，避免互相覆盖。</li>
+<li><strong>status 子资源</strong>提供单独的 /status 更新端点，使主资源写入不会顺便更新 status。是否允许用户或控制器写入这些端点仍由 RBAC 决定；启用子资源不会自动识别“用户”和“控制器”。</li>
 </ul>
 </div>
 
@@ -16137,6 +16232,8 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
 </div>
 
 <h3>43.3 编写 Operator</h3>
+<div class="box note"><div class="bt">示例前置条件与范围</div><p>下方 Go 代码为控制循环示意：省略 imports、辅助函数、OwnerReference、RBAC、Watch 与冲突处理，不能独立编译运行。创建子 Deployment 后应重读实际 status 或等待下一次调谐；OwnerReference 需显式设置，不会由 CRD 自动生成。</p></div>
+
 
 <div class="tw">
 <table>
@@ -16176,7 +16273,7 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
     err := r.<span class="tk-f">Get</span>(ctx, types.NamespacedName{
         Name:      desiredDeploy.Name,
         Namespace: desiredDeploy.Namespace,
-    }, &currentDeploy)
+    }, &amp;currentDeploy)
 
     <span class="tk-k">if</span> apierrors.<span class="tk-f">IsNotFound</span>(err) {
         <span class="tk-c">// 5a. 不存在则创建</span>
@@ -16188,10 +16285,10 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
         <span class="tk-k">return</span> ctrl.Result{}, err
     } <span class="tk-k">else</span> {
         <span class="tk-c">// 5b. 存在则比对，不一致则更新</span>
-        <span class="tk-k">if</span> !r.<span class="tk-f">deploymentMatches</span>(&currentDeploy, desiredDeploy) {
+        <span class="tk-k">if</span> !r.<span class="tk-f">deploymentMatches</span>(&amp;currentDeploy, desiredDeploy) {
             log.<span class="tk-f">Info</span>(<span class="tk-s">"updating deployment"</span>)
             currentDeploy.Spec = desiredDeploy.Spec
-            <span class="tk-k">if</span> err := r.<span class="tk-f">Update</span>(ctx, &currentDeploy); err != <span class="tk-k">nil</span> {
+            <span class="tk-k">if</span> err := r.<span class="tk-f">Update</span>(ctx, &amp;currentDeploy); err != <span class="tk-k">nil</span> {
                 <span class="tk-k">return</span> ctrl.Result{}, err
             }
         }
@@ -16199,7 +16296,7 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
 
     <span class="tk-c">// 6. 更新 CRD 的 status（反映实际状态）</span>
     wa.Status.ReadyReplicas = currentDeploy.Status.ReadyReplicas
-    wa.Status.Phase = <span class="tk-f">determinePhase</span>(&currentDeploy)
+    wa.Status.Phase = <span class="tk-f">determinePhase</span>(&amp;currentDeploy)
     <span class="tk-k">if</span> err := r.Status().<span class="tk-f">Update</span>(ctx, &wa); err != <span class="tk-k">nil</span> {
         <span class="tk-k">return</span> ctrl.Result{}, err
     }
@@ -16499,6 +16596,8 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
 <p><strong>判断标准</strong>：如果引入一个扩展带来的复杂度超过了它解决的问题，就不应该引入。Kubernetes 原生能力（Deployment、Service、HPA、NetworkPolicy）能解决的问题，不要用更复杂的方案。</p>
 </div>
 
+<div class="box note"><div class="bt">官方依据（按部署版本查阅）</div><p><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">自定义资源</a></p></div>
+
 <hr>
 
 <h2 id="appA"><span class="num">A</span>kubectl 命令速查</h2>
@@ -16524,9 +16623,9 @@ kubectl explain webapplications.spec    <span class="tk-c"># 自动生成文档<
 <tr><td><code>kubectl config use-context &lt;ctx&gt;</code></td><td>切换上下文（切换集群 / 账号）</td></tr>
 <tr><td><code>kubectl config set-context --current --namespace=&lt;ns&gt;</code></td><td>给当前上下文设置默认命名空间</td></tr>
 <tr><td><code>kubectl cluster-info</code></td><td>显示 apiserver 与附加组件的地址</td></tr>
-<tr><td><code>kubectl api-resources</code></td><td>列出集群支持的所有资源类型及缩写、是否命名空间化</td></tr>
+<tr><td><code>kubectl api-resources</code> / <code>kubectl api-versions</code></td><td>分别列出可用资源与服务端提供的 API group/version</td></tr>
 <tr><td><code>kubectl api-versions</code></td><td>列出所有可用的 API 组 / 版本（排查 CRD 是否注册成功）</td></tr>
-<tr><td><code>kubectl version --short</code></td><td>显示客户端与服务端版本（升级前必查）</td></tr>
+<tr><td><code>kubectl version</code></td><td>显示客户端与服务端版本（升级前必查）</td></tr>
 </tbody>
 </table>
 </div>
@@ -16556,7 +16655,7 @@ kubectl --context=prod-cluster -n kube-system get pods
 <tr><td><code>kubectl get &lt;kind&gt; -l app=web</code></td><td>按标签筛选（标签是本手册第 14 章的核心概念）</td></tr>
 <tr><td><code>kubectl get &lt;kind&gt; --field-selector status.phase=Running</code></td><td>按字段筛选，服务端过滤效率更高</td></tr>
 <tr><td><code>kubectl get events --sort-by=.lastTimestamp</code></td><td>按时间排序查看事件，定位调度 / 拉镜像失败</td></tr>
-<tr><td><code>kubectl explain pod.spec.containers</code></td><td>离线查看字段文档与类型，不依赖浏览器</td></tr>
+<tr><td><code>kubectl explain pod.spec.containers</code></td><td>通过 API Server 的 OpenAPI 描述查看字段文档，通常需连接集群</td></tr>
 <tr><td><code>kubectl describe &lt;kind&gt; &lt;name&gt;</code></td><td>人类可读的详情 + 关联事件，最常用的排查入口</td></tr>
 </tbody>
 </table>
@@ -16594,7 +16693,7 @@ kubectl get po -A -o jsonpath=<span class="tk-s">'{range .items[*]}{range .statu
 <tr><td><code>kubectl scale deploy &lt;name&gt; --replicas=5</code></td><td>调整副本数</td></tr>
 <tr><td><code>kubectl set image deploy/&lt;name&gt; app=nginx:1.27</code></td><td>更新镜像，触发滚动发布</td></tr>
 <tr><td><code>kubectl rollout undo deploy/&lt;name&gt;</code></td><td>回滚到上一版本</td></tr>
-<tr><td><code>kubectl label po &lt;name&gt; env=prod</code></td><td>添加 / 修改标签</td></tr>
+<tr><td><code>kubectl label po &lt;name&gt; env=prod --overwrite</code></td><td>添加 / 修改标签</td></tr>
 <tr><td><code>kubectl annotate deploy &lt;name&gt; note="hotfix"</code></td><td>添加注解</td></tr>
 </tbody>
 </table>
@@ -16619,7 +16718,7 @@ kubectl get po -A -o jsonpath=<span class="tk-s">'{range .items[*]}{range .statu
 <tr><td><code>kubectl cp &lt;pod&gt;:/path/f /local/</code></td><td>在容器与本地之间复制文件</td></tr>
 <tr><td><code>kubectl port-forward svc/&lt;name&gt; 8080:80</code></td><td>把 Service 端口映射到本地，无需 NodePort</td></tr>
 <tr><td><code>kubectl debug -it &lt;pod&gt; --image=busybox --target=&lt;c&gt;</code></td><td>注入临时调试容器（Ephemeral Container），共享目标进程命名空间</td></tr>
-<tr><td><code>kubectl debug node/&lt;node&gt; -it --image=busybox</code></td><td>以特权容器进入节点命名空间排查</td></tr>
+<tr><td><code>kubectl debug node/&lt;node&gt; -it --image=busybox --profile=sysadmin</code></td><td>需要相应权限时使用 sysadmin 特权调试 profile；默认 profile 并不保证 privileged</td></tr>
 <tr><td><code>kubectl attach -it &lt;pod&gt;</code></td><td>附着到容器主进程的标准输入输出</td></tr>
 </tbody>
 </table>
@@ -16644,7 +16743,7 @@ kubectl get po -A -o jsonpath=<span class="tk-s">'{range .items[*]}{range .statu
 <tr><td><code>kubectl get nodes -o wide</code></td><td>查看节点状态、角色、版本、内网 IP</td></tr>
 <tr><td><code>kubectl describe node &lt;node&gt;</code></td><td>查看节点的资源分配（Allocated resources）与事件</td></tr>
 <tr><td><code>kubectl cordon &lt;node&gt;</code></td><td>标记为不可调度，已有 Pod 不受影响</td></tr>
-<tr><td><code>kubectl drain &lt;node&gt; --ignore-daemonsets --delete-emptydir-data</code></td><td>驱逐节点上所有 Pod，为维护 / 升级做准备</td></tr>
+<tr><td><code>kubectl drain &lt;node&gt; --ignore-daemonsets --delete-emptydir-data</code></td><td>经 Eviction API 排空普通工作负载；保留 DaemonSet/mirror Pod，删除 emptyDir 数据前须确认可丢弃</td></tr>
 <tr><td><code>kubectl uncordon &lt;node&gt;</code></td><td>恢复可调度</td></tr>
 <tr><td><code>kubectl top node</code> / <code>kubectl top pod -A</code></td><td>查看实时资源用量（需 metrics-server）</td></tr>
 <tr><td><code>kubectl taint node &lt;node&gt; key=value:NoSchedule</code></td><td>添加污点，<code>key-</code> 形式可移除</td></tr>
@@ -16683,19 +16782,25 @@ kubectl get po -A -o jsonpath=<span class="tk-s">'{range .items[*]}{range .statu
 </table>
 </div>
 
-<pre><span class="lang">bash</span><code><span class="tk-c"># 批量删除所有 Evicted 状态的 Pod</span>
-kubectl get po -A --field-selector status.phase=Failed -o name \
-  | xargs -r kubectl delete --ignore-not-found
+<pre><span class="lang">bash</span><code># 先预览 Evicted Pod（需 jq），保留命名空间信息
+kubectl get pods -A -o json | jq -r '
+  .items[] | select(.status.phase == "Failed" and .status.reason == "Evicted") |
+  [.metadata.namespace, .metadata.name] | @tsv'
 
-<span class="tk-c"># 观察 Deployment 滚动发布全过程</span>
-kubectl rollout status deploy/&lt;name&gt; -w
+# 确认预览范围后，可将同一查询的输出管道传给以下循环：
+# while IFS="$(printf '\t')" read -r ns name; do
+#   kubectl delete pod "$name" -n "$ns" --ignore-not-found
+# done
+# Failed 不等于 Evicted；不要跨命名空间输出 -o name 后直接 xargs delete。
 
-<span class="tk-c"># 导出某命名空间全部可复用资源（清理元数据后作模板）</span>
-kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></pre>
+# 观察发布（替换 NAME 和 NAMESPACE）
+kubectl rollout status deployment/NAME -n NAMESPACE --timeout=180s
+# API 对象导出不包含卷数据，也可能包含 Secret；不是完整集群备份。
+</code></pre>
 
 <h3>A.7 性能与并发</h3>
 
-<p>批量操作时 kubectl 默认串行请求，可以通过参数提高吞吐；排查大规模集群时也能借此减少往返。</p>
+<p>大列表查询可用分页和超时控制请求规模；这些参数并不提供通用的批处理并发开关。大规模变更应按批次观察，而非把请求参数当作并发控制。</p>
 
 <div class="tw">
 <table>
@@ -16705,7 +16810,7 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 <tr><td><code>--request-timeout=30s</code></td><td>单次请求超时</td></tr>
 <tr><td><code>-A</code></td><td>等价于 <code>--all-namespaces</code></td></tr>
 <tr><td><code>--field-selector</code></td><td>服务端过滤，比客户端 grep 高效</td></tr>
-<tr><td><code>--server-side --force-conflicts</code></td><td>服务端应用（SSA），是 Server-Side Apply 的入口</td></tr>
+<tr><td><code>--server-side</code></td><td>启用 SSA；仅在明确需要接管其他管理者字段时才另加 --force-conflicts</td></tr>
 </tbody>
 </table>
 </div>
@@ -16719,7 +16824,7 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 
 <h2 id="appB"><span class="num">B</span>YAML 模板库</h2>
 
-<p class="lead">本附录给出一批可直接复制使用的 YAML 模板，覆盖从最小 Pod 到生产级 Deployment 的常见形态。所有模板都遵循生产实践约定：显式设置资源请求与限制、使用语义化镜像标签、配置健康探针。</p>
+<p class="lead">本附录包含完整清单与合并片段，模板需按环境调整，不能把整章一次性 apply。示例镜像、Secret、命名空间、StorageClass 和插件通常需预先准备；未配置探针或完整安全上下文的最小示例不应称为生产模板。</p>
 
 <div class="box tip">
 <div class="bt">使用前请确认三件事</div>
@@ -16732,7 +16837,7 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 
 <h3>B.1 最小可用 Pod</h3>
 
-<p>Pod 是 Kubernetes 的最小调度单元（第 11 章）。裸 Pod 不会自愈，仅适合调试，生产请用控制器。</p>
+<p>裸 Pod 的容器可按 restartPolicy 重启；缺少的是删除或节点故障后的替代 Pod 重建。下面的裸 Pod 仅用于调试，业务应使用控制器。</p>
 
 <pre><span class="lang">yaml</span><code><span class="tk-f">apiVersion</span>: v1
 <span class="tk-f">kind</span>: Pod
@@ -16946,46 +17051,65 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 
 <p>StatefulSet 为每个副本提供<strong>稳定的网络标识</strong>与<strong>独立的存储</strong>（第 12、23 章）。它需要 Headless Service 配合。</p>
 
-<pre><span class="lang">yaml</span><code><span class="tk-f">apiVersion</span>: apps/v1
-<span class="tk-f">kind</span>: StatefulSet
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: db
-<span class="tk-f">spec</span>:
-  <span class="tk-f">serviceName</span>: db-headless   <span class="tk-c"># 必须指向 Headless Service</span>
-  <span class="tk-f">replicas</span>: <span class="tk-n">3</span>
-  <span class="tk-f">podManagementPolicy</span>: OrderedReady  <span class="tk-c"># 默认：按序启动/逆序终止</span>
-  <span class="tk-f">selector</span>:
-    <span class="tk-f">matchLabels</span>: { <span class="tk-f">app</span>: db }
-  <span class="tk-f">template</span>:
-    <span class="tk-f">metadata</span>:
-      <span class="tk-f">labels</span>: { <span class="tk-f">app</span>: db }
-    <span class="tk-f">spec</span>:
-      <span class="tk-f">containers</span>:
-        - <span class="tk-f">name</span>: postgres
-          <span class="tk-f">image</span>: postgres:16-alpine
-          <span class="tk-f">ports</span>:
-            - <span class="tk-f">name</span>: pg
-              <span class="tk-f">containerPort</span>: <span class="tk-n">5432</span>
-          <span class="tk-f">env</span>:
-            - <span class="tk-f">name</span>: PGDATA
-              <span class="tk-f">value</span>: /var/lib/postgresql/data/pgdata
-          <span class="tk-f">resources</span>:
-            <span class="tk-f">requests</span>: { <span class="tk-f">cpu</span>: <span class="tk-s">"500m"</span>, <span class="tk-f">memory</span>: <span class="tk-s">"1Gi"</span> }
-            <span class="tk-f">limits</span>:   { <span class="tk-f">cpu</span>: <span class="tk-s">"2"</span>,    <span class="tk-f">memory</span>: <span class="tk-s">"2Gi"</span> }
-          <span class="tk-f">volumeMounts</span>:
-            - <span class="tk-f">name</span>: data
-              <span class="tk-f">mountPath</span>: /var/lib/postgresql/data
-  <span class="tk-f">volumeClaimTemplates</span>:      <span class="tk-c"># 每个副本各生成一个 PVC</span>
-    - <span class="tk-f">metadata</span>:
-        <span class="tk-f">name</span>: data
-      <span class="tk-f">spec</span>:
-        <span class="tk-f">accessModes</span>: [<span class="tk-s">"ReadWriteOnce"</span>]
-        <span class="tk-f">storageClassName</span>: fast-ssd
-        <span class="tk-f">resources</span>:
-          <span class="tk-f">requests</span>:
-            <span class="tk-f">storage</span>: <span class="tk-s">"20Gi"</span></code></pre>
+<pre><span class="lang">yaml</span><code># 前提：当前命名空间中已有 db-credentials Secret（password 键）
+# 且 fast-ssd StorageClass/CSI 驱动可用；3 个独立数据库实例，不是复制集群。
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-headless
+spec:
+  clusterIP: None
+  selector: {app: db}
+  ports:
+  - name: pg
+    port: 5432
+    targetPort: pg
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  serviceName: db-headless   # 必须指向 Headless Service
+  replicas: 3
+  podManagementPolicy: OrderedReady  # 默认：按序启动/逆序终止
+  selector:
+    matchLabels: { app: db }
+  template:
+    metadata:
+      labels: { app: db }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - name: pg
+              containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          resources:
+            requests: { cpu: "500m", memory: "1Gi" }
+            limits:   { cpu: "2",    memory: "2Gi" }
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:      # 每个副本各生成一个 PVC
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: fast-ssd
+        resources:
+          requests:
+            storage: "20Gi"</code></pre>
 
-<p>副本的 DNS 名称形如 <code>db-0.db-headless.&lt;ns&gt;.svc.cluster.local</code>。删除 StatefulSet <strong>不会</strong>删除 PVC，这是数据保护设计——如需清理须手动删除 PVC。</p>
+<p>副本 DNS 形如 <code>db-0.db-headless.&lt;ns&gt;.svc.cluster.local</code>，前提是已有对应 Headless Service。PVC 默认 Retain，但显式配置 Delete 保留策略会改变行为。下面只是独立数据库实例的模板，3 副本不会自动组成 PostgreSQL 主从或高可用集群；需另外部署复制与故障转移逻辑。</p>
 
 <h3>B.6 DaemonSet 与 Job</h3>
 
@@ -17035,45 +17159,59 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 
 <h3>B.7 存储三件套</h3>
 
-<pre><span class="lang">yaml</span><code><span class="tk-c"># StorageClass：定义「哪类存储」，是动态供应的模板</span>
-<span class="tk-f">apiVersion</span>: storage.k8s.io/v1
-<span class="tk-f">kind</span>: StorageClass
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: fast-ssd
-<span class="tk-f">provisioner</span>: ebs.csi.aws.com
-<span class="tk-f">parameters</span>:
-  <span class="tk-f">type</span>: gp3
-  <span class="tk-f">fsType</span>: ext4
-<span class="tk-f">reclaimPolicy</span>: Delete          <span class="tk-c"># Delete | Retain</span>
-<span class="tk-f">allowVolumeExpansion</span>: <span class="tk-n">true</span>     <span class="tk-c"># 允许在线扩容 PVC</span>
-<span class="tk-f">volumeBindingMode</span>: WaitForFirstConsumer  <span class="tk-c"># 延迟绑定，配合拓扑感知调度</span>
+<pre><span class="lang">yaml</span><code># StorageClass：定义「哪类存储」，是动态供应的模板
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-ssd
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+  fsType: ext4
+reclaimPolicy: Delete          # Delete | Retain
+allowVolumeExpansion: true     # 允许在线扩容 PVC
+volumeBindingMode: WaitForFirstConsumer  # 延迟绑定，配合拓扑感知调度
 ---
-<span class="tk-c"># PersistentVolume：管理员预置的存储（静态供应时使用）</span>
-<span class="tk-f">apiVersion</span>: v1
-<span class="tk-f">kind</span>: PersistentVolume
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: pv-nfs-01
-<span class="tk-f">spec</span>:
-  <span class="tk-f">capacity</span>:
-    <span class="tk-f">storage</span>: 100Gi
-  <span class="tk-f">accessModes</span>: [<span class="tk-s">"ReadWriteMany"</span>]
-  <span class="tk-f">persistentVolumeReclaimPolicy</span>: Retain
-  <span class="tk-f">storageClassName</span>: nfs
-  <span class="tk-f">nfs</span>:
-    <span class="tk-f">server</span>: 10.0.0.20
-    <span class="tk-f">path</span>: /exports/data
+# PersistentVolume：管理员预置的存储（静态供应时使用）
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-01
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes: ["ReadWriteMany"]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+  nfs:
+    server: 10.0.0.20
+    path: /exports/data
 ---
-<span class="tk-c"># PersistentVolumeClaim：用户声明「我要多大、什么访问模式」</span>
-<span class="tk-f">apiVersion</span>: v1
-<span class="tk-f">kind</span>: PersistentVolumeClaim
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: app-data
-<span class="tk-f">spec</span>:
-  <span class="tk-f">accessModes</span>: [<span class="tk-s">"ReadWriteOnce"</span>]
-  <span class="tk-f">storageClassName</span>: fast-ssd
-  <span class="tk-f">resources</span>:
-    <span class="tk-f">requests</span>:
-      <span class="tk-f">storage</span>: 20Gi</code></pre>
+# 动态 PVC：使用上面的 AWS EBS StorageClass，不会绑定到 NFS PV
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-ebs
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 20Gi
+---
+# 静态 PVC：与上面的 NFS PV 显式匹配（两种方案互相独立）
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-nfs
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nfs
+  volumeName: pv-nfs-01
+  resources:
+    requests:
+      storage: 20Gi
+</code></pre>
 
 <div class="box note">
 <div class="bt">三种 accessModes 的含义</div>
@@ -17193,42 +17331,44 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 
 <h3>B.10 自动扩缩容与中断预算</h3>
 
-<pre><span class="lang">yaml</span><code><span class="tk-c"># HPA：基于指标自动调整副本数</span>
-<span class="tk-f">apiVersion</span>: autoscaling/v2
-<span class="tk-f">kind</span>: HorizontalPodAutoscaler
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: web-hpa
-<span class="tk-f">spec</span>:
-  <span class="tk-f">scaleTargetRef</span>:
-    <span class="tk-f">apiVersion</span>: apps/v1
-    <span class="tk-f">kind</span>: Deployment
-    <span class="tk-f">name</span>: web
-  <span class="tk-f">minReplicas</span>: <span class="tk-n">2</span>
-  <span class="tk-f">maxReplicas</span>: <span class="tk-n">20</span>
-  <span class="tk-f">metrics</span>:
-    - <span class="tk-f">type</span>: Resource
-      <span class="tk-f">resource</span>:
-        <span class="tk-f">name</span>: cpu
-        <span class="tk-f">target</span>:
-          <span class="tk-f">type</span>: Utilization
-          <span class="tk-f">averageUtilization</span>: <span class="tk-n">70</span>
-  <span class="tk-f">behavior</span>:                  <span class="tk-c"># 防止抖动：缩容慢、扩容快</span>
-    <span class="tk-f">scaleDown</span>:
-      <span class="tk-f">stabilizationWindowSeconds</span>: <span class="tk-n">300</span>
-      <span class="tk-f">policies</span>:
-        - { <span class="tk-f">type</span>: Percent, <span class="tk-f">value</span>: <span class="tk-n">50</span>, <span class="tk-f">periodSeconds</span>: <span class="tk-n">60</span> }
-    <span class="tk-f">scaleUp</span>:
-      <span class="tk-f">stabilizationWindowSeconds</span>: <span class="tk-n">0</span>
+<pre><span class="lang">yaml</span><code># HPA：基于指标自动调整副本数
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-hpa
+  namespace: prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:                  # 防止抖动：缩容慢、扩容快
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - { type: Percent, value: 50, periodSeconds: 60 }
+    scaleUp:
+      stabilizationWindowSeconds: 0
 ---
-<span class="tk-c"># PDB：自愿中断时保证可用副本下限</span>
-<span class="tk-f">apiVersion</span>: policy/v1
-<span class="tk-f">kind</span>: PodDisruptionBudget
-<span class="tk-f">metadata</span>:
-  <span class="tk-f">name</span>: web-pdb
-<span class="tk-f">spec</span>:
-  <span class="tk-f">minAvailable</span>: <span class="tk-n">2</span>        <span class="tk-c"># 或 maxUnavailable: 1，二者只能选一</span>
-  <span class="tk-f">selector</span>:
-    <span class="tk-f">matchLabels</span>: { <span class="tk-f">app</span>: web }</code></pre>
+# PDB：自愿中断时保证可用副本下限
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web-pdb
+  namespace: prod
+spec:
+  minAvailable: 2        # 或 maxUnavailable: 1，二者只能选一
+  selector:
+    matchLabels: { app: web }</code></pre>
 
 <div class="box note">
 <div class="bt">PDB 只约束「自愿中断」</div>
@@ -17237,25 +17377,30 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 
 <h3>B.11 Pod 安全上下文速查</h3>
 
-<pre><span class="lang">yaml</span><code><span class="tk-f">securityContext</span>:              <span class="tk-c"># Pod 级，作用于所有容器</span>
-  <span class="tk-f">runAsNonRoot</span>: <span class="tk-n">true</span>
-  <span class="tk-f">runAsUser</span>: <span class="tk-n">10001</span>
-  <span class="tk-f">runAsGroup</span>: <span class="tk-n">10001</span>
-  <span class="tk-f">fsGroup</span>: <span class="tk-n">10001</span>              <span class="tk-c"># 挂载卷的属组，解决写入权限问题</span>
-  <span class="tk-f">seccompProfile</span>:
-    <span class="tk-f">type</span>: RuntimeDefault      <span class="tk-c"># 启用默认系统调用过滤</span>
-<span class="tk-c"># ---- 容器级 ----</span>
-<span class="tk-f">securityContext</span>:
-  <span class="tk-f">allowPrivilegeEscalation</span>: <span class="tk-n">false</span>  <span class="tk-c"># 禁止提权</span>
-  <span class="tk-f">readOnlyRootFilesystem</span>: <span class="tk-n">true</span>    <span class="tk-c"># 根文件系统只读</span>
-  <span class="tk-f">privileged</span>: <span class="tk-n">false</span>
-  <span class="tk-f">capabilities</span>:
-    <span class="tk-f">drop</span>: [<span class="tk-s">"ALL"</span>]              <span class="tk-c"># 先丢弃全部</span>
-    <span class="tk-f">add</span>: [<span class="tk-s">"NET_BIND_SERVICE"</span>]  <span class="tk-c"># 再按需添加最小能力</span></code></pre>
+<pre><span class="lang">yaml</span><code># Pod.spec 片段：Pod 与容器的 securityContext 位于不同层级
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001  # 行为取决于卷类型、驱动与权限策略
+  seccompProfile:
+    type: RuntimeDefault
+containers:
+- name: app
+  image: registry.example.com/app:VERSION  # 替换为支持指定 UID 的镜像
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    privileged: false
+    capabilities:
+      drop: ["ALL"]
+      add: ["NET_BIND_SERVICE"]
+  # 应用所需可写目录还需显式挂载卷
+</code></pre>
 
 <div class="box tip">
 <div class="bt">Pod 安全基线四件套</div>
-<p>生产环境的容器应默认满足以下四条，可显著收敛攻击面：<code>runAsNonRoot: true</code>、<code>allowPrivilegeEscalation: false</code>、<code>capabilities.drop: ["ALL"]</code>、<code>seccompProfile.type: RuntimeDefault</code>。这正好对应 Pod Security Admission 的 <strong>restricted</strong> 级别要求（第 26 章），可以用命名空间标签强制实施。</p>
+<p>这些设置涵盖 restricted 的常见要求，但不是完整准入条件。还需检查宿主命名空间、卷类型、SELinux/AppArmor、UID 等适用项以及 Linux/Windows 差异，按具体 PSA 版本核对完整标准。</p>
 </div>
 
 <h3>B.12 便捷配置片段</h3>
@@ -17613,7 +17758,7 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
 <table>
 <thead><tr><th>#</th><th>题目</th><th>参考章节</th></tr></thead>
 <tbody>
-<tr><td>9</td><td>为什么 Service 的 ClusterIP 无法 ping 通，但可以用它建立 TCP 连接？</td><td>第 13、17 章</td></tr>
+<tr><td>9</td><td>为什么验证 Service 应测试服务端口，而不能仅看 ping 结果？</td><td>第 13、17 章</td></tr>
 <tr><td>10</td><td>为什么删除一个由 Deployment 管理的 Pod 后，它会被自动重建？重建出的 Pod 是同一个吗？</td><td>第 10、12 章</td></tr>
 <tr><td>11</td><td>为什么设置了 CPU limits 反而可能导致性能下降？这与 CPU 的「可压缩资源」特性有什么关系？</td><td>第 28 章</td></tr>
 <tr><td>12</td><td>在 preStop 中 sleep 几秒为什么能减少滚动发布期间的 502 错误？</td><td>第 11 章</td></tr>
@@ -17769,9 +17914,19 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  /* ---------- 侧栏搜索（过滤章节链接） ---------- */
+  /* ---------- 章节内容搜索（返回包含关键词的章节） ---------- */
   var input = document.getElementById('searchInput');
   var parts = Array.prototype.slice.call(sidebar.querySelectorAll('.nav-part'));
+  var chapterSearchText = {};
+  targets.forEach(function (target) {
+    var pieces = [target.link.textContent, target.el.textContent];
+    var next = target.el.nextElementSibling;
+    while (next && next.tagName !== 'H2') {
+      pieces.push(next.textContent);
+      next = next.nextElementSibling;
+    }
+    chapterSearchText[target.id] = pieces.join(' ').toLowerCase();
+  });
   input.addEventListener('input', function () {
     var q = input.value.trim().toLowerCase();
     if (!q) {
@@ -17780,7 +17935,8 @@ kubectl get deploy,svc,cm,secret -n &lt;ns&gt; -o yaml &gt; backup.yaml</code></
       return;
     }
     links.forEach(function (a) {
-      var hit = a.textContent.toLowerCase().indexOf(q) !== -1;
+      var id = a.getAttribute('href').slice(1);
+      var hit = (chapterSearchText[id] || a.textContent.toLowerCase()).indexOf(q) !== -1;
       a.classList.toggle('hidden', !hit);
     });
     /* 隐藏没有任何可见链接的分组标题 */

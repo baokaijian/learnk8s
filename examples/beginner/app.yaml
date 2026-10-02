@@ -1,0 +1,90 @@
+# 本地学习实验；不依赖额外 CRD、Ingress、Metrics Server 或持久卷。
+# nginx 版本与 Kubernetes 版本彼此独立；生产镜像还应验证来源并固定 digest。
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: k8s-lab
+  labels:
+    app.kubernetes.io/part-of: learnk8s
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-content
+  namespace: k8s-lab
+data:
+  index.html: |
+    <!doctype html>
+    <html lang="zh-CN">
+    <meta charset="utf-8">
+    <title>我的第一个 Kubernetes 应用</title>
+    <h1>Hello Kubernetes!</h1>
+    <p>页面内容来自 ConfigMap，网站由 Deployment 管理，通过 Service 访问。</p>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: k8s-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: nginx
+        image: nginx:1.31.6-alpine
+        ports:
+        - name: http
+          containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 128Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        volumeMounts:
+        - name: content
+          mountPath: /usr/share/nginx/html
+          readOnly: true
+      volumes:
+      - name: content
+        configMap:
+          name: web-content
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: k8s-lab
+spec:
+  selector:
+    app: web
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
