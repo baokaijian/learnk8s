@@ -4,6 +4,8 @@
 
 本次已验证清单的 YAML 与内置资源字段，尚未在真实集群运行整套实验。镜像下载、驱动和节点资源问题仍需在你的环境验证。
 
+**使用 Apple silicon Mac、希望体验 Apple container？** 先走 [Apple container 实验路线](./APPLE_CONTAINER_GUIDE.md)：用 container 1.0.0 完成原生容器实验，再通过 E08 把自己构建的镜像交给独立 Kubernetes 集群。该路线使用 `learnk8s-apple` / `apple-lab` / `apple-web`，和本文的 `learnk8s` / `k8s-lab` / `web` 分开操作。Apple container 1.0.0 不能替代下面的 docker 驱动，也无需为原生实验先安装 Docker；若继续本文原样流程，仍需本文指定的 minikube 驱动环境。
+
 ## 先认识五个概念
 
 | 概念 | 在本实验中的作用 |

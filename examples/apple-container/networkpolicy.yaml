@@ -1,0 +1,13 @@
+# 仅在支持 NetworkPolicy 的 CNI 上生效；通过集群 client 测试，勿用 port-forward 验收。
+# 恢复：kubectl --context=learnk8s-apple -n apple-lab delete networkpolicy apple-web-deny-ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: apple-web-deny-ingress
+  namespace: apple-lab
+spec:
+  podSelector:
+    matchLabels:
+      app: apple-web
+  policyTypes: [Ingress]
+  ingress: []

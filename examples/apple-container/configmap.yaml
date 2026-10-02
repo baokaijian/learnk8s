@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apple-config
+  namespace: apple-lab
+data:
+  LAB_MODE: kubernetes

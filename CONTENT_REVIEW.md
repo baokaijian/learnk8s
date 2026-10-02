@@ -98,3 +98,28 @@ python3 scripts/validate_content.py --schema /tmp/learnk8s-openapi-v1.34.json
 ```
 
 此脚本检查语法、重复字段、基础字段类型与必填项，不替代 apiserver 对字段值、跨字段约束、准入策略和运行时前置条件的完整校验。
+
+## 2026-10-02 补充：Apple container 实验路线
+
+- 正文 43 章全部增加可展开的实验卡，包含任务、可复制命令、验收与环境前提；附录 E 完整收录 Apple 指南与 43 章索引。现在共有 49 个章节入口（导论、43 章、5 附录）。
+- 新增 [Apple 实验指南](./APPLE_CONTAINER_GUIDE.md)，按 E00–E10 组织：环境、隔离、构建、生命周期、网络/DNS、卷、权限/资源、日志、Kubernetes 镜像流转、深入前提、清理。
+- 核对 [1.0.0 发布源码](https://github.com/apple/container/tree/1.0.0)、[命令说明](https://github.com/apple/container/blob/1.0.0/docs/command-reference.md)、[技术说明](https://github.com/apple/container/blob/1.0.0/docs/technical-overview.md) 与 [官方入门](https://github.com/apple/container/blob/1.0.0/docs/tutorials/start-here.md)。本机 macOS 27.0.1 / arm64 / container 1.0.0 已运行原生实验。
+- 订正实际 IP 提取路径为 `status.networks[].ipv4Address`；官方 how-to 中旧示例的顶层 `networks[].address` 与本机 1.0.0 输出不同。检查版本与实际数据，避免照抄旧字段。
+- Kubernetes 衔接使用独立 minikube QEMU/containerd 节点与镜像归档；依据 [QEMU 驱动说明](https://minikube.sigs.k8s.io/docs/drivers/qemu/)、[镜像加载命令](https://minikube.sigs.k8s.io/docs/commands/image/) 和 [Kubernetes 镜像规则](https://kubernetes.io/docs/concepts/containers/images/)。明确 Apple 1.0.0 不能作为 docker 驱动或 CRI endpoint。主分支实验性的 container k8s 不作为已发布 1.0.0 的能力。
+- 配套 Dockerfile 与 7 份完整 Kubernetes 清单（12 个资源对象）：网站、ConfigMap、NetworkPolicy、PVC/写入 Pod、RBAC、HPA、ResourceQuota；插件和权限条件分别标注，按章独立部署。
+- 由 `scripts/sync_apple_labs.py` 将指南及 JSON 任务同步到离线 HTML；`--check` 核查一致性，避免 43 章、Markdown 与网页长期漂移。
+- 本轮 YAML/OpenAPI 检查：220 份 YAML 文档、115 个内置资源字段检查；38 个组件/自定义配置与 67 个片段仍只做语法检查，1 个未渲染 Helm 模板跳过。
+
+**实测与限制：**Apple 网站构建/访问、非 root、停止/启动、专用网络通信及跨网络隔离、DNS、只读目录挂载、命名卷持久化、只读根/capability/环境变量、stats/logs、镜像 save/load 通过。新增 Kubernetes 清单只做静态检查；本机缺少 QEMU，也没有可用的原 Docker 驱动，因此没有启动 Kubernetes 集群，未实际验收节点镜像导入、Pod、插件、多节点或 HA。所有短时验证资源使用 lk8s-ac 前缀，并在验证后清理。
+
+本轮网页核查：49 个目录入口和 43 个实验卡/索引均完整，内部锚点及本地文件链接有效；搜索 Apple container 返回 45 个相关入口，清空后恢复 49 个。实验索引深链接会自动展开卡片；桌面与 500px 窄屏无整体横向溢出，窄屏导航正常开合且释放滚动锁，未见控制台错误或外部资源加载。59 组新增命令通过 bash/zsh 语法检查；语法检查不代替集群执行。
+
+## 2026-10-02 补充：页面与手机 / 平板阅读优化
+
+首屏重写为三个学习入口：小白入门、Apple container、原理学习；缩短导论说明，明确完整清单与配置片段的区别。正文最大行宽约 920px，提升辅助文字和代码注释的对比度。实验卡折叠时显示任务，展开后按准备环境、命令、观察结果和适用范围组织；附录 E 增加步骤导航与纯命令复制。
+
+手机与平板增加固定阅读导航、当前章节、语义化目录按钮、关闭按钮、44px 触控区域及大字号搜索。目录开合同步焦点、背景滚动、aria-expanded 和隐藏目录的不可交互状态，支持 Escape 关闭、Tab 循环及章节跳转后定位标题。平板入口为双列，手机为单列；代码保持格式，宽表格、代码和图示只在自身区域横向滚动，并按实际溢出显示提示。修复两处网格卡片最小宽度导致的手机页面横向溢出；为 SVG 保留可读宽度，支持系统减少动态效果偏好。
+
+验证使用浏览器视口/触控模拟，宽度覆盖 320、390、768、1024、1180、1440、1920px，包括手机、平板纵横屏和电脑宽屏；均未出现页面整体横向溢出。检查 49 个章节入口、43 个实验卡、内部锚点、搜索/空结果/清空、目录遮罩和滚动解锁、Tab/Escape、实验卡 Enter 展开、宽表格键盘滚动、深链接展开、当前章节提示及无外部资源加载。复制检查使用隔离页面的剪贴板替身，确认复制文本与代码一致，并验证受限时的代码选择回退；没有覆盖用户剪贴板。
+
+静态核查仍覆盖 220 份 YAML 文档及 115 个内置资源；所有实验数据与离线 HTML 同步。此轮只调整呈现与阅读操作，Kubernetes 运行验证边界见上节。视口模拟不等同于所有真实设备与浏览器组合的兼容性验收。

@@ -1,0 +1,78 @@
+# 先完成 APPLE_CONTAINER_GUIDE.md E08 的镜像导入，再部署。
+# 本清单使用本地镜像，不从公共仓库拉取；节点需要有 linux/arm64 镜像。
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apple-lab
+  labels:
+    app.kubernetes.io/part-of: learnk8s
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apple-web
+  namespace: apple-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: apple-web
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: apple-web
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: web
+        image: docker.io/learnk8s/apple-web:1.0
+        imagePullPolicy: Never
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 32Mi
+          limits:
+            cpu: 500m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apple-web
+  namespace: apple-lab
+spec:
+  selector:
+    app: apple-web
+  ports:
+  - name: http
+    port: 80
+    targetPort: http

@@ -1,0 +1,39 @@
+# 先完成 E08；需要默认 StorageClass。仅串行重建同一 Pod 观察 PVC 数据。
+# 教学写入使用 root；生产存储权限需结合驱动设置 UID/GID/fsGroup。
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: apple-data
+  namespace: apple-lab
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 64Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-writer
+  namespace: apple-lab
+spec:
+  automountServiceAccountToken: false
+  restartPolicy: Never
+  containers:
+  - name: writer
+    image: docker.io/alpine:3.22
+    command: [sh, -c, "test -f /data/message.txt || echo persisted-in-kubernetes > /data/message.txt; sleep 3600"]
+    resources:
+      requests:
+        cpu: 50m
+        memory: 16Mi
+      limits:
+        cpu: 100m
+        memory: 32Mi
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: apple-data

@@ -4,6 +4,8 @@
 
 **第一次学习？** 从 [小白入门实验](./BEGINNER_GUIDE.md) 开始，配套 [完整实验清单](./examples/beginner/app.yaml)。本次核查的订正、官方依据、验证边界与优化建议见 [内容核查报告](./CONTENT_REVIEW.md)。
 
+**Apple silicon Mac 用户：** 从 [Apple container 实验指南](./APPLE_CONTAINER_GUIDE.md) 开始，用原生容器构建、访问和调试网站，再把同一镜像导入独立 Kubernetes 集群。43 章均有对应实验入口，网页附录 E 完整收录指南，可离线阅读。原生命令基于已实测的 container 1.0.0；Kubernetes、插件与多节点实验分别标注前提。
+
 [![Single File](https://img.shields.io/badge/单文件-HTML-blue)](./index.html)
 [![Offline](https://img.shields.io/badge/离线-零依赖-green)](./index.html)
 [![Chapters](https://img.shields.io/badge/章节-43-orange)](./index.html)
@@ -22,7 +24,7 @@ Kubernetes 的学习难点从来不在「某个命令怎么用」，而在于**�
 
 ## 内容概览
 
-全书共 **43 章 + 4 个附录**，分为九篇：
+全书共 **43 章 + 5 个附录**，分为九篇：
 
 | 篇 | 主题 | 回答的核心问题 |
 |---|---|---|
@@ -121,6 +123,7 @@ Kubernetes 的学习难点从来不在「某个命令怎么用」，而在于**�
 - B · YAML 模板库
 - C · 术语表
 - D · 学习路径与自测题
+- E · Apple container 全章节实验路线
 
 </details>
 
@@ -131,6 +134,7 @@ Kubernetes 的学习难点从来不在「某个命令怎么用」，而在于**�
 | 路径 | 说明 |
 |---|---|
 | **小白入门**（推荐初学者） | 先完成入门实验，再读第 8–13、24、28、39 章的基础段落，建立部署与排障能力。 |
+| **Apple container 实验**（Apple silicon Mac） | 先做 E00–E07 原生容器，再做 E08 镜像流转与 Kubernetes；每章实验给出任务、命令、验收和环境边界。 |
 | **系统深入学习** | 从第 1 章顺序读到第 43 章。适合已有实践基础、希望理解原理或承担平台建设职责的读者。 |
 | **运维速成** | 先读第 2、8、9、11、12、39 章，快速建立可用认知并掌握排障方法，再按需回补网络、存储、调度各篇。 |
 | **按需查阅** | 利用左侧导航直接跳转。每章开头的「本章要点」和结尾的「小结」可以帮助快速定位。术语不确定时查附录 C。 |
@@ -164,12 +168,14 @@ start index.html
 
 ## 技术特性
 
-- **单文件交付** —— 全部内容、样式、脚本内联于一个 HTML 文件，体积约 1 MB，便于分发、归档与离线阅读。
+- **单文件交付** —— 全部内容、样式、脚本内联于一个 HTML 文件，体积约 1.2 MB，便于分发、归档与离线阅读。
 - **零外部加载依赖** —— 正文、样式和脚本内联，不加载外部字体、CDN 或图片，断网可阅读。官方参考链接需联网访问，实验安装与镜像下载也需相应网络。
-- **深色主题排版** —— 针对长时间阅读优化，代码块、表格、提示框均有独立配色。
-- **侧边栏导航 + 章节内容搜索** —— 匹配章节标题和正文关键词，返回包含关键词的章节；不提供句子级结果或命中位置高亮。
+- **清晰的学习入口** —— 首屏可选择小白入门、Apple container 实验或原理学习，实验卡先展示任务，展开后查看准备环境、命令、结果与适用范围。
+- **深色主题排版** —— 正文行宽、文字对比度与层级适合持续阅读；代码块、表格、提示框分别排版。
+- **侧边栏导航 + 章节内容搜索** —— 匹配章节标题和正文关键词，显示结果数与空结果提示；不提供句子级结果或命中位置高亮。
 - **阅读进度条与回到顶部** —— 长文档阅读体验优化。
-- **响应式布局** —— 适配桌面与移动端。
+- **手机与平板阅读** —— 固定导航显示当前章节，目录支持触控、键盘和关闭后恢复焦点；平板使用双列入口，手机使用单列。宽表格、代码和图示可单独横向滑动，溢出时显示提示。
+- **实验命令复制** —— Apple 实验提供复制按钮；浏览器限制剪贴板时会选中代码供系统复制。支持减少动态效果的系统偏好。
 
 ---
 
@@ -177,14 +183,31 @@ start index.html
 
 ```
 learnk8s/
-├── index.html                   # 主体（43 章 + 导论 + 4 附录）
+├── index.html                   # 主体（43 章 + 导论 + 5 附录）
 ├── README.md                    # 本文件
 ├── BEGINNER_GUIDE.md            # 入门实验、预期结果与排障路径
+├── APPLE_CONTAINER_GUIDE.md     # Apple 原生实验与 Kubernetes 衔接
 ├── CONTENT_REVIEW.md            # 内容订正、官方依据与优化建议
 ├── examples/beginner/app.yaml   # 完整的标准资源实验清单
+├── examples/apple-container/   # 网站镜像、43 章任务及配置/存储/RBAC/策略/HPA/配额清单
 ├── scripts/validate_content.py  # YAML 与可选 OpenAPI 静态核查
+├── scripts/sync_apple_labs.py   # 将 Apple 指南和各章任务同步到离线 HTML
 └── .gitignore                   # 忽略本地工作目录数据
 ```
+
+---
+
+## 维护实验内容
+
+Apple 指南与 43 章任务分别维护在 `APPLE_CONTAINER_GUIDE.md`、`examples/apple-container/chapter-labs.json`。修改后同步网页并检查：
+
+```bash
+python3 scripts/sync_apple_labs.py
+python3 scripts/sync_apple_labs.py --check
+python3 scripts/validate_content.py
+```
+
+同步脚本仅用 Python 标准库；YAML 检查需要 PyYAML。它们不连接集群。Apple 原生实验已实际运行，Kubernetes 衔接清单已静态检查；QEMU 集群导入与插件实验尚需按指南在相应环境验收。
 
 ---
 

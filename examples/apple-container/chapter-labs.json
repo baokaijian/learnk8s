@@ -1,0 +1,432 @@
+[
+  {
+    "chapter": 1,
+    "section": "E01",
+    "level": "Apple 原生",
+    "goal": "比较 Mac 与容器的内核、架构与运行边界。",
+    "commands": "uname -a\ncontainer run --rm --name lk8s-ac-ch01 docker.io/alpine:3.22 uname -a",
+    "expected": "Mac 显示 Darwin，容器显示 Linux / aarch64；解释每容器轻量 VM。",
+    "boundary": "不能由 namespace 名字或 inode 数字推断两个 VM 共享内核。",
+    "prerequisite": "先完成 E00。"
+  },
+  {
+    "chapter": 2,
+    "section": "E01",
+    "level": "Apple 原生",
+    "goal": "在 Linux 容器里观察 namespace 与 cgroup v2，而不是在 Mac 寻找 /proc。",
+    "commands": "container run --rm --name lk8s-ac-ch02 docker.io/alpine:3.22 sh -c 'ls /proc/self/ns; cat /proc/self/cgroup; cat /sys/fs/cgroup/cgroup.controllers'",
+    "expected": "能读到隔离入口与控制器；将可见结果和正文的 Linux 主机模型对照。",
+    "boundary": "VM vCPU、VM 内存与 Kubernetes cgroup requests/limits 的语义不同。",
+    "prerequisite": "先完成 E00。"
+  },
+  {
+    "chapter": 3,
+    "section": "E02",
+    "level": "Apple 原生",
+    "goal": "构建并检查镜像的平台、摘要与配置。",
+    "commands": "container image inspect docker.io/learnk8s/apple-web:1.0",
+    "expected": "能找到 linux/arm64 与摘要；修改网页、用新标签重建后对照。",
+    "boundary": "OCI 可移植仍需匹配 CPU 架构；inspect 不等于检查所有层的安全性。",
+    "prerequisite": "先完成 E02；保留 lk8s-ac-web。"
+  },
+  {
+    "chapter": 4,
+    "section": "E03",
+    "level": "Apple 原生",
+    "goal": "把 Docker 的基础生命周期操作与 Apple CLI 逐项对照。",
+    "commands": "container exec lk8s-ac-web id\ncontainer logs lk8s-ac-web\ncontainer stop lk8s-ac-web\ncontainer start lk8s-ac-web",
+    "expected": "UID 1000，停止后需手动启动；网站恢复后可再次访问。",
+    "boundary": "Docker daemon/socket/Compose 参数不可机械替换为 container。",
+    "prerequisite": "先完成 E02；保留 lk8s-ac-web。"
+  },
+  {
+    "chapter": 5,
+    "section": "E02",
+    "level": "Apple 原生",
+    "goal": "用仓库 Dockerfile 体验 BuildKit 缓存和构建上下文。",
+    "commands": "container build --platform linux/arm64 -t docker.io/learnk8s/apple-web:1.0 examples/apple-container",
+    "expected": "原样再次构建可观察缓存；.dockerignore 只允许网页和 Dockerfile 进入上下文。",
+    "boundary": "COPY 来源相对于构建上下文；构建时的变量和秘密不应泄漏进镜像。",
+    "prerequisite": "先完成 E00，文件位于仓库根目录。"
+  },
+  {
+    "chapter": 6,
+    "section": "E04",
+    "level": "Apple 原生",
+    "goal": "分别完成专用网络通信与命名卷读写。",
+    "commands": "container network inspect lk8s-ac-net\ncontainer volume inspect lk8s-ac-data",
+    "expected": "E04 的同网络请求成功，E05 的第二个容器读到 persisted。",
+    "boundary": "vmnet 网络与本地卷没有 Kubernetes Service、NetworkPolicy 或 PVC 语义。",
+    "prerequisite": "先完成 E04、E05。"
+  },
+  {
+    "chapter": 7,
+    "section": "E08",
+    "level": "Apple 原生",
+    "goal": "导出标准镜像，理解本地镜像存储与 CRI 节点镜像存储的区别。",
+    "commands": "container image inspect docker.io/learnk8s/apple-web:1.0",
+    "expected": "在 E08 完成 save → minikube image load → 节点镜像列表核对。",
+    "boundary": "Apple runtime 不是 Kubernetes CRI endpoint；不要将 Apple API server 当作 kube-apiserver。",
+    "prerequisite": "先完成 E02；保留 lk8s-ac-web。"
+  },
+  {
+    "chapter": 8,
+    "section": "E03",
+    "level": "Kubernetes 基础",
+    "goal": "对比 E03 手动恢复与 Deployment 的副本控制。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab scale deployment/apple-web --replicas=3\nkubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s\nkubectl --context=learnk8s-apple apply -f examples/apple-container/app.yaml",
+    "expected": "扩容后 3 个 Ready Pod，再 apply 回到文件声明的 2；解释控制器职责。",
+    "boundary": "原生 stop/start 与集群调谐分属不同系统。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 9,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "找到真实控制平面对象、节点与业务 Pod。",
+    "commands": "kubectl --context=learnk8s-apple get nodes -o wide\nkubectl --context=learnk8s-apple -n kube-system get pods -o wide\nkubectl --context=learnk8s-apple -n apple-lab get pods -o wide",
+    "expected": "区分 kube-system 的组件与 apple-lab 的业务容器，并确认节点为 Linux。",
+    "boundary": "控制平面可能以静态 Pod、服务或托管组件运行；Apple 的 container-apiserver 不是 Kubernetes 控制平面。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 10,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "向 API Server 校验清单，再比较文件期望状态。",
+    "commands": "kubectl --context=learnk8s-apple apply --dry-run=server -f examples/apple-container/app.yaml\nkubectl --context=learnk8s-apple diff -f examples/apple-container/app.yaml",
+    "expected": "server dry-run 通过；diff 无差异返回 0，有差异返回 1，错误通常大于 1。",
+    "boundary": "字段静态检查不能替代 API Server 准入；修改在线副本再 diff 能看见漂移。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 11,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "检查同一 Apple 镜像在 Pod 内的探针、安全设置与状态。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide\nkubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml",
+    "expected": "找到 image、readiness/liveness、UID 1000 和只读根；区分 Running 与 Ready。",
+    "boundary": "一个 Apple 原生容器不自动成为 Pod；Pod 的共享网络和生命周期由节点实现。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 12,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "扩容后观察 Deployment → ReplicaSet → Pod，再恢复声明。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab scale deployment/apple-web --replicas=3\nkubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s\nkubectl --context=learnk8s-apple -n apple-lab get deployment,replicaset,pods\nkubectl --context=learnk8s-apple apply -f examples/apple-container/app.yaml",
+    "expected": "三个 Ready 副本与控制器关系可见；等待恢复成两个副本。",
+    "boundary": "Job、CronJob、StatefulSet 需分别用本章完整实验资源；原生启动命令不会代替控制器。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 13,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "核对 Service 选择器与就绪后端。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get service apple-web -o yaml\nkubectl --context=learnk8s-apple -n apple-lab get endpointslices -l kubernetes.io/service-name=apple-web",
+    "expected": "Service app=apple-web 匹配 Pod，EndpointSlice 有就绪地址；再做 E08 集群内 HTTP。",
+    "boundary": "port-forward 选定一个 Pod，不能单独验收负载均衡。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 14,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "用标签查询业务 Pod，对比 Apple 容器名字与 Kubernetes Namespace。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web --show-labels\nkubectl --context=learnk8s-apple get namespace apple-lab --show-labels",
+    "expected": "能从 app 标签查到 Pod；能说明命名空间、标签和注解的不同用途。",
+    "boundary": "Apple network/label 与 Kubernetes Namespace/selector 没有自动映射。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 15,
+    "section": "E04",
+    "level": "Kubernetes 基础",
+    "goal": "把原生 VM 的 IP 与 Pod、Node、Service 地址分开记录。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get pods -o wide\nkubectl --context=learnk8s-apple -n apple-lab get service apple-web -o wide\nkubectl --context=learnk8s-apple get nodes -o wide",
+    "expected": "获得三个层次的地址；通过 E08 client 验证 Service 路径。",
+    "boundary": "Mac/Apple VM 的直接 IP 可达性不能证明跨节点 Pod 网络；跨节点测试要多节点。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 16,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "先识别集群已安装的网络实现，再执行本章 CNI 实验。",
+    "commands": "kubectl --context=learnk8s-apple -n kube-system get daemonsets\nkubectl --context=learnk8s-apple -n kube-system get pods -o wide",
+    "expected": "记录网络组件；若无 DaemonSet，还要检查节点 CNI 配置和启动参数。",
+    "boundary": "不要往 Apple VM 写 Kubernetes 的 CNI 配置；更换集群 CNI 需专门可销毁环境。",
+    "prerequisite": "先完成 E08；按本章准备目标 CNI 与节点访问权限。"
+  },
+  {
+    "chapter": 17,
+    "section": "E04",
+    "level": "Kubernetes 进阶",
+    "goal": "从 Service 与 EndpointSlice 入手，将转发分析放到真实节点。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get service apple-web -o yaml\nkubectl --context=learnk8s-apple -n apple-lab get endpointslices -l kubernetes.io/service-name=apple-web -o yaml",
+    "expected": "记录 ClusterIP、端口和后端；按节点实际实现检查 iptables/nftables/IPVS/eBPF。",
+    "boundary": "Mac 的 pf 与 Apple vmnet 不等于 kube-proxy；不要预设集群一定用 iptables。",
+    "prerequisite": "先完成 E08；节点转发深入实验需 Linux 节点权限。"
+  },
+  {
+    "chapter": 18,
+    "section": "E08",
+    "level": "Kubernetes 基础",
+    "goal": "在 Pod 内解析 Service 域名，和 E04 原生 DNS 对比。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab run dns-client --image=docker.io/alpine:3.22 --restart=Never --command -- sleep 3600\nkubectl --context=learnk8s-apple -n apple-lab wait --for=condition=Ready pod/dns-client --timeout=120s\nkubectl --context=learnk8s-apple -n apple-lab exec dns-client -- nslookup apple-web\nkubectl --context=learnk8s-apple -n apple-lab exec dns-client -- wget -T 5 -qO- http://apple-web\nkubectl --context=learnk8s-apple -n apple-lab delete pod dns-client",
+    "expected": "域名解析到 Service 地址，HTTP 取得网页；临时 client 已清理。",
+    "boundary": "Apple 主机 resolver 的 test 域和 Kubernetes 的 svc.cluster.local 属于不同 DNS 系统。",
+    "prerequisite": "先完成 E08，节点能拉取 Alpine；dns-client 名称空闲。"
+  },
+  {
+    "chapter": 19,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "确认 Gateway API 资源是否已安装，给 apple-web 配置真正的入口。",
+    "commands": "kubectl --context=learnk8s-apple api-resources --api-group=gateway.networking.k8s.io\nkubectl --context=learnk8s-apple -n apple-lab get ingress",
+    "expected": "确认 CRD 和控制器后，将本章路由的 namespace、backend service 和端口改为 apple-lab / apple-web / 80，再验收请求。",
+    "boundary": "仅安装 Gateway CRD 不能转发流量；QEMU builtin 不能用 minikube tunnel，需按入口实现配置访问。",
+    "prerequisite": "先完成 E08，并按本章安装 Ingress 或 Gateway 控制器；未安装时只完成 API 查询。"
+  },
+  {
+    "chapter": 20,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "在专用命名空间用 default-deny 对照允许通信的结果。",
+    "commands": "kubectl --context=learnk8s-apple apply -f examples/apple-container/networkpolicy.yaml\nkubectl --context=learnk8s-apple -n apple-lab get networkpolicy apple-web-deny-ingress -o yaml",
+    "expected": "用 E08 client 请求网站应超时；删除该策略后恢复。若仍可达，先核对 CNI 是否执行策略。",
+    "boundary": "vmnet 的不同网络隔离不是 NetworkPolicy；port-forward 不作为策略验收流量。",
+    "prerequisite": "先完成 E08；CNI 必须支持并启用 NetworkPolicy，先保留一个 E08 client 做前后对照。"
+  },
+  {
+    "chapter": 21,
+    "section": "E05",
+    "level": "Kubernetes 基础",
+    "goal": "在 Kubernetes 卷里写文件，再重建挂载 Pod，和 Apple named volume 对照。",
+    "commands": "kubectl --context=learnk8s-apple apply -f examples/apple-container/storage.yaml\nkubectl --context=learnk8s-apple -n apple-lab wait --for=condition=Ready pod/volume-writer --timeout=180s\nkubectl --context=learnk8s-apple -n apple-lab exec volume-writer -- cat /data/message.txt",
+    "expected": "读到 persisted-in-kubernetes；删除 volume-writer Pod 后重新 apply，仍可读取文件。",
+    "boundary": "先删 Pod，再复用同一个 PVC；Apple volume 不能直接作为 Kubernetes 的卷名。",
+    "prerequisite": "先完成 E08；集群有可用默认 StorageClass/供给器，节点能拉取 Alpine。"
+  },
+  {
+    "chapter": 22,
+    "section": "E05",
+    "level": "Kubernetes 进阶",
+    "goal": "观察 PVC 绑定、PV 和 StorageClass 的关系。",
+    "commands": "kubectl --context=learnk8s-apple get storageclass\nkubectl --context=learnk8s-apple -n apple-lab get pvc apple-data\nkubectl --context=learnk8s-apple get pv",
+    "expected": "执行第 21 章实验后 PVC 为 Bound；记录 volumeName 与所用 StorageClass。",
+    "boundary": "没有默认 StorageClass 可能保持 Pending；本地供给器不意味着分布式可靠存储。",
+    "prerequisite": "先完成第 21 章 storage.yaml 实验；查询 PV/StorageClass 需相应权限。"
+  },
+  {
+    "chapter": 23,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "判断当前卷是否真的由 CSI 管理，再进行快照/恢复实验。",
+    "commands": "kubectl --context=learnk8s-apple get csidriver,csinode\nkubectl --context=learnk8s-apple -n apple-lab get pvc apple-data -o yaml",
+    "expected": "识别 provisioner/driver；CSI 资源为空也可能是当前本地供给器并不使用 CSI。",
+    "boundary": "Apple 本地卷与 minikube hostPath 都不能自动验收 CSI 快照、拓扑或跨节点故障恢复。",
+    "prerequisite": "先完成第 21 章；深入实验另需 CSI driver、所需 CRD 与多节点存储条件。"
+  },
+  {
+    "chapter": 24,
+    "section": "E06",
+    "level": "Kubernetes 基础",
+    "goal": "把非敏感环境变量从原生命令迁到 ConfigMap。",
+    "commands": "kubectl --context=learnk8s-apple apply -f examples/apple-container/configmap.yaml\nkubectl --context=learnk8s-apple -n apple-lab set env deployment/apple-web --from=configmap/apple-config\nkubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s",
+    "expected": "Pod 模板注入 LAB_MODE=kubernetes；选新 Pod 用 exec 查看环境，配置文件更新不自动刷新已注入的环境。",
+    "boundary": "原生 -e 不提供 Secret/RBAC；本实验只用非敏感信息，恢复时需单独 set env 删除 LAB_MODE。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 25,
+    "section": "E09",
+    "level": "Kubernetes 基础",
+    "goal": "用只读 Role 验证「能列 Pod，不能读 Secret」。",
+    "commands": "kubectl --context=learnk8s-apple apply -f examples/apple-container/rbac.yaml\nkubectl --context=learnk8s-apple -n apple-lab auth can-i list pods --as=system:serviceaccount:apple-lab:reader\nkubectl --context=learnk8s-apple -n apple-lab auth can-i get secrets --as=system:serviceaccount:apple-lab:reader",
+    "expected": "分别输出 yes/no；解释 ServiceAccount、Role 和 RoleBinding。",
+    "boundary": "--as 需要调用者具有 impersonate 权限；Apple registry/keychain 登录不是 RBAC。",
+    "prerequisite": "先完成 E08；调用者可创建 RBAC 对象并 impersonate 实验 ServiceAccount。"
+  },
+  {
+    "chapter": 26,
+    "section": "E06",
+    "level": "Kubernetes 基础",
+    "goal": "对比 E06 安全容器与集群 Pod 的 securityContext。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml",
+    "expected": "找到非 root、allowPrivilegeEscalation=false、只读根、capabilities.drop 与 RuntimeDefault。",
+    "boundary": "VM 隔离不能代替镜像权限、Pod 安全设置、RBAC 或 PSA；PSA 实验仅使用学习命名空间。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 27,
+    "section": "E09",
+    "level": "Kubernetes 基础",
+    "goal": "检查副本被调度到哪里以及调度事件。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide\nkubectl --context=learnk8s-apple -n apple-lab get events --sort-by=.metadata.creationTimestamp",
+    "expected": "单节点实验中多个副本可以都在同一节点；解释 requests 与可分配资源。",
+    "boundary": "Apple VM 不会充当 kube-scheduler 的候选节点；增加原生容器不增加集群节点。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 28,
+    "section": "E06",
+    "level": "Kubernetes 基础",
+    "goal": "观察集群资源配置，与原生 VM 的资源预算对照。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml\nkubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o custom-columns='NAME:.metadata.name,QOS:.status.qosClass'",
+    "expected": "本例 CPU/内存 requests 与 limits 不相同，Pod 通常为 Burstable；说明调度看 requests。",
+    "boundary": "原生 --cpus 不是 500m CPU 配额；container stats 不能替代 kubectl top。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 29,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "在多节点集群对照亲和性、污点与 topology spread。",
+    "commands": "kubectl --context=learnk8s-apple get nodes --show-labels\nkubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide",
+    "expected": "先记录节点标签；用本章调度清单观察分布与 Pending 的 Events。",
+    "boundary": "单节点可演示无法满足约束，但不能验收跨节点分散；不要给其他项目节点随意加污点。",
+    "prerequisite": "先完成 E08，并另建至少两个可调度节点的隔离集群；将 context 明确替换为该集群。"
+  },
+  {
+    "chapter": 30,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "检查 PDB 与优先级配置，再进行受控驱逐对比。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get pdb\nkubectl --context=learnk8s-apple get priorityclass",
+    "expected": "按本章仅为实验工作负载创建 PDB，观察 allowedDisruptions 与副本就绪数。",
+    "boundary": "PDB 面向自愿中断且不是可用性保证；不要在单节点学习环境随意 drain 全节点。",
+    "prerequisite": "先完成 E08；驱逐/抢占深入实验需可销毁的多节点环境和备用容量。"
+  },
+  {
+    "chapter": 31,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "让 Apple 网站接受集群 HPA 控制，并检查指标前提。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab top pods -l app=apple-web\nkubectl --context=learnk8s-apple apply -f examples/apple-container/hpa.yaml\nkubectl --context=learnk8s-apple -n apple-lab get hpa apple-web",
+    "expected": "指标 API 可用时 TARGETS 有值；按本章生成可控负载观察副本变化与回落。",
+    "boundary": "若 top 失败先装好指标组件；E08 apply 中的 replicas 与 HPA 都管理副本时要处理字段管理。",
+    "prerequisite": "先完成 E08；Metrics Server 工作，requests.cpu 已配置；开启 HPA 后不要同时手动 scale。"
+  },
+  {
+    "chapter": 32,
+    "section": "E07",
+    "level": "Kubernetes 基础",
+    "goal": "对比同一网站的原生日志与集群日志。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab logs -l app=apple-web --all-containers=true --prefix=true --tail=20\nkubectl --context=learnk8s-apple -n apple-lab get events --sort-by=.metadata.creationTimestamp",
+    "expected": "在 E08 访问后找到请求记录；区分应用日志、集群事件、指标与追踪。",
+    "boundary": "本例 Python 静态网站不自带业务指标/OTel；需要按本章另外接入采集。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 33,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "先确认原生日志可见，再接入集群监控与追踪。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab logs -l app=apple-web --prefix=true --tail=20\nkubectl --context=learnk8s-apple -n apple-lab top pods -l app=apple-web",
+    "expected": "记录 Pod 名、请求时间、资源指标；按本章给应用与采集器接入关联信息。",
+    "boundary": "stdout 和 top 不是分布式追踪；静态网站无追踪 SDK，须另用带 instrumentation 的练习服务。",
+    "prerequisite": "先完成 E08；top 需 Metrics Server；指标/追踪实验需本章配套组件。"
+  },
+  {
+    "chapter": 34,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "明确 eBPF 所观测的是哪一个 Linux 内核。",
+    "commands": "kubectl --context=learnk8s-apple get nodes -o wide\nkubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide",
+    "expected": "把 Pod 对应到真实 Linux 节点，按本章工具要求检查内核特性、权限与 arm64 支持。",
+    "boundary": "在另一个 Apple VM 里运行工具不会自动观测 Kubernetes 节点；Mac 不能直接运行 Linux eBPF 程序。",
+    "prerequisite": "先完成 E08；另外准备兼容 eBPF 的 Linux 节点和对应观测组件。"
+  },
+  {
+    "chapter": 35,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "用节点数与副本位置检验自己是否真的搭出了 HA。",
+    "commands": "kubectl --context=learnk8s-apple get nodes -o wide\nkubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide",
+    "expected": "能说明本路线单节点即使两个业务副本，也不是控制平面或节点高可用。",
+    "boundary": "若要故障演练需独立多控制平面/多工作节点实验集群；几个 Apple 容器不构成 HA。",
+    "prerequisite": "先完成 E08；HA 验收另建专用多节点集群。"
+  },
+  {
+    "chapter": 36,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "把镜像更新与 Kubernetes 集群版本升级分开。",
+    "commands": "kubectl --context=learnk8s-apple version\nkubectl --context=learnk8s-apple -n apple-lab rollout history deployment/apple-web",
+    "expected": "记录客户端/服务端版本及应用修订；E02 以 1.1 标签重建并先导入后再 set image。",
+    "boundary": "rollout undo 回滚应用模板，不回滚 Kubernetes；禁止对当前单节点照抄生产升级命令。",
+    "prerequisite": "先完成 E08；应用变更使用新镜像标签；集群升级另建可销毁环境。"
+  },
+  {
+    "chapter": 37,
+    "section": "E09",
+    "level": "Kubernetes 基础",
+    "goal": "对学习命名空间建立配额，观察 requests/limits 用量。",
+    "commands": "kubectl --context=learnk8s-apple apply -f examples/apple-container/quota.yaml\nkubectl --context=learnk8s-apple -n apple-lab describe resourcequota apple-quota",
+    "expected": "配额显示 Used/Hard；不声明 requests 的临时 Pod 可能被准入拒绝，先读错误原因。",
+    "boundary": "Apple --memory 配的是一个 VM，ResourceQuota 配的是 Namespace；实验完成删除 apple-quota。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 38,
+    "section": "E06",
+    "level": "Kubernetes 基础",
+    "goal": "区分 VM、构建器与 Kubernetes 工作负载的资源成本。",
+    "commands": "container stats --no-stream lk8s-ac-web\nkubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml",
+    "expected": "记录 E06 的 VM 预算和 Pod requests/limits；有指标组件后再结合利用率调整。",
+    "boundary": "不要直接比较不同采样口径；本地节省内存不是云账单或 Cluster Autoscaler 的验收。",
+    "prerequisite": "先完成 E02、E08；两种平台同时运行，估算时计入 BuildKit/节点 VM。"
+  },
+  {
+    "chapter": 39,
+    "section": "E07",
+    "level": "Kubernetes 基础",
+    "goal": "制造一个仅本实验使用的缺失镜像标签，按 Events 定位。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab set image deployment/apple-web web=docker.io/learnk8s/apple-web:missing\nkubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web\nkubectl --context=learnk8s-apple -n apple-lab get events --sort-by=.metadata.creationTimestamp\nkubectl --context=learnk8s-apple -n apple-lab rollout undo deployment/apple-web\nkubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s",
+    "expected": "imagePullPolicy=Never 下新 Pod 报 ErrImageNeverPull；回滚后恢复健康副本。",
+    "boundary": "如果已做其他变更，undo 退到上一模板修订；确认镜像后也可显式设回 1.0。",
+    "prerequisite": "先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。"
+  },
+  {
+    "chapter": 40,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "把 Apple 镜像作为业务服务加入 mesh，观察注入结果。",
+    "commands": "kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o custom-columns='NAME:.metadata.name,CONTAINERS:.spec.containers[*].name'",
+    "expected": "按本章安装/启用 sidecar 注入并重建实验 Pod 后，容器列表包含业务与代理。",
+    "boundary": "原生 Apple 网络上直接启动代理不会创建 Istio mesh；安装版本需支持 arm64 与当前集群。",
+    "prerequisite": "先完成 E08；按本章安装 Istio，选择 sidecar 模式，先核对命名空间和注入修订标签。"
+  },
+  {
+    "chapter": 41,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "在 mesh 内用同一网站验证流量规则与身份策略。",
+    "commands": "kubectl --context=learnk8s-apple api-resources --api-group=networking.istio.io\nkubectl --context=learnk8s-apple api-resources --api-group=security.istio.io",
+    "expected": "使用本章规则，将 host/selector 改为 apple-web 和 app=apple-web；从 mesh client 请求并检查代理配置。",
+    "boundary": "静态网站只有一个版本，灰度实验要先构建导入两个不同标签和带 version 标签的工作负载；port-forward 不代表 mTLS 路径。",
+    "prerequisite": "先完成第 40 章 mesh 安装；流量验收用加入 mesh 的独立 client。"
+  },
+  {
+    "chapter": 42,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "对比无 sidecar 的业务 Pod 与 ztunnel/waypoint。",
+    "commands": "kubectl --context=learnk8s-apple -n istio-system get daemonsets\nkubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o custom-columns='NAME:.metadata.name,CONTAINERS:.spec.containers[*].name'",
+    "expected": "按本章 Ambient 配置后业务 Pod 不含 sidecar，仍需验证 ztunnel 与实际流量；L7 功能另需 waypoint。",
+    "boundary": "不要同时沿用 sidecar 注入标签；Apple 每容器 VM 模型不是 Ambient 的实现机制。",
+    "prerequisite": "先完成 E08；另选 Ambient 兼容的 Istio/CNI 安装路线，避免与第 40 章模式混用。"
+  },
+  {
+    "chapter": 43,
+    "section": "E09",
+    "level": "Kubernetes 进阶",
+    "goal": "区别应用 OCI 镜像与 Kubernetes API 扩展。",
+    "commands": "kubectl --context=learnk8s-apple get customresourcedefinitions\nkubectl --context=learnk8s-apple get validatingwebhookconfigurations,mutatingwebhookconfigurations",
+    "expected": "安装本章示例 CRD/控制器后，再观察自定义对象和所管理的 apple-web 状态。",
+    "boundary": "本章未安装的 CRD/Operator 不会随 E08 网站清单出现；webhook/Go 示例不是直接可部署的完整项目。",
+    "prerequisite": "先完成 E08；自定义 API、控制器与准入实验按本章分别准备，所需镜像支持节点架构。"
+  }
+]

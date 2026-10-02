@@ -12,7 +12,7 @@
   --bg-code:#0b0f14;
   --text:#dbe3ec;
   --text-dim:#8f9bab;
-  --text-faint:#5f6b7a;
+  --text-faint:#8492a3;
   --border:#252d38;
   --border-soft:#1d242d;
   --accent:#4a9eff;
@@ -27,13 +27,14 @@
   --purple-dim:#2c1f4a;
   --cyan:#39c5cf;
   --cyan-dim:#123236;
-  --sidebar-w:310px;
+  --sidebar-w:288px;
   --radius:8px;
   --mono:"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scrollbar-gutter:stable}
+html.menu-open{overflow:hidden}
 body{
   background:var(--bg);
   color:var(--text);
@@ -49,13 +50,13 @@ body{
 #sidebar{
   position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
   background:var(--bg-alt);border-right:1px solid var(--border);
-  overflow-y:auto;z-index:900;padding:0 0 40px;
+  overflow-y:auto;overscroll-behavior-y:contain;z-index:900;padding:0 0 40px;
 }
 #sidebar::-webkit-scrollbar{width:8px}
 #sidebar::-webkit-scrollbar-thumb{background:#2c3542;border-radius:4px}
 #sidebar::-webkit-scrollbar-track{background:transparent}
 .side-head{padding:22px 20px 16px;border-bottom:1px solid var(--border-soft);position:sticky;top:0;background:var(--bg-alt);z-index:2}
-.side-head h1{font-size:15px;font-weight:700;letter-spacing:.02em;color:#fff;line-height:1.5}
+.side-title{margin:0;font-size:15px;font-weight:700;letter-spacing:.02em;color:#fff;line-height:1.5}
 .side-head .sub{font-size:11.5px;color:var(--text-faint);margin-top:6px;letter-spacing:.04em}
 .side-search{margin-top:14px;position:relative}
 .side-search input{
@@ -73,14 +74,9 @@ body{
 #sidebar a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(74,158,255,.09);font-weight:600}
 #sidebar a.hidden{display:none}
 /* ============ 主内容 ============ */
-/* 正文在「侧栏右侧区域」内水平居中：main 总宽 = 侧栏宽 + 正文宽 + 两侧内边距，
-   再整体居中，即可让正文与右侧空白对称，消除宽屏下右侧大片留白 */
-main{
-  margin:0 auto;
-  max-width:calc(var(--sidebar-w) + 1040px + 112px);
-  padding:0 56px 120px calc(var(--sidebar-w) + 56px);
-}
-.cover{padding:88px 0 56px;border-bottom:1px solid var(--border)}
+/* 正文行宽控制在 920px，居中于目录右侧的可用空间。 */
+main{margin-left:var(--sidebar-w);padding:0 max(32px,calc((100vw - var(--sidebar-w) - 920px)/2)) 112px;min-width:0}
+.cover{padding:60px 0 40px;border-bottom:1px solid var(--border)}
 .cover .kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:20px}
 .cover h1{font-size:44px;line-height:1.22;font-weight:800;color:#fff;letter-spacing:-.015em;margin-bottom:18px}
 .cover .tagline{font-size:17.5px;color:var(--text-dim);max-width:720px;line-height:1.85}
@@ -88,7 +84,7 @@ main{
 .chip{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text-dim);background:var(--bg-elev)}
 .chip.hl{border-color:var(--accent-dim);color:var(--accent);background:rgba(74,158,255,.08)}
 h2{
-  font-size:29px;font-weight:750;color:#fff;margin:78px 0 22px;padding-top:20px;
+  font-size:29px;font-weight:750;color:#fff;margin:64px 0 22px;padding-top:20px;
   letter-spacing:-.01em;line-height:1.35;border-top:1px solid var(--border-soft);
 }
 h2:first-of-type{border-top:none}
@@ -123,7 +119,7 @@ pre::-webkit-scrollbar-track{background:transparent}
   color:var(--text-faint);padding:5px 12px;font-family:var(--mono);border-left:1px solid var(--border);border-bottom:1px solid var(--border);
   border-radius:0 var(--radius) 0 6px;background:var(--bg-alt);
 }
-.tk-c{color:#5f6b7a;font-style:italic}      /* 注释 */
+.tk-c{color:#8492a3;font-style:italic}      /* 注释 */
 .tk-s{color:#a5d6a7}                        /* 字符串 */
 .tk-k{color:#ff8ab3}                        /* 关键字 */
 .tk-n{color:#f0a868}                        /* 数字/布尔 */
@@ -155,12 +151,12 @@ tr:last-child td{border-bottom:none}
 tbody tr:hover{background:rgba(74,158,255,.035)}
 /* ============ 图 ============ */
 figure{margin:0 0 28px;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px 16px;overflow-x:auto}
-figure svg{display:block;margin:0 auto;max-width:100%;height:auto}
+figure svg{display:block;margin:0 auto;width:100%;height:auto}
 figcaption{text-align:center;font-size:12.8px;color:var(--text-faint);margin-top:16px;letter-spacing:.02em}
 /* ============ 其他 ============ */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
-.card{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.card{min-width:0;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
 .card h5{margin-top:0;color:#fff;font-size:14px;margin-bottom:8px}
 .card p{font-size:13.5px;color:var(--text-dim);margin-bottom:0;line-height:1.7}
 hr{border:none;border-top:1px solid var(--border-soft);margin:44px 0}
@@ -168,7 +164,7 @@ hr{border:none;border-top:1px solid var(--border-soft);margin:44px 0}
 .lead{font-size:17px;color:var(--text-dim);line-height:1.85;margin-bottom:24px}
 .toc{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:26px 30px;margin:40px 0 20px}
 .toc h4{margin-top:0;color:#fff;font-size:15px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
-.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}
+.toc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 28px}
 .toc-item{display:flex;gap:10px;font-size:13.5px;padding:5px 0;color:var(--text-dim);text-decoration:none;border:none}
 .toc-item:hover{color:var(--accent)}
 .toc-item .n{font-family:var(--mono);color:var(--accent);flex-shrink:0;font-size:12.5px;min-width:34px}
@@ -185,96 +181,178 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
   opacity:0;transition:opacity .25s;backdrop-filter:blur(1px);
 }
 #mask.show{display:block;opacity:1}
-/* ============ 响应式：平板 ============ */
+/* ============ 阅读入口与交互 ============ */
+.cover h1{font-size:clamp(32px,3.2vw,46px);line-height:1.18;margin-bottom:20px}
+.cover h1 span{display:block}
+.cover .cover-title{font-size:.8em;color:var(--text);margin-top:10px;font-weight:650}
+.cover .tagline{font-size:17px;max-width:680px;line-height:1.8}
+.cover .meta{margin-top:22px;gap:8px}
+.start-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
+.start-card{display:flex;flex-direction:column;gap:10px;padding:20px;background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;transition:border-color .15s,background .15s;min-width:0}
+.start-card:hover{border-color:var(--accent);background:var(--bg-elev)}
+.start-card .start-label{font-size:12px;color:var(--accent);font-weight:650}
+.start-card strong{font-size:17px;line-height:1.5}
+.start-card p{font-size:14px;color:var(--text-dim);line-height:1.7;margin:0;flex:1}
+.start-card .start-link{font-size:13px;margin-top:4px}
+.start-card.primary{border-color:var(--accent-dim);background:rgba(74,158,255,.06)}
+.reader-bar{display:none}
+#menuBtn,#closeMenu{font-family:var(--sans);cursor:pointer;border:1px solid var(--border);border-radius:8px;background:var(--bg-elev);color:var(--text);min-height:44px}
+#menuBtn{display:flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;padding:0 12px;font-size:14px}
+#closeMenu{display:none;width:44px;font-size:24px;line-height:1}
+.side-search input{min-height:42px;font-size:14px}
+.side-search input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.search-status{font-size:12px;color:var(--text-dim);margin-top:8px;line-height:1.5}
+#sidebar a{min-height:40px;display:flex;align-items:center;font-size:13.5px}
+#sidebar a.hidden{display:none}
+.nav-part{font-size:11px;letter-spacing:.04em;line-height:1.5;padding-top:18px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+h2,h3[id],h4[id],details.apple-lab,.box[id],#content{scroll-margin-top:24px}
+.skip-link{position:fixed;top:-100px;left:20px;z-index:1100;padding:12px 16px;border-radius:6px;background:var(--accent);color:var(--bg-code);font-weight:700}
+.skip-link:focus{top:12px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.scroll-hint{font-size:12px;line-height:1.5;color:var(--text-dim);margin:0 0 8px}
+.scroll-hint[hidden]{display:none}
+.tw,figure,pre{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+/* 实验卡在折叠时也显示任务，展开后按环境、操作、结果组织。 */
+.apple-lab{padding:0!important;overflow:hidden;border:1px solid var(--border);border-left:3px solid var(--accent);background:var(--bg-alt)!important}
+.apple-lab summary{position:relative;list-style:none;cursor:pointer;padding:18px 44px 18px 20px;color:var(--text);font-weight:400}
+.apple-lab summary::-webkit-details-marker{display:none}
+.apple-lab summary:focus-visible{outline-offset:-4px}
+.apple-lab summary::after{content:'＋';position:absolute;right:16px;top:18px;font-size:19px;color:var(--accent)}
+.apple-lab[open] summary::after{content:'−'}
+.apple-lab[open] summary{margin:0;border-bottom:1px solid var(--border)}
+.lab-title{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-weight:700;font-size:15px;color:var(--accent)}
+.lab-level{font-size:11.5px;line-height:1.5;padding:3px 8px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);font-weight:500}
+.lab-preview{display:block;margin-top:9px;font-size:14px;line-height:1.75;color:var(--text-dim)}
+.lab-toggle{display:block;margin-top:8px;font-size:12px;color:var(--accent)}
+.lab-toggle::before{content:'展开实验步骤'}
+.apple-lab[open] .lab-toggle::before{content:'收起实验步骤'}
+.lab-body{padding:20px}
+.lab-meta{margin:0 0 18px;font-size:14px;line-height:1.8}
+.lab-meta>div+div{margin-top:14px}
+.lab-meta dt{font-size:12px;color:var(--accent);font-weight:650;margin-bottom:4px}
+.lab-meta dd{margin:0;color:var(--text)}
+.lab-meta .lab-boundary dd{color:var(--text-dim)}
+.lab-footer{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 0!important;font-size:13px}
+.lab-steps{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;padding:4px 2px 12px;margin:0 0 20px}
+.lab-steps a{display:flex;align-items:center;gap:6px;min-height:44px;flex-shrink:0;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-alt)}
+.lab-steps span{color:var(--text-dim);font-family:var(--mono);font-size:11px}
+pre.has-copy{padding-top:52px}
+.copy-code{position:absolute;right:10px;top:9px;min-height:32px;padding:4px 10px;font:12px var(--sans);color:var(--text-dim);background:var(--bg-elev);border:1px solid var(--border);border-radius:6px;cursor:pointer}
+.copy-code:hover{color:var(--accent);border-color:var(--accent)}
+/* ============ 平板及窄屏目录 ============ */
 @media (max-width:1100px){
-  #sidebar{transform:translateX(-100%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.5)}
+  body{padding-top:calc(64px + env(safe-area-inset-top,0px))}
+  #sidebar{transform:translateX(-100%);transition:transform .2s;box-shadow:0 0 40px rgba(0,0,0,.45);width:320px;max-width:calc(100vw - 48px);padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
   #sidebar.open{transform:none}
-  main{margin:0 auto;max-width:100%;padding:0 32px 100px}
-  .grid2,.grid3,.toc-grid{grid-template-columns:1fr}
-  .cover h1{font-size:32px}
-  #menuBtn{display:flex!important}
+  .side-head{padding-top:calc(22px + env(safe-area-inset-top,0px));padding-right:68px}
+  .side-search,.search-status{margin-right:-48px}
+  .side-search input{font-size:16px;min-height:44px}
+  #closeMenu{display:block;position:absolute;right:12px;top:calc(14px + env(safe-area-inset-top,0px))}
+  #sidebar a{min-height:44px;font-size:14px;padding:9px 20px}
+  main{margin:0 auto;max-width:960px;padding:0 28px 96px}
+  .reader-bar{position:fixed;top:0;left:0;right:0;z-index:850;display:flex;align-items:center;gap:14px;height:calc(64px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));background:var(--bg-alt);border-bottom:1px solid var(--border)}
+  .reader-context{min-width:0;line-height:1.4}
+  #readerChapter{display:block;font-size:14px;font-weight:650;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .reader-meta{display:block;margin-top:2px;font-size:11px;color:var(--text-dim)}
+  h2,h3[id],h4[id],details.apple-lab,.box[id],#content{scroll-margin-top:calc(84px + env(safe-area-inset-top,0px))}
+  .cover{padding:36px 0 30px}
+  .grid3,.start-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3>.card:last-child:nth-child(odd),.start-card:last-child{grid-column:1/-1}
+  .toc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-/* ============ 响应式：手机 ============ */
-@media (max-width:760px){
-  body{font-size:15.5px;line-height:1.8}
-  main{padding:0 18px 90px}
-  #sidebar{width:86vw;max-width:320px}
-  /* 顶部留出汉堡按钮空间，避免遮挡封面 */
-  .cover{padding:64px 0 40px}
-  .cover h1{font-size:26px;line-height:1.3}
-  .cover .kicker{font-size:11px;letter-spacing:.16em;margin-bottom:14px}
+/* ============ 手机 ============ */
+@media (max-width:600px){
+  body{font-size:16px;line-height:1.85}
+  main{padding:0 max(18px,env(safe-area-inset-left,0px)) 88px}
+  .reader-bar{gap:12px}
+  .reader-meta{font-size:11px}
+  .cover{padding:28px 0 28px}
+  .cover .kicker{font-size:11px;letter-spacing:.08em;margin-bottom:16px}
+  .cover h1{font-size:34px;line-height:1.2}
   .cover .tagline{font-size:15px;line-height:1.8}
-  .cover .meta{gap:8px;margin-top:26px}
-  .chip{font-size:11.5px;padding:4px 10px}
-  h2{font-size:22px;margin:52px 0 16px;padding-top:16px}
-  h2 .num{font-size:17px;margin-right:8px}
-  h3{font-size:18px;margin:34px 0 12px}
-  h4{font-size:15.5px;margin:24px 0 10px}
-  h5{font-size:14px}
-  p,li{word-break:break-word}
-  .lead{font-size:15.5px;line-height:1.8}
-  ul,ol{padding-left:20px}
-  /* 代码块：缩小内边距与字号，横向可滚动 */
-  pre{padding:14px 14px;margin:0 0 20px;border-radius:6px}
-  pre code{font-size:12px;line-height:1.62}
-  .lang{font-size:9.5px;padding:4px 9px}
-  code{font-size:12.5px;padding:1px 5px}
-  /* 提示框 */
-  .box{padding:14px 16px 14px 16px;margin:0 0 20px}
-  .box .bt{font-size:13px}
-  /* 表格：允许横向滚动，提示用户 */
-  .tw{margin:0 0 20px;border-radius:6px}
-  table{font-size:12.8px;min-width:460px}
-  th{padding:9px 11px;font-size:12.2px}
-  td{padding:8px 11px}
-  /* 图与卡片 */
-  figure{padding:16px 12px 12px;margin:0 0 22px;border-radius:6px}
-  figcaption{font-size:12px;margin-top:12px}
-  .card{padding:14px 15px}
-  .toc{padding:20px 18px;margin:30px 0 18px;border-radius:6px}
-  .toc-grid{gap:4px}
-  .toc-item{font-size:13px}
+  .cover .meta{gap:6px;margin-top:18px}
+  .chip{font-size:11px;padding:4px 9px}
+  .start-grid{grid-template-columns:1fr;gap:10px;margin-top:22px}
+  .start-card{padding:16px;gap:7px}
+  .start-card strong{font-size:16px}
+  .start-card p{font-size:14px}
+  .start-card .start-link{margin-top:2px}
+  .grid2,.grid3,.toc-grid{grid-template-columns:minmax(0,1fr)}
+  h2{font-size:24px;line-height:1.45;margin:46px 0 18px;padding-top:18px}
+  h2 .num{display:block;font-size:14px;margin:0 0 6px}
+  h3{font-size:20px;line-height:1.5;margin:34px 0 16px}
+  h4{font-size:17px;margin:24px 0 12px}
+  h5{font-size:15px}
+  p,li{overflow-wrap:anywhere;word-break:normal}
+  .lead{font-size:16px;line-height:1.85}
+  ul,ol{padding-left:22px}
+  code{font-size:13px}
+  pre{padding:16px;margin-bottom:20px}
+  pre code{font-size:13px;line-height:1.75}
+  .lang{font-size:10px}
+  .box{padding:16px;margin-bottom:20px}
+  .box .bt{font-size:14px;line-height:1.6}
+  .tw{margin-bottom:20px}
+  table{font-size:14px;min-width:560px}
+  th{font-size:13px;padding:12px}
+  td{padding:12px;line-height:1.75}
+  figure{padding:16px;margin-bottom:20px}
+  figure svg{min-width:680px}
+  figcaption{font-size:13px;line-height:1.7;text-align:left}
+  .card{padding:16px}
+  .card p{font-size:14px}
+  .toc{padding:20px;margin:28px 0 20px}
+  .toc-item{font-size:14px;min-height:44px;align-items:center}
   hr{margin:32px 0}
-  /* 悬浮按钮避让安全区（刘海屏 / 手势条） */
-  #backtop{right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:40px;height:40px}
-  #menuBtn{top:calc(12px + env(safe-area-inset-top,0px));left:12px}
+  .apple-lab summary{padding:16px 40px 16px 16px}
+  .lab-body{padding:16px}
+  .lab-meta,.lab-preview{font-size:14px}
+  .lab-footer a{display:inline-flex;align-items:center;min-height:44px}
+  .copy-code{min-height:44px;top:7px}
+  pre.has-copy{padding-top:62px}
+  #backtop{right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:44px;height:44px}
 }
-/* ============ 响应式：小屏手机 ============ */
-@media (max-width:420px){
-  main{padding:0 14px 80px}
-  .cover h1{font-size:22px}
-  .cover .tagline{font-size:14.5px}
-  h2{font-size:20px;margin:44px 0 14px}
-  h2 .num{display:block;font-size:14px;margin:0 0 4px}
-  h3{font-size:16.5px}
-  table{min-width:400px}
-  pre{padding:12px 12px}
-  pre code{font-size:11.5px}
-  #sidebar{width:90vw}
+@media (max-width:360px){
+  main{padding-right:14px;padding-left:14px}
+  .cover h1{font-size:30px}
+  .reader-bar{gap:9px;padding-right:12px;padding-left:12px}
+  #readerChapter{font-size:13px}
 }
-#menuBtn{display:none;position:fixed;top:14px;left:14px;z-index:950;width:40px;height:40px;border-radius:8px;background:var(--bg-elev);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text);box-shadow:0 2px 12px rgba(0,0,0,.35)}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
 @media print{
-  #sidebar,#backtop,#progress,#menuBtn,#mask{display:none!important}
+  #sidebar,#backtop,#progress,.reader-bar,#mask,#closeMenu,.copy-code,.scroll-hint{display:none!important}
   main{margin:0;max-width:none;padding:0}
-  body{background:#fff;color:#000}
+  body{background:#fff;color:#000;padding-top:0}
 }
 </style>
 </head>
 <body>
-<div id="progress"></div>
-<div id="mask"></div>
-<div id="menuBtn">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-</div>
+<a class="skip-link" href="#content">跳到正文</a>
+<div id="progress" aria-hidden="true"></div>
+<div id="mask" aria-hidden="true"></div>
+<header class="reader-bar" aria-label="阅读导航">
+  <button id="menuBtn" type="button" aria-label="打开章节目录" aria-expanded="false" aria-controls="sidebar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <span>目录</span>
+  </button>
+  <div class="reader-context"><span id="readerChapter">Kubernetes 学习手册</span><span class="reader-meta">从实验开始，按章节深入</span></div>
+</header>
+<span id="readerStatus" class="sr-only" role="status" aria-live="polite"></span>
 
-<nav id="sidebar">
+<nav id="sidebar" aria-label="章节目录">
   <div class="side-head">
-    <h1>Kubernetes 系统化教学手册</h1>
-    <div class="sub">从容器原理到生产化实践 · 理论与实践</div>
+    <button id="closeMenu" type="button" aria-label="关闭章节目录">×</button>
+    <p class="side-title">Kubernetes 学习手册</p>
+    <div class="sub">43 章 · 5 个附录 · 按需阅读</div>
     <div class="side-search">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="searchInput" type="text" placeholder="搜索章节 / 概念…">
+      <input id="searchInput" type="search" placeholder="搜索章节或概念" aria-label="搜索章节标题和正文" autocomplete="off">
     </div>
+    <p id="searchStatus" class="search-status" role="status" aria-live="polite">49 个章节入口</p>
   </div>
   <div class="nav-part">导论</div>
   <a href="#ch0">0 · 如何使用本手册</a>
@@ -335,35 +413,45 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
   <a href="#appB">B · YAML 模板库</a>
   <a href="#appC">C · 术语表</a>
   <a href="#appD">D · 学习路径与自测题</a>
+  <a href="#appE">E · Apple container 实验路线</a>
 </nav>
 
-<main>
+<main id="content" tabindex="-1">
 
-<section class="cover">
-  <div class="kicker">Cloud Native · Teaching Handbook</div>
-  <h1>Kubernetes 系统化教学手册</h1>
-  <p class="tagline">一份系统化的 Kubernetes 学习材料：从容器原理、集群架构，到网络、存储、调度与生产实践。初学者先完成入门实验，再按需深入原理；涉及版本与插件的内容应结合对应官方文档核对。</p>
+<section class="cover" aria-labelledby="handbook-title">
+  <div class="kicker">从动手实验到理解原理</div>
+  <h1 id="handbook-title"><span>Kubernetes</span><span class="cover-title">系统化学习手册</span></h1>
+  <p class="tagline">先部署一个应用，学会访问、扩容和排障，再逐步理解容器、集群、网络与存储。按你的基础选择起点，边读边做。</p>
   <div class="meta">
-    <span class="chip hl">43 章 · 完整知识体系</span>
-    <span class="chip">容器基础</span>
-    <span class="chip">集群架构</span>
-    <span class="chip">网络与存储</span>
-    <span class="chip">调度与资源</span>
-    <span class="chip">可观测性</span>
-    <span class="chip">生产化实践</span>
-    <span class="chip">服务网格</span>
+    <span class="chip hl">43 章 · 5 个附录</span>
+    <span class="chip">Apple container 实验</span>
+    <span class="chip">可离线阅读</span>
+  </div>
+  <div class="start-grid">
+    <a class="start-card primary" href="#beginner-start">
+      <span class="start-label">第一次接触 Kubernetes</span><strong>先让网站跑起来</strong>
+      <p>从部署、访问到扩容与排障，建立第一轮实践经验。</p><span class="start-link">进入小白入门 →</span>
+    </a>
+    <a class="start-card" href="#appE">
+      <span class="start-label">Apple silicon Mac 用户</span><strong>在 Mac 上动手实验</strong>
+      <p>用 Apple container 调试网站，再把同一镜像交给 Kubernetes。</p><span class="start-link">进入 Apple 实验 →</span>
+    </a>
+    <a class="start-card" href="#ch1">
+      <span class="start-label">已有容器或集群基础</span><strong>按章节深入原理</strong>
+      <p>从容器隔离开始，逐步学习集群架构与生产实践。</p><span class="start-link">从第一章开始 →</span>
+    </a>
   </div>
 </section>
 
 <h2 id="ch0"><span class="num">00</span>如何使用本手册</h2>
 
-<p class="lead">在开始之前，请先花三分钟理解这份材料的设计意图与使用方式。它不是一份速查表，也不是一篇综述，而是一条被设计好的学习路径。</p>
+<p class="lead">第一次学习，先完成入门实验，再读基础章节。已有实践经验，可以按目录深入原理；遇到陌生概念，用目录搜索或附录 C 查阅。</p>
 
 <h3>0.1 这份材料的定位</h3>
 
-<p>Kubernetes 的学习难点从来不在"某个命令怎么用"，而在于<strong>概念之间的依赖关系</strong>。很多人在没有理解 Linux 容器隔离机制的情况下直接去背 Pod、Service、Deployment 的定义，结果是能跑通教程，却无法解释"为什么 Pod 里的容器共享网络命名空间"、"为什么 Service 需要一个不存在的虚拟 IP"这类问题。一旦生产环境出问题，这种理解深度的差距就会暴露出来。</p>
+<p>学会 Kubernetes，需要把<strong>应用、容器、Pod 和集群组件的关系</strong>串起来。先通过实验看到结果，再解释 Pod 如何共享网络、Service 如何找到后端，以及控制器如何恢复副本。</p>
 
-<p>因此本手册采取<strong>自底向上、逐层递进</strong>的组织方式。每一章都建立在前一章已经建立的概念之上，并且在需要时明确回顾前置知识。全书分为九篇：</p>
+<p>因此本手册采取<strong>自底向上、逐层递进</strong>的组织方式。每一章都建立在前一章已经建立的概念之上，并且在需要时明确回顾前置知识。内容按九篇组织：</p>
 
 <div class="tw">
 <table>
@@ -389,7 +477,13 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <p>第一轮目标：能解释 kubectl 操作的是 API 对象，理解 Running 与 Ready 的区别，并能用 get、describe、logs 找到证据。完成后再深入 Linux 原理、存储、高可用和服务网格。</p>
 </div>
 
-<h3>0.2 三种阅读路径</h3>
+<div class="box tip" id="apple-start">
+<div class="bt">Apple silicon Mac：从原生容器到 Kubernetes</div>
+<p>从 <a href="#appE">附录 E · Apple container 实验路线</a> 开始，在 Mac 上构建、访问和调试网站，再把同一 OCI 镜像交给真实 Kubernetes 集群。43 章的导读后都增加了可展开的实验卡，包含任务、命令、验收和环境要求。</p>
+<p>基线是已实测的 container 1.0.0、Apple silicon、macOS 26+。原生实验用 E01–E07；Pod、Service、CNI、CSI、网格等走 E08–E09。<a href="APPLE_CONTAINER_GUIDE.md">Markdown 指南</a> 与 <a href="examples/apple-container/Dockerfile">完整镜像示例</a> 可配套使用。</p>
+</div>
+
+<h3>0.2 完成实验后，按目标继续阅读</h3>
 
 <div class="grid3">
 <div class="card">
@@ -408,7 +502,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 
 <h3>0.3 关于代码与命令</h3>
 
-<p>手册中的 YAML 清单和命令都经过简化以确保可读性，但保留了生产可用的关键字段。阅读时请注意：</p>
+<p>示例分为完整清单、配置片段和原理演示。执行前先确认类型与环境前提；入门优先使用仓库配套的完整实验文件。</p>
 
 <ul>
 <li>以 <code>$</code> 开头的代码块表示在终端执行的 shell 命令，<code>#</code> 开头的是注释。</li>
@@ -430,6 +524,7 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <table>
 <thead><tr><th>方式</th><th>适用场景</th><th>特点</th></tr></thead>
 <tbody>
+<tr><td>Apple container + 独立 Kubernetes 集群</td><td>Apple silicon Mac 的容器与集群学习</td><td>原生构建与调试镜像；Kubernetes 由独立 Linux 节点运行。详见附录 E 的版本要求和 QEMU 路线</td></tr>
 <tr><td>单机开发环境（如 kind / minikube）</td><td>学习、本地验证 YAML</td><td>在容器或虚拟机中跑一个单节点集群，启动快，可随时销毁重建</td></tr>
 <tr><td>多节点本地集群</td><td>验证调度、网络、存储行为</td><td>用容器模拟多个节点，可测试跨节点通信与拓扑分布</td></tr>
 <tr><td>云托管集群</td><td>贴近生产、体验云集成</td><td>控制面由云厂商托管，需要关注费用与权限模型</td></tr>
@@ -460,6 +555,19 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <h2 id="ch1"><span class="num">01</span>隔离与虚拟化原理</h2>
 
 <p class="lead">在讨论 Kubernetes 之前，必须先回答一个更基础的问题：容器到底是什么？很多人把容器理解为"轻量级虚拟机"，这个类比虽然方便，却会误导后续的理解。本章从操作系统层面把这件事讲清楚。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:1:START -->
+<details class="box note apple-lab" id="apple-ch1">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">比较 Mac 与容器的内核、架构与运行边界。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E00。 <a href="#apple-e01">查看 E01 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">uname -a
+container run --rm --name lk8s-ac-ch01 docker.io/alpine:3.22 uname -a</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>Mac 显示 Darwin，容器显示 Linux / aarch64；解释每容器轻量 VM。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>不能由 namespace 名字或 inode 数字推断两个 VM 共享内核。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:1:END -->
 
 <h3>1.1 一个应用部署的困境</h3>
 
@@ -682,6 +790,18 @@ mark{background:rgba(214,160,44,.28);color:#fff;border-radius:2px}
 <h2 id="ch2"><span class="num">02</span>Namespace 与 Cgroups</h2>
 
 <p class="lead">上一章给出了"容器是被隔离的进程"这个结论。本章把这个结论落到 Linux 内核的具体机制上——理解这些机制，是理解 Kubernetes 中 Pod 为什么能共享网络、为什么资源限制会触发 OOMKilled、为什么某些监控指标看不到的关键。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:2:START -->
+<details class="box note apple-lab" id="apple-ch2">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">在 Linux 容器里观察 namespace 与 cgroup v2，而不是在 Mac 寻找 /proc。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E00。 <a href="#apple-e01">查看 E01 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container run --rm --name lk8s-ac-ch02 docker.io/alpine:3.22 sh -c &#x27;ls /proc/self/ns; cat /proc/self/cgroup; cat /sys/fs/cgroup/cgroup.controllers&#x27;</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>能读到隔离入口与控制器；将可见结果和正文的 Linux 主机模型对照。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>VM vCPU、VM 内存与 Kubernetes cgroup requests/limits 的语义不同。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:2:END -->
 
 <h3>2.1 Namespace：隔离视图</h3>
 
@@ -944,6 +1064,18 @@ ls: /home: No such file or directory   <span class="tk-c"># 宿主机的家目�
 
 <p class="lead">上一章讲到容器需要一个独立的根文件系统。如果每个容器都从零构建这套文件系统，那么部署一个 10MB 的应用也要下载数百 MB 的操作系统文件。镜像与分层文件系统正是为了解决这个效率问题。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:3:START -->
+<details class="box note apple-lab" id="apple-ch3">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">构建并检查镜像的平台、摘要与配置。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E02；保留 lk8s-ac-web。 <a href="#apple-e02">查看 E02 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container image inspect docker.io/learnk8s/apple-web:1.0</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>能找到 linux/arm64 与摘要；修改网页、用新标签重建后对照。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>OCI 可移植仍需匹配 CPU 架构；inspect 不等于检查所有层的安全性。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:3:END -->
+
 <h3>3.1 镜像是什么</h3>
 
 <p>容器镜像（Image）是一个<strong>只读模板</strong>，包含了运行应用所需的一切：文件系统内容、启动命令、环境变量、工作目录、暴露端口等元数据。</p>
@@ -1161,6 +1293,21 @@ ls: /home: No such file or directory   <span class="tk-c"># 宿主机的家目�
 <h2 id="ch4"><span class="num">04</span>Docker 架构与核心操作</h2>
 
 <p class="lead">Docker 是最广为人知的容器工具，它把上一章那些内核机制包装成了易于使用的产品。理解 Docker 的架构分层，对后续理解 Kubernetes 的容器运行时接口至关重要——因为 Kubernetes 本身并不直接调用 Docker，而是通过一层抽象。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:4:START -->
+<details class="box note apple-lab" id="apple-ch4">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">把 Docker 的基础生命周期操作与 Apple CLI 逐项对照。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E02；保留 lk8s-ac-web。 <a href="#apple-e03">查看 E03 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container exec lk8s-ac-web id
+container logs lk8s-ac-web
+container stop lk8s-ac-web
+container start lk8s-ac-web</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>UID 1000，停止后需手动启动；网站恢复后可再次访问。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Docker daemon/socket/Compose 参数不可机械替换为 container。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:4:END -->
 
 <h3>4.1 客户端-服务端架构</h3>
 
@@ -1406,6 +1553,18 @@ $ docker network inspect appnet</code></pre>
 <h2 id="ch5"><span class="num">05</span>Dockerfile 与镜像构建</h2>
 
 <p class="lead">Dockerfile 是镜像的源码。它看起来只是一串命令，但每一行都影响最终镜像的体积、构建速度、安全性以及可复现性。本章不仅讲"怎么写"，更讲"为什么这样写"。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:5:START -->
+<details class="box note apple-lab" id="apple-ch5">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">用仓库 Dockerfile 体验 BuildKit 缓存和构建上下文。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E00，文件位于仓库根目录。 <a href="#apple-e02">查看 E02 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container build --platform linux/arm64 -t docker.io/learnk8s/apple-web:1.0 examples/apple-container</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>原样再次构建可观察缓存；.dockerignore 只允许网页和 Dockerfile 进入上下文。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>COPY 来源相对于构建上下文；构建时的变量和秘密不应泄漏进镜像。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:5:END -->
 
 <h3>5.1 从零开始：一个反例</h3>
 
@@ -1670,6 +1829,19 @@ README.md</code></pre>
 
 <p class="lead">容器有了隔离的文件系统与资源限制，还需要网络才能对外提供服务，需要存储才能保住数据。本章讲清楚单机 Docker 环境下的网络与存储模型——这是理解 Kubernetes 网络与存储的前提。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:6:START -->
+<details class="box note apple-lab" id="apple-ch6">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">分别完成专用网络通信与命名卷读写。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E04、E05。 <a href="#apple-e04">查看 E04 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container network inspect lk8s-ac-net
+container volume inspect lk8s-ac-data</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>E04 的同网络请求成功，E05 的第二个容器读到 persisted。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>vmnet 网络与本地卷没有 Kubernetes Service、NetworkPolicy 或 PVC 语义。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:6:END -->
+
 <h3>6.1 单机容器网络的四种模式</h3>
 
 <div class="tw">
@@ -1841,6 +2013,18 @@ work/       <span class="tk-c"># 内核工作目录</span></code></pre>
 <h2 id="ch7"><span class="num">07</span>从 Docker 到 OCI 与 CRI</h2>
 
 <p class="lead">Docker 在 2013 年横空出世后迅速成为事实标准，但也带来了生态锁定的担忧。为了让容器技术不被单一厂商控制，社区推动建立了 OCI 与 CRI 两套标准。理解这两个标准，是理解"为什么 Kubernetes 不再使用 Docker"这一关键问题的钥匙。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:7:START -->
+<details class="box note apple-lab" id="apple-ch7">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Apple 原生</span></span>
+<span class="lab-preview">导出标准镜像，理解本地镜像存储与 CRI 节点镜像存储的区别。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E02；保留 lk8s-ac-web。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container image inspect docker.io/learnk8s/apple-web:1.0</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>在 E08 完成 save → minikube image load → 节点镜像列表核对。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Apple runtime 不是 Kubernetes CRI endpoint；不要将 Apple API server 当作 kube-apiserver。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:7:END -->
 
 <h3>7.1 OCI：容器格式与运行时的标准化</h3>
 
@@ -2127,6 +2311,20 @@ print('结束时间:', d['status']['finishedAt'])
 
 <p class="lead">在深入 Kubernetes 的技术细节之前，先理解它要解决的根本问题。这个问题的本质可以用一句话概括：<strong>如何让运维人员只描述"我想要什么"，而不必关心"怎么做到"</strong>。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:8:START -->
+<details class="box note apple-lab" id="apple-ch8">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">对比 E03 手动恢复与 Deployment 的副本控制。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e03">查看 E03 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab scale deployment/apple-web --replicas=3
+kubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s
+kubectl --context=learnk8s-apple apply -f examples/apple-container/app.yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>扩容后 3 个 Ready Pod，再 apply 回到文件声明的 2；解释控制器职责。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>原生 stop/start 与集群调谐分属不同系统。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:8:END -->
+
 <h3>8.1 从"命令式"到"声明式"</h3>
 
 <p>假设你需要保证一个服务始终有 3 个实例在运行。两种思路：</p>
@@ -2276,6 +2474,20 @@ print('结束时间:', d['status']['finishedAt'])
 <h2 id="ch9"><span class="num">09</span>集群架构与核心组件</h2>
 
 <p class="lead">本章给出 Kubernetes 集群的全局视图。理解各组件的职责边界，是后续所有排障工作的基础——因为每一个错误信息、每一个异常状态，最终都指向某个具体组件的某个环节。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:9:START -->
+<details class="box note apple-lab" id="apple-ch9">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">找到真实控制平面对象、节点与业务 Pod。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get nodes -o wide
+kubectl --context=learnk8s-apple -n kube-system get pods -o wide
+kubectl --context=learnk8s-apple -n apple-lab get pods -o wide</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>区分 kube-system 的组件与 apple-lab 的业务容器，并确认节点为 Linux。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>控制平面可能以静态 Pod、服务或托管组件运行；Apple 的 container-apiserver 不是 Kubernetes 控制平面。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:9:END -->
 
 <h3>9.1 整体架构</h3>
 
@@ -2764,6 +2976,19 @@ KUBE-SEP-CCCC   tcp  --  0.0.0.0/0   0.0.0.0/0    /* default/nginx:http */
 
 <p class="lead">第 8 章讲了声明式模型的理念，本章讲它如何落地为具体的 API 机制。理解这部分内容，你就能明白为什么 Kubernetes 的配置能安全地反复应用、为什么 <code>kubectl apply</code> 与 <code>kubectl create</code> 行为不同、以及如何自己扩展 Kubernetes。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:10:START -->
+<details class="box note apple-lab" id="apple-ch10">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">向 API Server 校验清单，再比较文件期望状态。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple apply --dry-run=server -f examples/apple-container/app.yaml
+kubectl --context=learnk8s-apple diff -f examples/apple-container/app.yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>server dry-run 通过；diff 无差异返回 0，有差异返回 1，错误通常大于 1。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>字段静态检查不能替代 API Server 准入；修改在线副本再 diff 能看见漂移。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:10:END -->
+
 <h3>10.1 API 对象的结构</h3>
 
 <p>Kubernetes 中的一切都是 API 对象，它们共享一套统一的结构：</p>
@@ -3147,6 +3372,19 @@ selector:
 <h2 id="ch11"><span class="num">11</span>Pod 深入剖析</h2>
 
 <p class="lead">Pod 是 Kubernetes 中最小的调度单元，也是整个体系的核心抽象。理解 Pod 为什么存在、它包含什么、它的生命周期如何演进，是掌握 Kubernetes 的关键一步。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:11:START -->
+<details class="box note apple-lab" id="apple-ch11">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">检查同一 Apple 镜像在 Pod 内的探针、安全设置与状态。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide
+kubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>找到 image、readiness/liveness、UID 1000 和只读根；区分 Running 与 Ready。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>一个 Apple 原生容器不自动成为 Pod；Pod 的共享网络和生命周期由节点实现。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:11:END -->
 
 <h3>11.1 为什么需要 Pod 这一层抽象</h3>
 
@@ -3870,6 +4108,21 @@ volumes:
 <h2 id="ch12"><span class="num">12</span>工作负载控制器</h2>
 
 <p class="lead">直接创建的裸 Pod 没有控制器负责替换。其容器仍可按 restartPolicy 重启，但 Pod 删除或节点故障后不会自动在其他节点创建替代 Pod。业务部署通常使用 Deployment、StatefulSet 等控制器。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:12:START -->
+<details class="box note apple-lab" id="apple-ch12">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">扩容后观察 Deployment → ReplicaSet → Pod，再恢复声明。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab scale deployment/apple-web --replicas=3
+kubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s
+kubectl --context=learnk8s-apple -n apple-lab get deployment,replicaset,pods
+kubectl --context=learnk8s-apple apply -f examples/apple-container/app.yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>三个 Ready 副本与控制器关系可见；等待恢复成两个副本。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Job、CronJob、StatefulSet 需分别用本章完整实验资源；原生启动命令不会代替控制器。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:12:END -->
 
 <h3>12.1 工作负载类型总览</h3>
 
@@ -4689,6 +4942,19 @@ spec:
 
 <p class="lead">Pod 是"一次性"的——它们会被重建、被调度到不同节点、IP 不断变化。这带来一个根本问题：调用方如何找到一个随时可能变化的服务实例？Service 就是 Kubernetes 对这个问题的回答。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:13:START -->
+<details class="box note apple-lab" id="apple-ch13">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">核对 Service 选择器与就绪后端。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get service apple-web -o yaml
+kubectl --context=learnk8s-apple -n apple-lab get endpointslices -l kubernetes.io/service-name=apple-web</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>Service app=apple-web 匹配 Pod，EndpointSlice 有就绪地址；再做 E08 集群内 HTTP。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>port-forward 选定一个 Pod，不能单独验收负载均衡。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:13:END -->
+
 <h3>13.1 问题的提出</h3>
 
 <p>假设你有一个订单服务需要调用支付服务。支付服务有 3 个副本，它们的 IP 分别是 10.244.1.15、10.244.2.23、10.244.3.7。问题立刻出现：</p>
@@ -5115,6 +5381,19 @@ endpoints:
 
 <p class="lead">本章讨论 Kubernetes 中"组织与隔离"的基础设施。虽然概念本身不复杂，但命名空间的设计直接影响多租户治理、权限划分与资源配额——这些是生产化实践的基础。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:14:START -->
+<details class="box note apple-lab" id="apple-ch14">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">用标签查询业务 Pod，对比 Apple 容器名字与 Kubernetes Namespace。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web --show-labels
+kubectl --context=learnk8s-apple get namespace apple-lab --show-labels</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>能从 app 标签查到 Pod；能说明命名空间、标签和注解的不同用途。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Apple network/label 与 Kubernetes Namespace/selector 没有自动映射。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:14:END -->
+
 <h3>14.1 命名空间：逻辑隔离边界</h3>
 
 <p>命名空间（Namespace）为集群内的资源提供逻辑分组。同一命名空间内的资源名称必须唯一，不同命名空间可以有同名资源。</p>
@@ -5484,6 +5763,20 @@ services                15      50
 <h2 id="ch15"><span class="num">15</span>Kubernetes 网络模型</h2>
 
 <p class="lead">Kubernetes 网络学习需要区分 Pod IP、Service 虚拟 IP 与外部入口地址。连通性受路由、网络策略和数据平面实现影响；本章先说明模型，后续章节再解释实现。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:15:START -->
+<details class="box note apple-lab" id="apple-ch15">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">把原生 VM 的 IP 与 Pod、Node、Service 地址分开记录。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e04">查看 E04 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get pods -o wide
+kubectl --context=learnk8s-apple -n apple-lab get service apple-web -o wide
+kubectl --context=learnk8s-apple get nodes -o wide</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>获得三个层次的地址；通过 E08 client 验证 Service 路径。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Mac/Apple VM 的直接 IP 可达性不能证明跨节点 Pod 网络；跨节点测试要多节点。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:15:END -->
 
 <h3>15.1 网络模型的三条基本规则</h3>
 
@@ -5889,6 +6182,19 @@ MASQUERADE  all  --  10.244.0.0/16  !10.244.0.0/16    <span class="tk-c"># Pod �
 
 <p class="lead">CNI（Container Network Interface）是 Kubernetes 网络可插拔性的基础。本章讲解 CNI 规范如何工作，并对比主流实现的技术路线与选型依据。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:16:START -->
+<details class="box note apple-lab" id="apple-ch16">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">先识别集群已安装的网络实现，再执行本章 CNI 实验。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；按本章准备目标 CNI 与节点访问权限。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n kube-system get daemonsets
+kubectl --context=learnk8s-apple -n kube-system get pods -o wide</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>记录网络组件；若无 DaemonSet，还要检查节点 CNI 配置和启动参数。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>不要往 Apple VM 写 Kubernetes 的 CNI 配置；更换集群 CNI 需专门可销毁环境。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:16:END -->
+
 <h3>16.1 CNI 规范</h3>
 
 <p>CNI 是一个简单的规范，定义了容器运行时如何调用网络插件来配置容器网络。它的核心设计是<strong>"输入 JSON 配置 + 环境变量，输出 JSON 结果"</strong>的进程调用模型。</p>
@@ -6161,6 +6467,19 @@ Hubble:                 Ok   [Current/Max flows: 1234/4096]
 
 <p class="lead">第 13 章讲了 Service 是什么，本章讲它如何工作。理解转发原理，才能在 Service 不通时知道该检查什么，也才能理解为什么大规模集群需要放弃 iptables。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:17:START -->
+<details class="box note apple-lab" id="apple-ch17">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">从 Service 与 EndpointSlice 入手，将转发分析放到真实节点。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；节点转发深入实验需 Linux 节点权限。 <a href="#apple-e04">查看 E04 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get service apple-web -o yaml
+kubectl --context=learnk8s-apple -n apple-lab get endpointslices -l kubernetes.io/service-name=apple-web -o yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>记录 ClusterIP、端口和后端；按节点实际实现检查 iptables/nftables/IPVS/eBPF。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Mac 的 pf 与 Apple vmnet 不等于 kube-proxy；不要预设集群一定用 iptables。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:17:END -->
+
 <h3>17.1 三种转发模式</h3>
 
 <figure>
@@ -6421,6 +6740,22 @@ mysql-headless   ClusterIP   None         &lt;none&gt;        3306/TCP   5d
 <h2 id="ch18"><span class="num">18</span>集群 DNS</h2>
 
 <p class="lead">DNS 是集群的"通讯录"。它看起来只是个基础设施组件，但配置不当会导致严重的性能问题——DNS 查询超时是生产环境中最常见的故障原因之一。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:18:START -->
+<details class="box note apple-lab" id="apple-ch18">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">在 Pod 内解析 Service 域名，和 E04 原生 DNS 对比。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08，节点能拉取 Alpine；dns-client 名称空闲。 <a href="#apple-e08">查看 E08 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab run dns-client --image=docker.io/alpine:3.22 --restart=Never --command -- sleep 3600
+kubectl --context=learnk8s-apple -n apple-lab wait --for=condition=Ready pod/dns-client --timeout=120s
+kubectl --context=learnk8s-apple -n apple-lab exec dns-client -- nslookup apple-web
+kubectl --context=learnk8s-apple -n apple-lab exec dns-client -- wget -T 5 -qO- http://apple-web
+kubectl --context=learnk8s-apple -n apple-lab delete pod dns-client</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>域名解析到 Service 地址，HTTP 取得网页；临时 client 已清理。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Apple 主机 resolver 的 test 域和 Kubernetes 的 svc.cluster.local 属于不同 DNS 系统。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:18:END -->
 
 <h3>18.1 CoreDNS 架构</h3>
 
@@ -6792,6 +7127,19 @@ EOF
 <h2 id="ch19"><span class="num">19</span>Ingress 与 Gateway API</h2>
 
 <p class="lead">Service 解决了集群内部的流量分发，但外部用户如何访问集群内的 HTTP 服务？Ingress 与 Gateway API 就是这一层的答案。理解两者的差异，对当前的技术选型至关重要。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:19:START -->
+<details class="box note apple-lab" id="apple-ch19">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">确认 Gateway API 资源是否已安装，给 apple-web 配置真正的入口。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08，并按本章安装 Ingress 或 Gateway 控制器；未安装时只完成 API 查询。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple api-resources --api-group=gateway.networking.k8s.io
+kubectl --context=learnk8s-apple -n apple-lab get ingress</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>确认 CRD 和控制器后，将本章路由的 namespace、backend service 和端口改为 apple-lab / apple-web / 80，再验收请求。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>仅安装 Gateway CRD 不能转发流量；QEMU builtin 不能用 minikube tunnel，需按入口实现配置访问。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:19:END -->
 
 <h3>19.1 为什么需要 Ingress</h3>
 
@@ -7309,6 +7657,19 @@ spec:
 <h2 id="ch20"><span class="num">20</span>NetworkPolicy 网络策略</h2>
 
 <p class="lead">默认情况下，Kubernetes 集群内的所有 Pod 可以互相通信——这是一个"默认全通"的网络。NetworkPolicy 是收窄这个范围的标准手段，也是零信任架构的基础。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:20:START -->
+<details class="box note apple-lab" id="apple-ch20">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">在专用命名空间用 default-deny 对照允许通信的结果。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；CNI 必须支持并启用 NetworkPolicy，先保留一个 E08 client 做前后对照。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple apply -f examples/apple-container/networkpolicy.yaml
+kubectl --context=learnk8s-apple -n apple-lab get networkpolicy apple-web-deny-ingress -o yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>用 E08 client 请求网站应超时；删除该策略后恢复。若仍可达，先核对 CNI 是否执行策略。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>vmnet 的不同网络隔离不是 NetworkPolicy；port-forward 不作为策略验收流量。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:20:END -->
 
 <h3>20.1 默认全通模型的风险</h3>
 
@@ -7835,6 +8196,20 @@ spec:
 
 <p class="lead">容器本身是无状态的——它的可写层随容器销毁而消失。但真实应用几乎都需要读写数据：数据库要持久化、日志要落盘、配置要注入、容器间要共享文件。Volume 就是 Kubernetes 为 Pod 提供的"外部存储接口"。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:21:START -->
+<details class="box note apple-lab" id="apple-ch21">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">在 Kubernetes 卷里写文件，再重建挂载 Pod，和 Apple named volume 对照。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；集群有可用默认 StorageClass/供给器，节点能拉取 Alpine。 <a href="#apple-e05">查看 E05 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple apply -f examples/apple-container/storage.yaml
+kubectl --context=learnk8s-apple -n apple-lab wait --for=condition=Ready pod/volume-writer --timeout=180s
+kubectl --context=learnk8s-apple -n apple-lab exec volume-writer -- cat /data/message.txt</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>读到 persisted-in-kubernetes；删除 volume-writer Pod 后重新 apply，仍可读取文件。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>先删 Pod，再复用同一个 PVC；Apple volume 不能直接作为 Kubernetes 的卷名。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:21:END -->
+
 <h3>21.1 为什么需要 Volume</h3>
 
 <p>先理解问题的根源。回顾第 3 章讲过的镜像分层机制：镜像的每一层都是只读的，容器启动时会在最上面叠加一个<strong>可写层</strong>。所有写操作都发生在这个可写层里。</p>
@@ -8180,6 +8555,20 @@ spec:
 
 <p class="lead">第 21 章讲的 Volume 都定义在 Pod 里，由应用开发者直接声明。但生产环境需要一个更清晰的职责划分：<strong>存储管理员负责"提供什么存储"，应用开发者负责"我需要多少存储"</strong>。PV、PVC、StorageClass 就是这套分离机制。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:22:START -->
+<details class="box note apple-lab" id="apple-ch22">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">观察 PVC 绑定、PV 和 StorageClass 的关系。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成第 21 章 storage.yaml 实验；查询 PV/StorageClass 需相应权限。 <a href="#apple-e05">查看 E05 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get storageclass
+kubectl --context=learnk8s-apple -n apple-lab get pvc apple-data
+kubectl --context=learnk8s-apple get pv</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>执行第 21 章实验后 PVC 为 Bound；记录 volumeName 与所用 StorageClass。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>没有默认 StorageClass 可能保持 Pending；本地供给器不意味着分布式可靠存储。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:22:END -->
+
 <h3>22.1 三个对象的分工</h3>
 
 <p>用一句话概括：<strong>PV 是"供给"，PVC 是"需求"，StorageClass 是"自动供给的模板"</strong>。</p>
@@ -8490,6 +8879,19 @@ kubectl -n kube-system get pods | grep csi <span class="tk-c"># 确认 CSI 组�
 <h2 id="ch23"><span class="num">23</span>CSI 与有状态存储</h2>
 
 <p class="lead">PV 抽象了存储，但存储的具体实现千差万别——云盘、NFS、Ceph、iSCSI、本地 SSD。Kubernetes 不可能为每一种都写内置代码。CSI（Container Storage Interface）就是解决这个问题的标准接口：<strong>把存储实现从 Kubernetes 核心代码中彻底剥离</strong>。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:23:START -->
+<details class="box note apple-lab" id="apple-ch23">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">判断当前卷是否真的由 CSI 管理，再进行快照/恢复实验。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成第 21 章；深入实验另需 CSI driver、所需 CRD 与多节点存储条件。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get csidriver,csinode
+kubectl --context=learnk8s-apple -n apple-lab get pvc apple-data -o yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>识别 provisioner/driver；CSI 资源为空也可能是当前本地供给器并不使用 CSI。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Apple 本地卷与 minikube hostPath 都不能自动验收 CSI 快照、拓扑或跨节点故障恢复。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:23:END -->
 
 <h3>23.1 为什么需要 CSI</h3>
 
@@ -8851,6 +9253,20 @@ mysql-2.mysql.default.svc.cluster.local  →  10.244.3.9</code></pre>
 
 <p class="lead">容器镜像应该是不可变的——同一份镜像在开发、测试、生产环境运行。那么环境差异（数据库地址、日志级别、密钥）放在哪里？答案是<strong>把配置从镜像里剥离出来</strong>，运行时注入。ConfigMap 与 Secret 就是承载这个职责的两个对象。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:24:START -->
+<details class="box note apple-lab" id="apple-ch24">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">把非敏感环境变量从原生命令迁到 ConfigMap。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e06">查看 E06 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple apply -f examples/apple-container/configmap.yaml
+kubectl --context=learnk8s-apple -n apple-lab set env deployment/apple-web --from=configmap/apple-config
+kubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>Pod 模板注入 LAB_MODE=kubernetes；选新 Pod 用 exec 查看环境，配置文件更新不自动刷新已注入的环境。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>原生 -e 不提供 Secret/RBAC；本实验只用非敏感信息，恢复时需单独 set env 删除 LAB_MODE。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:24:END -->
+
 <h3>24.1 配置外置的价值</h3>
 
 <p>先看把配置写死在镜像里的问题：</p>
@@ -9195,6 +9611,20 @@ kubectl create secret docker-registry regcred \
 <h2 id="ch25"><span class="num">25</span>认证、授权与 RBAC</h2>
 
 <p class="lead">Kubernetes 的安全模型可以用一句话概括：<strong>所有请求都要经过"你是谁"（认证）→"你能做什么"（授权）→"这个操作是否被允许"（准入控制）三道关卡</strong>。本章讲透这三道关卡，重点是 RBAC。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:25:START -->
+<details class="box note apple-lab" id="apple-ch25">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">用只读 Role 验证「能列 Pod，不能读 Secret」。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；调用者可创建 RBAC 对象并 impersonate 实验 ServiceAccount。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple apply -f examples/apple-container/rbac.yaml
+kubectl --context=learnk8s-apple -n apple-lab auth can-i list pods --as=system:serviceaccount:apple-lab:reader
+kubectl --context=learnk8s-apple -n apple-lab auth can-i get secrets --as=system:serviceaccount:apple-lab:reader</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>分别输出 yes/no；解释 ServiceAccount、Role 和 RoleBinding。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>--as 需要调用者具有 impersonate 权限；Apple registry/keychain 登录不是 RBAC。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:25:END -->
 
 <h3>25.1 请求的处理链路</h3>
 
@@ -9625,6 +10055,18 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 
 <p class="lead">RBAC 控制的是"谁能操作 API"，但 Pod 一旦运行起来，它能对宿主机做什么？一个特权容器可以直接访问宿主机内核、读写任意文件、甚至逃逸出容器。本章讲的是<strong>运行时的纵深防御</strong>。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:26:START -->
+<details class="box note apple-lab" id="apple-ch26">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">对比 E06 安全容器与集群 Pod 的 securityContext。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e06">查看 E06 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>找到非 root、allowPrivilegeEscalation=false、只读根、capabilities.drop 与 RuntimeDefault。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>VM 隔离不能代替镜像权限、Pod 安全设置、RBAC 或 PSA；PSA 实验仅使用学习命名空间。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:26:END -->
+
 <h3>26.1 威胁模型：容器不是沙箱</h3>
 
 <p>必须先破除一个误解：<strong>容器不是安全沙箱</strong>。它只是内核提供的隔离机制的组合（Namespace + Cgroups + Capabilities），共享同一个内核。</p>
@@ -10002,6 +10444,19 @@ kubectl get rolebinding,clusterrolebinding -A -o json | \
 <h2 id="ch27"><span class="num">27</span>调度器工作原理</h2>
 
 <p class="lead">调度是 Kubernetes 的核心能力之一：把 Pod 放到"最合适"的节点上。这看起来是个简单问题——找个有空闲资源的节点放进去就行。但生产环境的约束远不止资源：亲和性、污点、拓扑分布、数据位置、成本，全都要考虑。本章讲清调度器的工作机制。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:27:START -->
+<details class="box note apple-lab" id="apple-ch27">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">检查副本被调度到哪里以及调度事件。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide
+kubectl --context=learnk8s-apple -n apple-lab get events --sort-by=.metadata.creationTimestamp</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>单节点实验中多个副本可以都在同一节点；解释 requests 与可分配资源。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Apple VM 不会充当 kube-scheduler 的候选节点；增加原生容器不增加集群节点。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:27:END -->
 
 <h3>27.1 调度的基本流程</h3>
 
@@ -10440,6 +10895,19 @@ kubectl label nodes gpu-node-1 hardware=gpu</code></pre>
 
 <p class="lead">资源管理是 Kubernetes 最容易配置错误、也最容易引发生产事故的部分。<code>requests</code> 和 <code>limits</code> 看起来只是两个数字，但它们决定了调度、服务质量等级、驱逐优先级和 OOM 行为——影响面远超想象。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:28:START -->
+<details class="box note apple-lab" id="apple-ch28">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">观察集群资源配置，与原生 VM 的资源预算对照。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e06">查看 E06 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o custom-columns=&#x27;NAME:.metadata.name,QOS:.status.qosClass&#x27;</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>本例 CPU/内存 requests 与 limits 不相同，Pod 通常为 Burstable；说明调度看 requests。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>原生 --cpus 不是 500m CPU 配额；container stats 不能替代 kubectl top。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:28:END -->
+
 <h3>28.1 requests 与 limits 的本质区别</h3>
 
 <div class="grid2">
@@ -10784,6 +11252,19 @@ kubectl describe node node-1 | grep -A8 "Allocated resources"
 
 <p class="lead">第 27 章从调度器视角讲了这些机制的判定逻辑。本章换个角度：从<strong>实际场景出发</strong>，讲清楚每个机制该在什么时候用、怎么组合、有哪些坑。这些是生产环境中最常打交道的配置。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:29:START -->
+<details class="box note apple-lab" id="apple-ch29">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">在多节点集群对照亲和性、污点与 topology spread。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08，并另建至少两个可调度节点的隔离集群；将 context 明确替换为该集群。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get nodes --show-labels
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>先记录节点标签；用本章调度清单观察分布与 Pending 的 Events。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>单节点可演示无法满足约束，但不能验收跨节点分散；不要给其他项目节点随意加污点。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:29:END -->
+
 <h3>29.1 三个机制的定位差异</h3>
 
 <p>初学时容易混淆：亲和性、污点容忍、拓扑分布，看起来都在"控制 Pod 去哪个节点"。它们的分工其实很清晰：</p>
@@ -11092,6 +11573,19 @@ kubectl get pv -o json | jq '.items[] | {name:.metadata.name, nodeAffinity:.spec
 <h2 id="ch30"><span class="num">30</span>优先级、抢占与中断预算</h2>
 
 <p class="lead">资源永远不够用。当集群满载时，新来的重要任务怎么办？节点要维护时，运行中的业务怎么安全地腾地方？这需要一套"优先级 + 抢占 + 中断预算"的机制，让系统在资源紧张时做出符合业务预期的取舍。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:30:START -->
+<details class="box note apple-lab" id="apple-ch30">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">检查 PDB 与优先级配置，再进行受控驱逐对比。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；驱逐/抢占深入实验需可销毁的多节点环境和备用容量。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get pdb
+kubectl --context=learnk8s-apple get priorityclass</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>按本章仅为实验工作负载创建 PDB，观察 allowedDisruptions 与副本就绪数。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>PDB 面向自愿中断且不是可用性保证；不要在单节点学习环境随意 drain 全节点。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:30:END -->
 
 <h3>30.1 PriorityClass：表达业务重要性</h3>
 
@@ -11498,6 +11992,20 @@ kubectl get pods -o wide --field-selector spec.nodeName=node-1
 
 <p class="lead">负载是波动的：白天高峰、夜间低谷、大促时暴涨。手动调整副本数既不及时也不经济。自动扩缩容让集群随负载变化自动调整资源。Kubernetes 提供了三个层次的扩缩容能力，需要配合使用。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:31:START -->
+<details class="box note apple-lab" id="apple-ch31">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">让 Apple 网站接受集群 HPA 控制，并检查指标前提。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；Metrics Server 工作，requests.cpu 已配置；开启 HPA 后不要同时手动 scale。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab top pods -l app=apple-web
+kubectl --context=learnk8s-apple apply -f examples/apple-container/hpa.yaml
+kubectl --context=learnk8s-apple -n apple-lab get hpa apple-web</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>指标 API 可用时 TARGETS 有值；按本章生成可控负载观察副本变化与回落。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>若 top 失败先装好指标组件；E08 apply 中的 replicas 与 HPA 都管理副本时要处理字段管理。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:31:END -->
+
 <h3>31.1 三个层次的扩缩容</h3>
 
 <figure>
@@ -11872,6 +12380,19 @@ kubectl describe vpa web-vpa
 
 <p class="lead">前面几章讲的都是"怎么让系统跑起来"。这一篇讲"怎么知道系统跑得好不好、出问题怎么定位"。可观测性不是"装几个监控工具"，而是一套从方法论到工具链的完整体系。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:32:START -->
+<details class="box note apple-lab" id="apple-ch32">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">对比同一网站的原生日志与集群日志。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e07">查看 E07 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab logs -l app=apple-web --all-containers=true --prefix=true --tail=20
+kubectl --context=learnk8s-apple -n apple-lab get events --sort-by=.metadata.creationTimestamp</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>在 E08 访问后找到请求记录；区分应用日志、集群事件、指标与追踪。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>本例 Python 静态网站不自带业务指标/OTel；需要按本章另外接入采集。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:32:END -->
+
 <h3>32.1 监控与可观测性的区别</h3>
 
 <p>这两个词经常被混用，但含义有本质差别。</p>
@@ -12215,6 +12736,19 @@ kubectl describe vpa web-vpa
 <h2 id="ch33"><span class="num">33</span>指标、日志与链路追踪</h2>
 
 <p class="lead">上一章讲了方法论，本章讲工程实现：这三类数据在 Kubernetes 环境中具体怎么采集、怎么存储、怎么使用。重点是与容器环境的适配问题。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:33:START -->
+<details class="box note apple-lab" id="apple-ch33">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">先确认原生日志可见，再接入集群监控与追踪。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；top 需 Metrics Server；指标/追踪实验需本章配套组件。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab logs -l app=apple-web --prefix=true --tail=20
+kubectl --context=learnk8s-apple -n apple-lab top pods -l app=apple-web</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>记录 Pod 名、请求时间、资源指标；按本章给应用与采集器接入关联信息。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>stdout 和 top 不是分布式追踪；静态网站无追踪 SDK，须另用带 instrumentation 的练习服务。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:33:END -->
 
 <h3>33.1 指标采集：Prometheus 体系</h3>
 
@@ -12699,6 +13233,19 @@ containerLogMaxFiles: 5
 
 <p class="lead">传统的观测方式要么需要改应用（埋点、SDK），要么只能看到容器层面的粗粒度数据。eBPF 提供了一条新路径：<strong>在内核层面观测，无需修改任何应用</strong>。它是近年云原生可观测性领域最重要的技术进展。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:34:START -->
+<details class="box note apple-lab" id="apple-ch34">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">明确 eBPF 所观测的是哪一个 Linux 内核。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；另外准备兼容 eBPF 的 Linux 节点和对应观测组件。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get nodes -o wide
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>把 Pod 对应到真实 Linux 节点，按本章工具要求检查内核特性、权限与 arm64 支持。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>在另一个 Apple VM 里运行工具不会自动观测 Kubernetes 节点；Mac 不能直接运行 Linux eBPF 程序。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:34:END -->
+
 <h3>34.1 eBPF 是什么</h3>
 
 <p>eBPF（extended Berkeley Packet Filter）允许在<strong>不修改内核源码、不加载内核模块</strong>的前提下，把用户编写的程序安全地注入内核执行。</p>
@@ -12998,6 +13545,19 @@ hubble observe --output json | jq '.flow.source.namespace, .flow.destination.nam
 <h2 id="ch35"><span class="num">35</span>集群规划与高可用</h2>
 
 <p class="lead">前面 34 章讲的都是"单个对象怎么用"。从本章开始进入生产化：一个真正承载业务的集群该怎么规划、怎么部署、怎么保证高可用。这些是书本知识与生产实践差距最大的部分。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:35:START -->
+<details class="box note apple-lab" id="apple-ch35">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">用节点数与副本位置检验自己是否真的搭出了 HA。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；HA 验收另建专用多节点集群。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get nodes -o wide
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o wide</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>能说明本路线单节点即使两个业务副本，也不是控制平面或节点高可用。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>若要故障演练需独立多控制平面/多工作节点实验集群；几个 Apple 容器不构成 HA。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:35:END -->
 
 <h3>35.1 容量规划</h3>
 
@@ -13390,6 +13950,19 @@ echo "Backup completed: $FILE"
 
 <p class="lead">Kubernetes 大约每 4 个月发布一个次要版本，每个版本只维护约 14 个月。这意味着生产集群必须持续升级——不升级不仅享受不到新特性，更会失去安全补丁。但升级是有风险的操作，需要严谨的流程。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:36:START -->
+<details class="box note apple-lab" id="apple-ch36">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">把镜像更新与 Kubernetes 集群版本升级分开。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；应用变更使用新镜像标签；集群升级另建可销毁环境。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple version
+kubectl --context=learnk8s-apple -n apple-lab rollout history deployment/apple-web</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>记录客户端/服务端版本及应用修订；E02 以 1.1 标签重建并先导入后再 set image。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>rollout undo 回滚应用模板，不回滚 Kubernetes；禁止对当前单节点照抄生产升级命令。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:36:END -->
+
 <h3>36.1 版本号的含义</h3>
 
 <p>Kubernetes 的版本号格式是 <code>vX.Y.Z</code>：</p>
@@ -13728,6 +14301,19 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 <h2 id="ch37"><span class="num">37</span>多租户与资源治理</h2>
 
 <p class="lead">一个集群通常要服务多个团队、多个业务。如果没有治理机制，会出现"某个团队占满整个集群""某个应用拖垮所有服务""资源账单无法分摊"等问题。多租户与资源治理解决的就是"如何让多方安全、公平地共享集群"。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:37:START -->
+<details class="box note apple-lab" id="apple-ch37">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">对学习命名空间建立配额，观察 requests/limits 用量。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple apply -f examples/apple-container/quota.yaml
+kubectl --context=learnk8s-apple -n apple-lab describe resourcequota apple-quota</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>配额显示 Used/Hard；不声明 requests 的临时 Pod 可能被准入拒绝，先读错误原因。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>Apple --memory 配的是一个 VM，ResourceQuota 配的是 Namespace；实验完成删除 apple-quota。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:37:END -->
 
 <h3>37.1 多租户的三种模式</h3>
 
@@ -14081,6 +14667,19 @@ kubectl rollout resume deployment/web          <span class="tk-c"># 继续</span
 
 <p class="lead">Kubernetes 的成本很容易失控。默认配置倾向于"保证稳定"而非"节省资源"——大量 requests 被过度预留、节点长期低负载、闲置资源无人清理。本章讲的是系统性的成本优化方法。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:38:START -->
+<details class="box note apple-lab" id="apple-ch38">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">区分 VM、构建器与 Kubernetes 工作负载的资源成本。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E02、E08；两种平台同时运行，估算时计入 BuildKit/节点 VM。 <a href="#apple-e06">查看 E06 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">container stats --no-stream lk8s-ac-web
+kubectl --context=learnk8s-apple -n apple-lab get deployment apple-web -o yaml</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>记录 E06 的 VM 预算和 Pod requests/limits；有指标组件后再结合利用率调整。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>不要直接比较不同采样口径；本地节省内存不是云账单或 Cluster Autoscaler 的验收。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:38:END -->
+
 <h3>38.1 成本从哪里来</h3>
 
 <figure>
@@ -14314,6 +14913,22 @@ kubectl top nodes
 <h2 id="ch39"><span class="num">39</span>故障排查手册</h2>
 
 <p class="lead">前面所有章节的知识，最终都要落到"出问题时能快速定位并解决"。本章是一份结构化的排障手册，覆盖生产环境最常见的故障场景。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:39:START -->
+<details class="box note apple-lab" id="apple-ch39">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 基础</span></span>
+<span class="lab-preview">制造一个仅本实验使用的缺失镜像标签，按 Events 定位。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08：learnk8s-apple 节点 Ready，apple-lab 的 apple-web 为 2/2。 <a href="#apple-e07">查看 E07 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab set image deployment/apple-web web=docker.io/learnk8s/apple-web:missing
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web
+kubectl --context=learnk8s-apple -n apple-lab get events --sort-by=.metadata.creationTimestamp
+kubectl --context=learnk8s-apple -n apple-lab rollout undo deployment/apple-web
+kubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>imagePullPolicy=Never 下新 Pod 报 ErrImageNeverPull；回滚后恢复健康副本。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>如果已做其他变更，undo 退到上一模板修订；确认镜像后也可显式设回 1.0。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:39:END -->
 
 <h3>39.1 排障的基本功</h3>
 
@@ -14727,6 +15342,18 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -30</code></pre>
 <h2 id="ch40"><span class="num">40</span>服务网格原理与 Istio</h2>
 
 <p class="lead">当微服务数量增长到几十上百个，每个服务都需要处理超时、重试、熔断、限流、加密、追踪——如果每个团队各自实现一遍，不仅重复劳动，而且标准不一、难以统一治理。服务网格的思路是：<strong>把这些能力从应用中抽离出来，下沉到基础设施层</strong>。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:40:START -->
+<details class="box note apple-lab" id="apple-ch40">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">把 Apple 镜像作为业务服务加入 mesh，观察注入结果。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；按本章安装 Istio，选择 sidecar 模式，先核对命名空间和注入修订标签。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o custom-columns=&#x27;NAME:.metadata.name,CONTAINERS:.spec.containers[*].name&#x27;</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>按本章安装/启用 sidecar 注入并重建实验 Pod 后，容器列表包含业务与代理。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>原生 Apple 网络上直接启动代理不会创建 Istio mesh；安装版本需支持 arm64 与当前集群。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:40:END -->
 
 <h3>40.1 服务网格解决什么问题</h3>
 
@@ -15300,6 +15927,19 @@ istioctl proxy-config endpoint &lt;pod&gt; --cluster "outbound|8080||reviews.def
 
 <p class="lead">第 40 章讲了 Istio 的架构与核心对象。本章深入两个最有价值的领域：<strong>精细化的流量管理</strong>和<strong>零信任安全</strong>。这两个能力是服务网格区别于普通负载均衡的核心价值。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:41:START -->
+<details class="box note apple-lab" id="apple-ch41">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">在 mesh 内用同一网站验证流量规则与身份策略。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成第 40 章 mesh 安装；流量验收用加入 mesh 的独立 client。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple api-resources --api-group=networking.istio.io
+kubectl --context=learnk8s-apple api-resources --api-group=security.istio.io</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>使用本章规则，将 host/selector 改为 apple-web 和 app=apple-web；从 mesh client 请求并检查代理配置。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>静态网站只有一个版本，灰度实验要先构建导入两个不同标签和带 version 标签的工作负载；port-forward 不代表 mTLS 路径。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:41:END -->
+
 <h3>41.1 流量管理的完整能力</h3>
 
 <div class="tw">
@@ -15771,6 +16411,19 @@ kubectl logs &lt;pod&gt; -c istio-proxy | grep -i "rbac\|audit"
 
 <p class="lead">Sidecar 模式虽然功能完整，但资源开销和运维复杂度始终是痛点。Ambient 模式是 Istio 给出的答案：<strong>把 L4 能力下沉到节点级的共享代理，只在需要 L7 能力时才启用按需代理</strong>。这是服务网格架构的一次重要演进。</p>
 
+<!-- APPLE-CONTAINER-CHAPTER:42:START -->
+<details class="box note apple-lab" id="apple-ch42">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">对比无 sidecar 的业务 Pod 与 ztunnel/waypoint。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；另选 Ambient 兼容的 Istio/CNI 安装路线，避免与第 40 章模式混用。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n istio-system get daemonsets
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -o custom-columns=&#x27;NAME:.metadata.name,CONTAINERS:.spec.containers[*].name&#x27;</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>按本章 Ambient 配置后业务 Pod 不含 sidecar，仍需验证 ztunnel 与实际流量；L7 功能另需 waypoint。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>不要同时沿用 sidecar 注入标签；Apple 每容器 VM 模型不是 Ambient 的实现机制。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:42:END -->
+
 <h3>42.1 Ambient 的设计思路</h3>
 
 <div class="box deep">
@@ -16028,6 +16681,19 @@ kubectl rollout restart deployment -n production
 <h2 id="ch43"><span class="num">43</span>CRD、Operator 与准入控制</h2>
 
 <p class="lead">Kubernetes 的内置资源（Pod、Deployment、Service）覆盖了通用场景，但真实业务总有特殊需求。CRD 让你<strong>扩展 API</strong>，Operator 让你<strong>把运维知识编码成软件</strong>，准入控制让你<strong>强制组织规范</strong>。这三者构成了 Kubernetes 最重要的扩展能力。</p>
+
+<!-- APPLE-CONTAINER-CHAPTER:43:START -->
+<details class="box note apple-lab" id="apple-ch43">
+<summary><span class="lab-title">Apple container 实验<span class="lab-level">Kubernetes 进阶</span></span>
+<span class="lab-preview">区别应用 OCI 镜像与 Kubernetes API 扩展。</span><span class="lab-toggle" aria-hidden="true"></span></summary>
+<div class="lab-body"><dl class="lab-meta"><div><dt>准备环境</dt><dd>先完成 E08；自定义 API、控制器与准入实验按本章分别准备，所需镜像支持节点架构。 <a href="#apple-e09">查看 E09 完整步骤</a>。</dd></div></dl>
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple get customresourcedefinitions
+kubectl --context=learnk8s-apple get validatingwebhookconfigurations,mutatingwebhookconfigurations</code></pre>
+<dl class="lab-meta"><div><dt>观察结果</dt><dd>安装本章示例 CRD/控制器后，再观察自定义对象和所管理的 apple-web 状态。</dd></div>
+<div class="lab-boundary"><dt>适用范围</dt><dd>本章未安装的 CRD/Operator 不会随 E08 网站清单出现；webhook/Go 示例不是直接可部署的完整项目。</dd></div></dl>
+<p class="lab-footer"><a href="#apple-e09">各章环境要求</a><a href="#apple-e10">清理与恢复</a></p></div>
+</details>
+<!-- APPLE-CONTAINER-CHAPTER:43:END -->
 
 <h3>43.1 CRD：扩展 API</h3>
 
@@ -17851,6 +18517,337 @@ containers:
 
 <hr>
 
+<!-- APPLE-CONTAINER-APPENDIX:START -->
+<h2 id="appE"><span class="num">E</span>Apple container 全章节实验路线</h2>
+
+<nav class="lab-steps" aria-label="Apple 实验步骤"><a href="#apple-e00"><span>E00</span>准备</a><a href="#apple-e01"><span>E01</span>隔离</a><a href="#apple-e02"><span>E02</span>构建</a><a href="#apple-e03"><span>E03</span>生命周期</a><a href="#apple-e04"><span>E04</span>网络</a><a href="#apple-e05"><span>E05</span>存储</a><a href="#apple-e06"><span>E06</span>配置与安全</a><a href="#apple-e07"><span>E07</span>排障</a><a href="#apple-e08"><span>E08</span>进入 Kubernetes</a><a href="#apple-e09"><span>E09</span>各章前提</a><a href="#apple-e10"><span>E10</span>清理</a></nav>
+
+<p>本路线覆盖正文全部 43 章：第 1–7 章先在 Apple container 中操作；后续章节复用这里构建的 OCI 镜像，在真实 Kubernetes 集群继续实验。每章的「Apple container 实验体验」给出任务、命令、验收和环境要求。网页版附录 E 完整收录本指南，单独保存 index.html 也能离线阅读。</p>
+
+<p>建议小白分三轮：第一轮完成 E00–E03，能构建、访问、停止和启动网站；第二轮完成 E04–E07，理解网络、持久化、配置和排障；第三轮完成 E08，再按章进入 Kubernetes。安装、下载时间另计，前两轮约 60–90 分钟。</p>
+
+<h3 id="apple-e00">E00 · 环境、版本与能力边界</h3>
+
+<p>核对日期：2026-10-02。原生命令基线为 <strong>Apple container 1.0.0</strong>，要求 <strong>Apple silicon Mac、macOS 26 或更新版本</strong>。本次实测环境为 macOS 27.0.1 / arm64 / container 1.0.0。不要用 Linux 或 Intel Mac 的操作结果推断本路线。<a href="https://github.com/apple/container/tree/1.0.0">官方安装要求</a>。</p>
+
+<p>Apple container 为每个 Linux 容器提供轻量虚拟机，Mac 主机运行 Darwin，容器内运行 Linux。OCI 镜像可复用，但仍要匹配节点架构；CLI 的名称相似不代表 Docker daemon、Compose、CRI 或 kind 驱动兼容。<a href="https://github.com/apple/container/blob/1.0.0/docs/technical-overview.md">官方技术说明</a>。</p>
+
+<div class="tw"><table><thead><tr><th>你要学习的能力</th><th>实验环境</th><th>如何验收</th></tr></thead><tbody>
+
+<tr><td>镜像构建、进程、端口、挂载、配置、日志</td><td>Apple container 原生</td><td>E01–E07 的实际输出</td></tr>
+
+<tr><td>Pod、Deployment、Service、RBAC、调度</td><td>Apple 构建镜像 + 独立 Kubernetes 集群</td><td>E08 及对应章的 API 对象、Events、探针和恢复行为</td></tr>
+
+<tr><td>CNI、NetworkPolicy、CSI、HPA、网格、Operator</td><td>具备相应组件的 Kubernetes 集群</td><td>E09 的前置条件与本章实验</td></tr>
+
+<tr><td>跨节点、HA、升级、节点扩容</td><td>专门的多节点实验集群</td><td>不能用几个独立 Apple 容器代表多个 Kubernetes 节点</td></tr>
+
+</tbody></table></div>
+
+<p>从 <a href="https://github.com/apple/container/releases">官方 Releases</a> 获取适合你系统的签名安装包，按官方说明安装。先检查版本，再查看该版本的命令帮助；本指南参考 <a href="https://github.com/apple/container/blob/1.0.0/docs/command-reference.md">1.0.0 命令说明</a> 和 <a href="https://github.com/apple/container/blob/1.0.0/docs/tutorials/start-here.md">官方入门实验</a>。</p>
+
+<pre class="apple-command"><code class="lang-bash">sw_vers
+uname -m
+container --version
+container system start
+container system status
+container ls -a</code></pre>
+
+<p>预期：架构为 arm64，服务可用，能列出容器。首次启动可能提示下载 Linux 内核；按提示安装。若出现 XPC / apiserver 连接失败，先确认服务已启动，再检查终端的 macOS 权限与系统日志。</p>
+
+<p>所有命令从本仓库根目录执行，使用 macOS 的终端。IP 提取步骤需要电脑上有 python3；也可以从 inspect 输出手动取 IP。名字以 lk8s-ac- 开头，使用本机 18080、18081、18082 端口；如名称或端口已被占用，先换名字/端口并同步后续命令，保留已有资源。</p>
+
+<p><strong>版本提醒：</strong>官方 main 分支已出现实验性的 <code>container k8s</code>，但 1.0.0 的发布文档与本机安装不包含该功能。它不是本指南的集群前提。以后若使用包含此功能的版本，先检查 <code>container k8s --help</code>，再按该版本的文档创建集群、加载镜像和处理 kubeconfig；主分支文档说明创建集群会写入默认 kubeconfig，不能假定配置完全隔离。<a href="https://github.com/apple/container/blob/main/docs/command-reference.md">主分支实验功能</a>。</p>
+
+<h3 id="apple-e01">E01 · 看见 Linux、进程和隔离（第 1、2、7 章）</h3>
+
+<pre class="apple-command"><code class="lang-bash">container run --rm --name lk8s-ac-info docker.io/alpine:3.22 sh -c &#x27;uname -a; id; ps; ls /proc/self/ns; cat /proc/self/cgroup; cat /sys/fs/cgroup/cgroup.controllers&#x27;</code></pre>
+
+<p>预期：显示 Linux / aarch64，能观察进程、namespace 入口和 cgroup v2 控制器。<code>--rm</code> 在退出后删除该容器。对比 Mac 上的 <code>uname -a</code>：为什么两个系统显示不同内核？</p>
+
+<p>观察到 namespace 文件不等于证明两个 Apple 容器共享同一个 Linux 内核；不同 VM 内的 namespace inode 数字也不能直接比较。macOS 上不能直接照抄正文的 Linux 主机 nsenter、iptables、cgroup 路径。后续节点级实验需进入真正的 Linux Kubernetes 节点。</p>
+
+<h3 id="apple-e02">E02 · 构建自己的网站镜像（第 3、5 章）</h3>
+
+<p>仓库已经提供 Dockerfile、网页与 .dockerignore。镜像基于 Python 3.13 Alpine，复制网页后用 UID/GID 1000 运行标准库 HTTP 服务；监听 0.0.0.0:8080。这是一份方便观察的教学网站，生产服务应另行选择合适服务器、镜像摘要和更新策略。</p>
+
+<pre class="apple-command"><code class="lang-bash">container build --platform linux/arm64 -t docker.io/learnk8s/apple-web:1.0 examples/apple-container
+container image inspect docker.io/learnk8s/apple-web:1.0
+container run -d --name lk8s-ac-web --cpus 1 --memory 256M -p 127.0.0.1:18080:8080 docker.io/learnk8s/apple-web:1.0
+container ls
+curl -f http://127.0.0.1:18080</code></pre>
+
+<p>预期：镜像架构为 arm64，容器正在运行，网页包含 <code>Hello Apple container!</code>。刚启动时请求可能连接失败，先用 logs 检查启动，再重试。<code>EXPOSE 8080</code> 只描述端口；真正发布到 Mac 的操作是 <code>-p</code>。</p>
+
+<p>再执行相同 build，观察缓存；只修改网页后以新标签构建，观察 COPY 之后的步骤变化。相同标签可指向新内容，不意味着已经运行的容器或 Pod 自动更新。保留 1.0 标签用于后续实验。</p>
+
+<p>本例 linux/arm64 镜像用于 Apple silicon 与 arm64 节点。amd64 集群要先使用支持的跨架构构建/执行方案生成对应镜像；Rosetta 或模拟运行并不改变现有镜像的平台字段。</p>
+
+<h3 id="apple-e03">E03 · 生命周期与「谁负责恢复」（第 4、8、10–12 章）</h3>
+
+<p>先完成 E02。本例没有给网站添加 <code>--rm</code>，以便停止后重新启动。</p>
+
+<pre class="apple-command"><code class="lang-bash">container exec lk8s-ac-web id
+container logs lk8s-ac-web
+container stop lk8s-ac-web
+container ls -a
+container start lk8s-ac-web
+curl -f http://127.0.0.1:18080</code></pre>
+
+<p>预期：网站以非 root 用户运行；stop 后为停止状态，start 后重新可访问。原生容器的停止与启动需你操作；E08 中 Deployment 的副本恢复由控制器完成。原生实验成功不能验收 Kubernetes 自愈、探针或调度。</p>
+
+<p>自测：如果网站进程退出，谁观察期望状态并补副本？删除一个镜像、停止一个容器和删除一个 Pod 是同一件事吗？</p>
+
+<h3 id="apple-e04">E04 · 网络、IP、端口与 DNS（第 6、13、15–20 章）</h3>
+
+<p>先完成 E02。创建专用网络及第二个网站，观察同网络通信。下面只从自己网站的 inspect 输出提取 IP，不写死文档中的示意地址。<a href="https://github.com/apple/container/blob/1.0.0/docs/how-to.md">官方网络与端口操作</a>。</p>
+
+<pre class="apple-command"><code class="lang-bash">container network create lk8s-ac-net
+container run -d --name lk8s-ac-netweb --network lk8s-ac-net --memory 256M docker.io/learnk8s/apple-web:1.0
+container inspect lk8s-ac-netweb
+WEB_IP=$(container inspect lk8s-ac-netweb | python3 -c &#x27;import json,sys; print(json.load(sys.stdin)[0][&quot;status&quot;][&quot;networks&quot;][0][&quot;ipv4Address&quot;].split(&quot;/&quot;)[0])&#x27;)
+container run --rm --name lk8s-ac-client --network lk8s-ac-net docker.io/alpine:3.22 wget -T 5 -qO- &quot;http://$WEB_IP:8080&quot;
+container run --rm --name lk8s-ac-dns --network lk8s-ac-net docker.io/alpine:3.22 sh -c &#x27;cat /etc/resolv.conf; nslookup example.com&#x27;</code></pre>
+
+<p>预期：同网络 client 取得网页；resolv.conf 有解析配置，公网 DNS 查询成功需网络可用。上面的 IP 路径以本机 1.0.0 实际输出为准：status.networks[].ipv4Address；官方 how-to 中顶层 networks/address 的旧示例不可直接复制。网络名不是 Kubernetes Namespace，IP 不是 ClusterIP；端口发布不是 Service 负载均衡。</p>
+
+<p>可选对比：去掉 client 的 <code>--network lk8s-ac-net</code>，使用另一个名字运行同一请求，观察默认网络到独立网络的请求超时。Apple 1.0.0 官方说明不同网络隔离；这不能替代 CNI 的 NetworkPolicy 规则验收。VPN、代理和 macOS 本地网络权限可能影响连接，排障时同时记录它们。</p>
+
+<p>小白路线使用 IP 和 loopback 端口，不修改全局 DNS。官方教程的 <code>sudo container system dns create ...</code> 会配置 Mac 的 /etc/resolver；它是可选的主机域名功能，不能用来证明 CoreDNS、Service 域名或集群 DNS 配置正确。</p>
+
+<h3 id="apple-e05">E05 · 挂载与数据是否真的留下（第 6、21–23 章）</h3>
+
+<p>先完成 E02。第一步将仓库网页目录只读挂载到 /site，镜像内容会被挂载覆盖；在 Mac 修改网页再刷新，无需重建镜像。</p>
+
+<pre class="apple-command"><code class="lang-bash">container run -d --name lk8s-ac-bind -p 127.0.0.1:18081:8080 -v &quot;$(pwd)/examples/apple-container:/site:ro&quot; docker.io/learnk8s/apple-web:1.0
+curl -f http://127.0.0.1:18081
+container volume create -s 64M lk8s-ac-data
+container run --rm --name lk8s-ac-write -v lk8s-ac-data:/data docker.io/alpine:3.22 sh -c &#x27;echo persisted &gt; /data/message.txt&#x27;
+container run --rm --name lk8s-ac-read -v lk8s-ac-data:/data docker.io/alpine:3.22 cat /data/message.txt
+container volume inspect lk8s-ac-data</code></pre>
+
+<p>预期：第二个容器读到 persisted，说明数据位于独立卷中；没有使用卷的容器可写层不提供这项跨删除保留的约定。这里只串行挂载卷，避免把本地 ext4 卷误当作多写者共享文件系统。</p>
+
+<p>Apple named volume 由本地容器平台管理；它没有 PVC 绑定、StorageClass 动态供给、CSI 或跨节点恢复语义。<code>--rm</code> 不等于删除持久卷；官方说明匿名卷也需单独清理。本路线用命名卷便于识别与清理。</p>
+
+<p>自测：如果删除容器、卷、Mac 本地目录，分别会损失什么？持久化与备份有什么区别？</p>
+
+<h3 id="apple-e06">E06 · 配置、权限与资源（第 24–31、37、38 章）</h3>
+
+<p>先完成 E02。使用明确的非敏感配置，观察 UID、Linux capability 状态和资源。网站仅进行读取，可运行于只读根文件系统。</p>
+
+<pre class="apple-command"><code class="lang-bash">container run -d --name lk8s-ac-secure --cpus 1 --memory 256M --read-only --cap-drop ALL -e LAB_MODE=apple -p 127.0.0.1:18082:8080 docker.io/learnk8s/apple-web:1.0
+container exec lk8s-ac-secure sh -c &#x27;id; echo &quot;$LAB_MODE&quot;; grep Cap /proc/self/status&#x27;
+container inspect lk8s-ac-secure
+container stats --no-stream lk8s-ac-secure
+curl -f http://127.0.0.1:18082</code></pre>
+
+<p>预期：UID 1000，输出 apple，网站可访问，inspect 显示资源配置。capability 的值可与 E01 root 容器对照；不要只凭 UID 判断全部安全配置。</p>
+
+<p><code>--cpus 1</code> 配置 VM 的 vCPU，<code>--memory 256M</code> 配置容器 VM 的内存预算，不能直接等同于 Kubernetes 的 CPU 配额、requests、limits 或 QoS。stats 与 Mac 活动监视器口径不同，内核及 VM 有额外开销。通过负载和观察学习后，在 E08 集群里检查实际 requests/limits、调度与 OOM 事件。</p>
+
+<p>这里的环境变量不是 ConfigMap/Secret；不要把真实凭据写进 Dockerfile、镜像层、网页或提交记录。原生用户权限也不是 RBAC、Pod Security Admission、ResourceQuota、PDB 或 HPA。</p>
+
+<h3 id="apple-e07">E07 · 日志、性能与失败证据（第 32–34、39 章）</h3>
+
+<p>先完成 E02。给网站发请求，关联日志与资源；再访问不存在的页面，区分应用返回错误和网络连接失败。</p>
+
+<pre class="apple-command"><code class="lang-bash">curl -f http://127.0.0.1:18080
+curl -i http://127.0.0.1:18080/missing
+container logs lk8s-ac-web
+container stats --no-stream lk8s-ac-web
+container inspect lk8s-ac-web</code></pre>
+
+<p>预期：首页 200，不存在的页面 404，logs 可看到请求路径。stop 网站后再次访问，通常是连接失败，原因与 404 不同；用 E03 的 start 恢复。不要把一次 stats 快照当作容量基准或链路追踪结果。</p>
+
+<div class="tw"><table><thead><tr><th>现象</th><th>先读的证据</th><th>下一步</th></tr></thead><tbody>
+
+<tr><td>服务/XPC 不可用</td><td>system status</td><td>启动服务，再检查版本、权限和系统日志</td></tr>
+
+<tr><td>拉取/构建失败</td><td>拉取或 build 输出</td><td>核对标签、网络、仓库认证与架构</td></tr>
+
+<tr><td>网站连不上</td><td>ls、logs、inspect</td><td>确认进程、监听地址、端口发布和 Mac 权限</td></tr>
+
+<tr><td>跨容器失败</td><td>network inspect、容器 IP、resolv.conf</td><td>确认同网络；区别 DNS 与 HTTP 失败</td></tr>
+
+<tr><td>目录无内容/不可写</td><td>挂载参数、id、路径权限</td><td>挂载覆盖镜像目录；检查只读和 UID</td></tr>
+
+<tr><td>Kubernetes 镜像找不到</td><td>describe pod 的 Events</td><td>Apple 镜像仓库与节点仓库独立，回到 E08 导入</td></tr>
+
+</tbody></table></div>
+
+<p>macOS 内核不是 Linux，不能在 Mac 上直接运行正文的 Linux bpftrace/cgroup/iptables 命令。Apple 容器的 Linux VM 与 Kubernetes 节点 VM 又是不同观测边界；集群 eBPF 工具需在支持相应内核、权限和组件的 Linux 节点运行。</p>
+
+<h3 id="apple-e08">E08 · 同一镜像进入真正的 Kubernetes（第 7–14 章与后续实验）</h3>
+
+<h4 id="apple-e08-1">E08.1 · 准备独立集群</h4>
+
+<p>Apple container 1.0.0 不提供本路线的 Kubernetes 集群，也不是 minikube 的 docker 驱动。这里让 Apple container 负责镜像开发，minikube 的 QEMU Linux VM 负责 Kubernetes；两者可以同时运行，不需要 Docker daemon。</p>
+
+<p>以下路线要求另外装好 minikube、kubectl、QEMU。若使用 Homebrew，可按需安装 <code>brew install minikube kubernetes-cli qemu</code>，然后查看官方 <a href="https://minikube.sigs.k8s.io/docs/drivers/qemu/">QEMU 驱动</a> 文档。不要复用或重建已有业务集群。为这个新 profile 留出 2 核 / 4 GiB，并预留 Apple 网站与 BuildKit 的额外资源。</p>
+
+<pre class="apple-command"><code class="lang-bash">minikube start -p learnk8s-apple --driver=qemu --network=builtin --container-runtime=containerd --cpus=2 --memory=4096
+kubectl --context=learnk8s-apple get nodes -o wide
+kubectl --context=learnk8s-apple version</code></pre>
+
+<p>预期：arm64 Linux 节点 Ready，客户端版本符合服务端的版本差异策略。builtin 网络不支持 minikube service / tunnel；本路线使用 kubectl port-forward。Mac 上终端/IDE 的本地网络权限可能影响连接。无法创建集群时先解决驱动或下载问题，再继续导入。</p>
+
+<p>若已有专门的学习集群，可使用它，但要在后续所有命令中明确替换 context，并按该集群流程导入镜像或使用你自己的镜像仓库。不能对远程集群照抄 minikube image load；不能把本地 arm64 镜像交给 amd64 节点。多节点离线导入需确保每个可调度节点都能找到对应镜像。</p>
+
+<h4 id="apple-e08-2">E08.2 · 导出、导入与部署</h4>
+
+<p>先完成 E02。Apple 镜像存储与 Kubernetes 节点的 containerd 存储彼此独立。导出的是镜像归档，不是运行容器的 rootfs export；归档放在系统临时目录，不进 Git。minikube 官方支持从归档加载镜像。<a href="https://minikube.sigs.k8s.io/docs/commands/image/">镜像加载命令</a>。</p>
+
+<pre class="apple-command"><code class="lang-bash">APPLE_IMAGE_ARCHIVE=&quot;${TMPDIR:-/tmp}/learnk8s-apple-web.tar&quot;
+container image save --platform linux/arm64 --output &quot;$APPLE_IMAGE_ARCHIVE&quot; docker.io/learnk8s/apple-web:1.0
+minikube -p learnk8s-apple image load &quot;$APPLE_IMAGE_ARCHIVE&quot;
+minikube -p learnk8s-apple image ls
+kubectl --context=learnk8s-apple apply -f examples/apple-container/app.yaml
+kubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s
+kubectl --context=learnk8s-apple -n apple-lab get deployment,replicaset,pods,service</code></pre>
+
+<p>预期：节点镜像列表有 docker.io/learnk8s/apple-web:1.0，Deployment 为 2/2。清单设 <code>imagePullPolicy: Never</code>，若未导入则报告 ErrImageNeverPull；它不会尝试从公共仓库拉取你未发布的镜像。镜像名称与标签必须完全一致。<a href="https://kubernetes.io/docs/concepts/containers/images/">Kubernetes 镜像规则</a>。</p>
+
+<p>完整清单含 Namespace、Deployment、Service、探针、资源限制及非 root 安全配置。网站直接读取镜像内网页，方便确认与 Apple 原生容器运行的是同一份应用；原来的 beginner/app.yaml 则保留 ConfigMap 网页实验，两份实验的命名空间不同。</p>
+
+<h4 id="apple-e08-3">E08.3 · 访问、扩容、恢复</h4>
+
+<p>终端 A 保持运行：</p>
+
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab port-forward service/apple-web 18083:80</code></pre>
+
+<p>终端 B：</p>
+
+<pre class="apple-command"><code class="lang-bash">curl -f http://127.0.0.1:18083
+kubectl --context=learnk8s-apple -n apple-lab scale deployment/apple-web --replicas=3
+kubectl --context=learnk8s-apple -n apple-lab rollout status deployment/apple-web --timeout=180s
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web</code></pre>
+
+<p>预期：相同网页，三个 Ready Pod。选其中一个 Pod 的完整名字后删除它，观察 Deployment 补回。不要一次删除所有 Pod。port-forward 选定的 Pod 被删除时，转发可能断开，需重新启动；转发成功不等于 ClusterIP 负载均衡已验收。</p>
+
+<pre class="apple-command"><code class="lang-bash"># 将 POD_NAME 替换为上一步一个实际的 Pod 名
+kubectl --context=learnk8s-apple -n apple-lab delete pod POD_NAME
+kubectl --context=learnk8s-apple -n apple-lab get pods -l app=apple-web -w</code></pre>
+
+<p>Ctrl+C 结束观察。再 apply 原清单、等待 rollout，副本恢复为文件声明的 2。对照 E03：恢复发生在哪个系统、由哪个控制器完成？</p>
+
+<p>若要验证集群内 DNS / Service 路径，在学习命名空间创建临时 client（需要节点能拉取 Alpine 镜像），执行内部 HTTP 请求后删除它：</p>
+
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple -n apple-lab run client --image=docker.io/alpine:3.22 --restart=Never --command -- sleep 3600
+kubectl --context=learnk8s-apple -n apple-lab wait --for=condition=Ready pod/client --timeout=120s
+kubectl --context=learnk8s-apple -n apple-lab exec client -- nslookup apple-web
+kubectl --context=learnk8s-apple -n apple-lab exec client -- wget -T 5 -qO- http://apple-web
+kubectl --context=learnk8s-apple -n apple-lab delete pod client</code></pre>
+
+<p>预期：Service 名可解析，HTTP 返回相同网页；结合 EndpointSlice 验证就绪后端。完整的负载均衡、NetworkPolicy 或 mesh 还要按对应章节分别验收。<a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/">Service 与 DNS</a>。</p>
+
+<h3 id="apple-e09">E09 · 全部章节的实验前提与深入路线</h3>
+
+<p>每章导读后均有 Apple 路线任务，先做对应的 E01–E08，再继续正文。下面是进入各篇时的环境检查；「能查询」与「功能正确工作」分开验收。</p>
+
+<div class="tw"><table><thead><tr><th>章节</th><th>Apple 体验如何衔接</th><th>继续深入的必要条件</th></tr></thead><tbody>
+
+<tr><td>1–7 容器基础</td><td>E01–E07 原生实验 + E08 镜像流转</td><td>Linux 主机内核操作留到 Linux VM；不能照搬 Docker socket / Compose</td></tr>
+
+<tr><td>8–14 架构与工作负载</td><td>用 apple-web 观察副本、Pod、Service、标签</td><td>E08 Ready 集群；保持明确 context / namespace</td></tr>
+
+<tr><td>15–20 网络</td><td>对比 E04 的 IP 与集群 Service / DNS</td><td>CNI 实现；Gateway/Ingress 控制器；策略实验须有支持 NetworkPolicy 的 CNI</td></tr>
+
+<tr><td>21–23 存储</td><td>对比 E05 的本地卷与 PVC / StorageClass</td><td>可用的供给器；CSI 实验需真实 CSI driver；本地 hostPath 不能验收跨节点恢复</td></tr>
+
+<tr><td>24–26 配置与安全</td><td>将 E06 的配置、非 root 和只读设置迁入 Pod</td><td>ConfigMap/Secret 清单、RBAC 权限及 PSA；不要使用真实凭据</td></tr>
+
+<tr><td>27–31 调度与弹性</td><td>查看 apple-web 的 requests、limits 与分配节点</td><td>拓扑/反亲和/抢占需多节点与可控资源；HPA 需可用指标 API；PDB 不保证每次故障可用</td></tr>
+
+<tr><td>32–34 可观测性</td><td>对比 E07 logs/stats 与集群日志和指标</td><td>Metrics Server/监控/追踪组件；eBPF 需要 Linux 节点内核与权限</td></tr>
+
+<tr><td>35–39 生产与排障</td><td>以同一镜像做变更、资源核对和故障记录</td><td>HA/升级/容灾另建可销毁多节点环境；单节点练习不能验收生产可靠性</td></tr>
+
+<tr><td>40–42 服务网格</td><td>以 apple-web 做业务端，执行本章流量实验</td><td>对应版本 Istio/CRD；sidecar 与 Ambient 分开选；arm64 镜像和节点内核要求均需核对</td></tr>
+
+<tr><td>43 扩展</td><td>用 apple-web 理解控制器管理的对象</td><td>安装示例 CRD/Operator/webhook；apiextensions 与业务镜像构建是两个层次</td></tr>
+
+</tbody></table></div>
+
+<p>配套完整清单：第 20 章 networkpolicy.yaml、第 21–22 章 storage.yaml、第 24 章 configmap.yaml、第 25 章 rbac.yaml、第 31 章 hpa.yaml、第 37 章 quota.yaml，均位于 examples/apple-container/。它们都以 E08 创建的 apple-lab 为前提，按章单独部署，避免一次开启互相影响的策略。storage.yaml 的教学写入使用 root；生产存储权限需按驱动设置 UID/GID/fsGroup。</p>
+
+<p>第 19、20、22、23、31、34、40–43 章的插件实验，先完成该章已有的安装前提；不要将正文 YAML 合并片段当完整清单直接 apply。在 E08 的新集群，服务网格、eBPF、CSI 等尚未安装是正常情况。</p>
+
+<p>已有 Docker/Compose 示例可以保留作为对照。只有具备相同能力且经核对的 build/run/exec/logs 等基础操作才迁到原生命令；Docker 网络驱动、docker.sock、docker compose、CRI 配置以及节点维护命令不能机械替换为 container。Apple VM 的边界仍要明确。</p>
+
+<h3 id="apple-chapter-map">E09.1 · 43 章实验索引</h3>
+<div class="tw"><table><thead><tr><th>章节</th><th>环境</th><th>任务</th><th>路线</th></tr></thead><tbody>
+<tr><td><a href="#apple-ch1">第 1 章</a></td><td>Apple 原生</td><td>比较 Mac 与容器的内核、架构与运行边界。</td><td><a href="#apple-e01">E01</a></td></tr>
+<tr><td><a href="#apple-ch2">第 2 章</a></td><td>Apple 原生</td><td>在 Linux 容器里观察 namespace 与 cgroup v2，而不是在 Mac 寻找 /proc。</td><td><a href="#apple-e01">E01</a></td></tr>
+<tr><td><a href="#apple-ch3">第 3 章</a></td><td>Apple 原生</td><td>构建并检查镜像的平台、摘要与配置。</td><td><a href="#apple-e02">E02</a></td></tr>
+<tr><td><a href="#apple-ch4">第 4 章</a></td><td>Apple 原生</td><td>把 Docker 的基础生命周期操作与 Apple CLI 逐项对照。</td><td><a href="#apple-e03">E03</a></td></tr>
+<tr><td><a href="#apple-ch5">第 5 章</a></td><td>Apple 原生</td><td>用仓库 Dockerfile 体验 BuildKit 缓存和构建上下文。</td><td><a href="#apple-e02">E02</a></td></tr>
+<tr><td><a href="#apple-ch6">第 6 章</a></td><td>Apple 原生</td><td>分别完成专用网络通信与命名卷读写。</td><td><a href="#apple-e04">E04</a></td></tr>
+<tr><td><a href="#apple-ch7">第 7 章</a></td><td>Apple 原生</td><td>导出标准镜像，理解本地镜像存储与 CRI 节点镜像存储的区别。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch8">第 8 章</a></td><td>Kubernetes 基础</td><td>对比 E03 手动恢复与 Deployment 的副本控制。</td><td><a href="#apple-e03">E03</a></td></tr>
+<tr><td><a href="#apple-ch9">第 9 章</a></td><td>Kubernetes 基础</td><td>找到真实控制平面对象、节点与业务 Pod。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch10">第 10 章</a></td><td>Kubernetes 基础</td><td>向 API Server 校验清单，再比较文件期望状态。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch11">第 11 章</a></td><td>Kubernetes 基础</td><td>检查同一 Apple 镜像在 Pod 内的探针、安全设置与状态。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch12">第 12 章</a></td><td>Kubernetes 基础</td><td>扩容后观察 Deployment → ReplicaSet → Pod，再恢复声明。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch13">第 13 章</a></td><td>Kubernetes 基础</td><td>核对 Service 选择器与就绪后端。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch14">第 14 章</a></td><td>Kubernetes 基础</td><td>用标签查询业务 Pod，对比 Apple 容器名字与 Kubernetes Namespace。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch15">第 15 章</a></td><td>Kubernetes 基础</td><td>把原生 VM 的 IP 与 Pod、Node、Service 地址分开记录。</td><td><a href="#apple-e04">E04</a></td></tr>
+<tr><td><a href="#apple-ch16">第 16 章</a></td><td>Kubernetes 进阶</td><td>先识别集群已安装的网络实现，再执行本章 CNI 实验。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch17">第 17 章</a></td><td>Kubernetes 进阶</td><td>从 Service 与 EndpointSlice 入手，将转发分析放到真实节点。</td><td><a href="#apple-e04">E04</a></td></tr>
+<tr><td><a href="#apple-ch18">第 18 章</a></td><td>Kubernetes 基础</td><td>在 Pod 内解析 Service 域名，和 E04 原生 DNS 对比。</td><td><a href="#apple-e08">E08</a></td></tr>
+<tr><td><a href="#apple-ch19">第 19 章</a></td><td>Kubernetes 进阶</td><td>确认 Gateway API 资源是否已安装，给 apple-web 配置真正的入口。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch20">第 20 章</a></td><td>Kubernetes 进阶</td><td>在专用命名空间用 default-deny 对照允许通信的结果。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch21">第 21 章</a></td><td>Kubernetes 基础</td><td>在 Kubernetes 卷里写文件，再重建挂载 Pod，和 Apple named volume 对照。</td><td><a href="#apple-e05">E05</a></td></tr>
+<tr><td><a href="#apple-ch22">第 22 章</a></td><td>Kubernetes 进阶</td><td>观察 PVC 绑定、PV 和 StorageClass 的关系。</td><td><a href="#apple-e05">E05</a></td></tr>
+<tr><td><a href="#apple-ch23">第 23 章</a></td><td>Kubernetes 进阶</td><td>判断当前卷是否真的由 CSI 管理，再进行快照/恢复实验。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch24">第 24 章</a></td><td>Kubernetes 基础</td><td>把非敏感环境变量从原生命令迁到 ConfigMap。</td><td><a href="#apple-e06">E06</a></td></tr>
+<tr><td><a href="#apple-ch25">第 25 章</a></td><td>Kubernetes 基础</td><td>用只读 Role 验证「能列 Pod，不能读 Secret」。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch26">第 26 章</a></td><td>Kubernetes 基础</td><td>对比 E06 安全容器与集群 Pod 的 securityContext。</td><td><a href="#apple-e06">E06</a></td></tr>
+<tr><td><a href="#apple-ch27">第 27 章</a></td><td>Kubernetes 基础</td><td>检查副本被调度到哪里以及调度事件。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch28">第 28 章</a></td><td>Kubernetes 基础</td><td>观察集群资源配置，与原生 VM 的资源预算对照。</td><td><a href="#apple-e06">E06</a></td></tr>
+<tr><td><a href="#apple-ch29">第 29 章</a></td><td>Kubernetes 进阶</td><td>在多节点集群对照亲和性、污点与 topology spread。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch30">第 30 章</a></td><td>Kubernetes 进阶</td><td>检查 PDB 与优先级配置，再进行受控驱逐对比。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch31">第 31 章</a></td><td>Kubernetes 进阶</td><td>让 Apple 网站接受集群 HPA 控制，并检查指标前提。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch32">第 32 章</a></td><td>Kubernetes 基础</td><td>对比同一网站的原生日志与集群日志。</td><td><a href="#apple-e07">E07</a></td></tr>
+<tr><td><a href="#apple-ch33">第 33 章</a></td><td>Kubernetes 进阶</td><td>先确认原生日志可见，再接入集群监控与追踪。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch34">第 34 章</a></td><td>Kubernetes 进阶</td><td>明确 eBPF 所观测的是哪一个 Linux 内核。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch35">第 35 章</a></td><td>Kubernetes 进阶</td><td>用节点数与副本位置检验自己是否真的搭出了 HA。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch36">第 36 章</a></td><td>Kubernetes 进阶</td><td>把镜像更新与 Kubernetes 集群版本升级分开。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch37">第 37 章</a></td><td>Kubernetes 基础</td><td>对学习命名空间建立配额，观察 requests/limits 用量。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch38">第 38 章</a></td><td>Kubernetes 基础</td><td>区分 VM、构建器与 Kubernetes 工作负载的资源成本。</td><td><a href="#apple-e06">E06</a></td></tr>
+<tr><td><a href="#apple-ch39">第 39 章</a></td><td>Kubernetes 基础</td><td>制造一个仅本实验使用的缺失镜像标签，按 Events 定位。</td><td><a href="#apple-e07">E07</a></td></tr>
+<tr><td><a href="#apple-ch40">第 40 章</a></td><td>Kubernetes 进阶</td><td>把 Apple 镜像作为业务服务加入 mesh，观察注入结果。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch41">第 41 章</a></td><td>Kubernetes 进阶</td><td>在 mesh 内用同一网站验证流量规则与身份策略。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch42">第 42 章</a></td><td>Kubernetes 进阶</td><td>对比无 sidecar 的业务 Pod 与 ztunnel/waypoint。</td><td><a href="#apple-e09">E09</a></td></tr>
+<tr><td><a href="#apple-ch43">第 43 章</a></td><td>Kubernetes 进阶</td><td>区别应用 OCI 镜像与 Kubernetes API 扩展。</td><td><a href="#apple-e09">E09</a></td></tr>
+</tbody></table></div>
+
+<h3 id="apple-e10">E10 · 清理、复盘与实测记录</h3>
+
+<p>按你实际完成的步骤清理。本段名字均属于本路线；先查 ls，已不存在的资源不必重复删除。退出仍在运行的 port-forward / watch 后执行。</p>
+
+<pre class="apple-command"><code class="lang-bash">container stop lk8s-ac-web lk8s-ac-netweb lk8s-ac-bind lk8s-ac-secure
+container delete lk8s-ac-web lk8s-ac-netweb lk8s-ac-bind lk8s-ac-secure
+container network delete lk8s-ac-net
+container volume delete lk8s-ac-data
+container image delete docker.io/learnk8s/apple-web:1.0</code></pre>
+
+<p>上述 volume delete 会删除本实验的 persisted 数据，先确认已不需要。短时容器使用 --rm 自动删除。镜像归档可从系统临时目录按文件名删除。</p>
+
+<p>逐章恢复：删除 apple-web-deny-ingress 恢复网络；删除 HPA 后再 apply app.yaml 恢复副本管理；删除 apple-quota 恢复准入；执行 <code>kubectl --context=learnk8s-apple -n apple-lab set env deployment/apple-web LAB_MODE-</code> 删除环境变量。想清理卷实验时先删 volume-writer，再删 apple-data PVC；PV 是否删除由回收策略决定，先检查再处理。</p>
+
+<p>完成 Kubernetes 部分后，只清理实验命名空间；若整个专用 minikube profile 也不再需要，再删除它：</p>
+
+<pre class="apple-command"><code class="lang-bash">kubectl --context=learnk8s-apple delete namespace apple-lab
+minikube delete -p learnk8s-apple</code></pre>
+
+<p>不要使用 --all / prune 清理其他项目，也不要在还有工作容器时停止全局服务或 BuildKit。只有确认服务完全空闲且希望退出平台时，才按官方说明停止服务。</p>
+
+<p>复盘标准：能区分镜像仓库与节点仓库，说明 Apple VM 与 Kubernetes 节点的边界；能独立访问网页、读取日志、保存与清理卷；进入集群后能解释控制器补副本、Service/DNS、资源和插件的前提。</p>
+
+<p><strong>验证范围：</strong>本次已经实际运行 Apple container 的容器/镜像构建、网站访问、生命周期、专用网络通信与隔离、DNS、挂载、持久卷、非 root/只读/capability、资源统计、日志及镜像归档实验。新增 Kubernetes 清单已做 YAML 和官方 OpenAPI 静态检查；本机没有可用的 QEMU Kubernetes 集群，镜像导入、Pod 运行与各插件实验仍需在上述集群环境中验收，不能视为已实测。</p>
+<!-- APPLE-CONTAINER-APPENDIX:END -->
+
 </main>
 
 <button id="backtop" title="回到顶部" aria-label="回到顶部">
@@ -17860,145 +18857,207 @@ containers:
 <script>
 (function () {
   var sidebar = document.getElementById('sidebar');
+  var main = document.getElementById('content');
+  var menuBtn = document.getElementById('menuBtn');
+  var closeMenu = document.getElementById('closeMenu');
+  var readerBar = document.querySelector('.reader-bar');
+  var readerChapter = document.getElementById('readerChapter');
+  var maskEl = document.getElementById('mask');
+  var input = document.getElementById('searchInput');
+  var searchStatus = document.getElementById('searchStatus');
+  var status = document.getElementById('readerStatus');
+  var narrow = window.matchMedia('(max-width:1100px)');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
   var links = Array.prototype.slice.call(sidebar.querySelectorAll('a[href^="#"]'));
   var targets = links.map(function (a) {
     var id = a.getAttribute('href').slice(1);
     return { link: a, el: document.getElementById(id), id: id };
   }).filter(function (t) { return t.el; });
+  var lastActive = null;
 
-  /* ---------- 阅读进度条 ---------- */
-  var progress = document.getElementById('progress');
-  function updateProgress() {
+  function updateReading() {
     var h = document.documentElement;
     var max = h.scrollHeight - h.clientHeight;
-    var pct = max > 0 ? (h.scrollTop || document.body.scrollTop) / max * 100 : 0;
-    progress.style.width = pct + '%';
-  }
-
-  /* ---------- 滚动高亮当前章节 ---------- */
-  var ticking = false;
-  function updateActive() {
-    var y = window.scrollY + 140;
+    document.getElementById('progress').style.width = (max > 0 ? window.scrollY / max * 100 : 0) + '%';
+    var y = window.scrollY + (narrow.matches ? 120 : 80);
     var current = null;
     for (var i = 0; i < targets.length; i++) {
       if (targets[i].el.offsetTop <= y) { current = targets[i]; }
       else { break; }
     }
-    links.forEach(function (a) { a.classList.remove('active'); });
-    if (current) {
-      current.link.classList.add('active');
-      /* 让侧栏中的当前项保持可见 */
-      var lb = current.link.offsetTop - sidebar.clientHeight / 2;
-      if (Math.abs(sidebar.scrollTop - lb) > sidebar.clientHeight / 2) {
-        sidebar.scrollTop = Math.max(0, lb);
+    if (lastActive !== current) {
+      if (lastActive) {
+        lastActive.link.classList.remove('active');
+        lastActive.link.removeAttribute('aria-current');
       }
+      if (current) {
+        current.link.classList.add('active');
+        current.link.setAttribute('aria-current', 'location');
+        readerChapter.textContent = current.link.textContent;
+        if ((!narrow.matches || sidebar.classList.contains('open')) && !input.value.trim()) {
+          sidebar.scrollTop = Math.max(0, current.link.offsetTop - sidebar.clientHeight / 2);
+        }
+      } else { readerChapter.textContent = 'Kubernetes 学习手册'; }
+      lastActive = current;
     }
-    var bt = document.getElementById('backtop');
-    bt.style.display = window.scrollY > 600 ? 'flex' : 'none';
+    document.getElementById('backtop').style.display = window.scrollY > 600 ? 'flex' : 'none';
   }
+  var ticking = false;
   function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      window.requestAnimationFrame(function () {
-        updateProgress();
-        updateActive();
-        ticking = false;
-      });
-    }
+    if (ticking) { return; }
+    ticking = true;
+    window.requestAnimationFrame(function () { updateReading(); ticking = false; });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-
-  /* ---------- 回到顶部 ---------- */
   document.getElementById('backtop').addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
   });
 
-  /* ---------- 章节内容搜索（返回包含关键词的章节） ---------- */
-  var input = document.getElementById('searchInput');
+  /* 目录抽屉：触控、键盘、焦点与背景滚动使用同一状态。 */
+  function syncSidebar() {
+    if (!narrow.matches) { sidebar.classList.remove('open'); }
+    var open = narrow.matches && sidebar.classList.contains('open');
+    sidebar.inert = narrow.matches && !open;
+    sidebar.setAttribute('aria-hidden', String(narrow.matches && !open));
+    main.inert = open;
+    readerBar.inert = open;
+    menuBtn.setAttribute('aria-expanded', String(open));
+    maskEl.classList.toggle('show', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    document.documentElement.classList.toggle('menu-open', open);
+  }
+  function setSidebar(open, returnFocus) {
+    sidebar.classList.toggle('open', Boolean(open && narrow.matches));
+    syncSidebar();
+    if (open && narrow.matches) { closeMenu.focus({ preventScroll: true }); }
+    else if (returnFocus !== false && narrow.matches) { menuBtn.focus({ preventScroll: true }); }
+  }
+  menuBtn.addEventListener('click', function () { setSidebar(true); });
+  closeMenu.addEventListener('click', function () { setSidebar(false); });
+  maskEl.addEventListener('click', function () { setSidebar(false); });
+  links.forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (!narrow.matches) { return; }
+      setSidebar(false, false);
+      var target = document.getElementById(a.getAttribute('href').slice(1));
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    });
+  });
+
+  /* 标题与正文共同参与搜索，结果数和空结果直接说明。 */
   var parts = Array.prototype.slice.call(sidebar.querySelectorAll('.nav-part'));
   var chapterSearchText = {};
   targets.forEach(function (target) {
     var pieces = [target.link.textContent, target.el.textContent];
     var next = target.el.nextElementSibling;
     while (next && next.tagName !== 'H2') {
-      pieces.push(next.textContent);
-      next = next.nextElementSibling;
+      pieces.push(next.textContent); next = next.nextElementSibling;
     }
     chapterSearchText[target.id] = pieces.join(' ').toLowerCase();
   });
   input.addEventListener('input', function () {
     var q = input.value.trim().toLowerCase();
-    if (!q) {
-      links.forEach(function (a) { a.classList.remove('hidden'); });
-      parts.forEach(function (p) { p.style.display = ''; });
-      return;
-    }
+    var count = 0;
     links.forEach(function (a) {
-      var id = a.getAttribute('href').slice(1);
-      var hit = (chapterSearchText[id] || a.textContent.toLowerCase()).indexOf(q) !== -1;
+      var hit = !q || chapterSearchText[a.getAttribute('href').slice(1)].indexOf(q) !== -1;
       a.classList.toggle('hidden', !hit);
+      if (hit) { count++; }
     });
-    /* 隐藏没有任何可见链接的分组标题 */
-    parts.forEach(function (p, idx) {
-      var next = p.nextElementSibling;
-      var any = false;
+    searchStatus.textContent = !q ? count + ' 个章节入口' : count ? '找到 ' + count + ' 个相关章节' : '没有匹配章节，请换一个关键词';
+    parts.forEach(function (p) {
+      var next = p.nextElementSibling, any = false;
       while (next && !next.classList.contains('nav-part')) {
         if (next.tagName === 'A' && !next.classList.contains('hidden')) { any = true; break; }
         next = next.nextElementSibling;
       }
-      p.style.display = any ? '' : 'none';
+      p.hidden = !any;
     });
   });
 
-  /* ---------- 键盘快捷键：/ 聚焦搜索，Esc 清空 ---------- */
   document.addEventListener('keydown', function (e) {
-    if (e.key === '/' && document.activeElement !== input) {
+    var editing = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable;
+    if (e.key === '/' && !editing) {
       e.preventDefault();
+      if (narrow.matches) { setSidebar(true); }
       input.focus();
-    } else if (e.key === 'Escape' && document.activeElement === input) {
-      input.value = '';
-      input.dispatchEvent(new Event('input'));
-      input.blur();
+    } else if (e.key === 'Escape') {
+      if (document.activeElement === input && input.value) {
+        input.value = ''; input.dispatchEvent(new Event('input'));
+      } else if (sidebar.classList.contains('open')) { setSidebar(false); }
+      else if (document.activeElement === input) { input.blur(); }
+    } else if (e.key === 'Tab' && narrow.matches && sidebar.classList.contains('open')) {
+      var focusable = Array.prototype.slice.call(sidebar.querySelectorAll('button,input,a[href]:not(.hidden)'));
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
   });
 
-  /* ---------- 窄屏点击章节后收起侧栏 ---------- */
-  links.forEach(function (a) {
-    a.addEventListener('click', function () {
-      if (window.innerWidth <= 1100) { setSidebar(false); }
+  /* 索引深链接在首次进入和再次点击时都展开实验。 */
+  function openLinkedLab() {
+    var target = document.getElementById(window.location.hash.slice(1));
+    if (target && target.matches('details.apple-lab') && !target.open) {
+      target.open = true; target.scrollIntoView();
+    }
+  }
+  window.addEventListener('hashchange', openLinkedLab);
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href^="#apple-ch"]');
+    var lab = link && document.getElementById(link.getAttribute('href').slice(1));
+    if (lab && lab.matches('details.apple-lab')) { lab.open = true; }
+  });
+
+  /* 只为纯命令实验添加复制按钮，原理片段和终端输出保留原样。 */
+  document.querySelectorAll('pre.apple-command').forEach(function (block) {
+    var button = document.createElement('button');
+    button.type = 'button'; button.className = 'copy-code'; button.textContent = '复制命令';
+    button.addEventListener('click', async function () {
+      var code = block.querySelector('code');
+      try {
+        if (!navigator.clipboard) { throw new Error('Clipboard unavailable'); }
+        await navigator.clipboard.writeText(code.textContent);
+        button.textContent = '已复制'; status.textContent = '实验命令已复制';
+      } catch (_) {
+        var range = document.createRange(); range.selectNodeContents(code);
+        var selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+        button.textContent = '已选中代码'; status.textContent = '代码已选中，请使用系统复制操作';
+      }
+      window.setTimeout(function () { button.textContent = '复制命令'; }, 2000);
     });
+    block.classList.add('has-copy'); block.appendChild(button);
   });
 
-  /* ---------- 侧栏开合：遮罩 + 背景滚动锁 ---------- */
-  var maskEl = document.getElementById('mask');
-  function syncScrollLock() {
-    var open = sidebar.classList.contains('open') && window.innerWidth <= 1100;
-    document.body.style.overflow = open ? 'hidden' : '';
-    maskEl.classList.toggle('show', open);
-  }
-  function setSidebar(open) {
-    sidebar.classList.toggle('open', open);
-    syncScrollLock();   /* 同步刷新，避免状态滞后一帧 */
-  }
-  /* 兜底：外部若直接改 class，也保持遮罩同步 */
-  if (window.MutationObserver) {
-    new MutationObserver(syncScrollLock).observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-  }
-  /* 点击遮罩关闭 */
-  maskEl.addEventListener('click', function () { setSidebar(false); });
-
-  /* 汉堡按钮开合侧栏 */
-  document.getElementById('menuBtn').addEventListener('click', function () {
-    setSidebar(!sidebar.classList.contains('open'));
+  /* 宽内容只在各自区域滑动，溢出时显示提示并允许键盘滚动。 */
+  var scrollers = Array.prototype.map.call(document.querySelectorAll('.tw,figure,pre,.lab-steps'), function (el) {
+    var hint = document.createElement('p'); hint.className = 'scroll-hint'; hint.hidden = true;
+    var kind = el.matches('figure') ? '图示' : el.matches('pre') ? '代码' : el.matches('.lab-steps') ? '步骤导航' : '表格';
+    hint.textContent = kind + '较宽，可左右滑动查看';
+    el.parentNode.insertBefore(hint, el);
+    return { el: el, hint: hint, kind: kind };
   });
-
-  /* ---------- 窗口尺寸变化时同步状态 ---------- */
-  window.addEventListener('resize', syncScrollLock);
-
-  updateProgress();
-  updateActive();
-  syncScrollLock();
+  function refreshOverflow() {
+    /* 先统一读取尺寸，再更新提示，避免长页面逐项读写引起重复布局。 */
+    var states = scrollers.map(function (item) {
+      var width = item.el.clientWidth;
+      return width > 0 && item.el.scrollWidth > width + 1;
+    });
+    scrollers.forEach(function (item, index) {
+      var overflow = states[index];
+      item.hint.hidden = !overflow;
+      if (overflow) {
+        item.el.setAttribute('tabindex', '0');
+        item.el.setAttribute('aria-label', item.kind + '，可左右滑动查看');
+      } else {
+        item.el.removeAttribute('tabindex'); item.el.removeAttribute('aria-label');
+      }
+    });
+    onScroll();
+  }
+  document.addEventListener('toggle', refreshOverflow, true);
+  window.addEventListener('resize', function () { syncSidebar(); refreshOverflow(); });
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(refreshOverflow); }
+  syncSidebar(); openLinkedLab(); refreshOverflow(); updateReading();
 })();
 </script>
 </body>

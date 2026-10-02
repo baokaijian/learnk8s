@@ -1,0 +1,13 @@
+# 前提：apple-lab 已创建；后续 Pod 必须声明相应 requests/limits。
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: apple-quota
+  namespace: apple-lab
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "2"
+    requests.memory: 512Mi
+    limits.cpu: "4"
+    limits.memory: 1Gi
